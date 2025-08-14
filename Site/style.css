@@ -1,0 +1,282 @@
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+section {
+  padding: 60px 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+p .descricao {
+  font-size: 20px;
+  color: #814d4d;
+  margin: 20px auto;
+  max-width: 600px;
+  margin-top: 10px;
+}
+
+.pg-inicial {
+  background-image: url('assets/fundo_pginicial.png');
+  background-size: 95%;       
+  background-repeat: no-repeat;  
+  background-position: center;    
+  min-height: 100vh;              
+  padding: 60px 30px;
+}
+
+.projeto {
+  text-align: center;
+  padding: 60px 30px;
+  font-family: 'Playfair Display', serif;
+  background-image: url('assets/fundo_projeto.png');
+   background-size: 95%;       /* cobre todo o espaço da seção */
+  background-repeat: no-repeat;   /* não repete */
+  background-position: center;    /* centraliza a imagem */
+  min-height: 100vh;              /* ocupa no mínimo 100% da altura da tela */
+  padding: 60px 30px;
+}
+
+.projeto h2 {
+  font-size: 48px;
+  color: #814d4d;
+  margin-bottom: 40px;
+}
+
+.blocos-texto {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.bloco {
+  padding: 25px 30px;
+  border-radius: 30px;
+  max-width: 400px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+ .bloco.amarelo {
+  background-color: #fbe1a5;
+  color: #6a2d2d;
+}
+
+ .bloco.verde {
+  background-color: #a9b58a;
+  
+}
+
+.bloco.roxo {
+  background-color: #9b5c6c;
+  color: white;
+  padding: 35px 40px;
+  max-width: 850px;
+  margin: 0 auto;
+  border-radius: 40px;
+}
+
+.pesquisadores {
+  text-align: center;
+  padding: 60px 30px;
+  font-family: 'Playfair Display', serif;
+  background-image: url('assets/fundo_pesquisadores.png');
+  background-size: 95%;      /* cobre todo o espaço da seção */
+  background-repeat: no-repeat;   /* não repete */
+  background-position: center;    /* centraliza a imagem */
+  min-height: 100vh;              /* ocupa no mínimo 100% da altura da tela */
+  padding: 60px 30px;
+}
+
+.pesquisadores h2 {
+  font-size: 48px;
+  color: #814d4d;
+  margin-bottom: 50px;
+  
+}
+
+.pesquisadores-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+}
+
+.pesquisador {
+  max-width: 300px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: #814d4d;
+}
+
+.pesquisador img {
+  width: 80px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.pesquisador h3 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.pesquisador p {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+.perguntas h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #7d4545;
+}
+
+.faq-container {
+  display: grid;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border: 2px solid #7d4545;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: white;
+  color: #7d4545;
+  font-weight: bold;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+.faq-question:hover {
+  background-color: #f9f1f1;
+}
+
+.faq-answer {
+  background-color: #f9e8e8;
+  color: #5a2a2a;
+  padding: 15px 20px;
+  display: none;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+
+.contato {
+  background-image: url('fundo_contato.png');
+  background-size: 95%;
+}
+
+.termo-consentimento {
+  background-image: url('assets/fundo_termodeconsentimento.png');
+  background-size: 95%;
+}
+
+.questionarios {
+  background-image: url('assets/fundo_questionarios.png');
+  background-size: 95%;
+}
+
+/* Menu */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 200px;
+  padding: 20px 0 10px;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 20px;
+  border-bottom:1.5px solid #814d4d;
+  background-color: #fff; /* Ajuste se o fundo for diferente */
+}
+
+nav a {
+  text-decoration: none;
+  color: #814d4d;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #5a2d2d;
+}
+
+
+/* Textos principais */
+h1 {
+  font-size: 3em;
+  color: #814d4d;
+  margin-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 2em;
+  color: #814d4d;
+  margin-bottom: 0.5em;
+}
+
+p {
+  font-size: 1em;
+  color: #814d4d;
+  max-width: 600px;
+  margin: 0 auto 1.5em auto;
+  line-height: 1.5;
+}
+
+/* Botões */
+button {
+  background-color: #814d4d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #5a2d2d;
+}
+
+/* Caixa do TCLE */
+.tcle-box {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #c3b8b8;
+  padding: 40px;
+  margin: 20px auto;
+  width: 80%;
+  color: #814d4d;
+  font-weight: bold;
+}
+
+/* Checkbox */
+.checkbox-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: #814d4d;
+}

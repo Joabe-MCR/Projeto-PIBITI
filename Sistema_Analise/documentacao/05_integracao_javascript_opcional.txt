@@ -1,0 +1,399 @@
+INTEGRAÇÃO OPCIONAL COM JAVASCRIPT/WEB
+=====================================
+
+Se você quiser criar uma interface web dinâmica para mostrar
+resultados em tempo real, aqui estão as opções:
+
+OPÇÃO 1: API REST COM FLASK
+============================
+
+ARQUIVO: api_web.py
+```python
+"""
+API Web para servir resultados dos questionários
+Permite integração com JavaScript no frontend
+"""
+
+from flask import Flask, jsonify, request, render_template_string
+from flask_cors import CORS
+import json
+import os
+from datetime import datetime
+
+app = Flask(__name__)
+CORS(app)  # Permitir requisições do frontend
+
+@app.route('/api/participante/<int:id_participante>')
+def get_resultado_participante(id_participante):
+    """Retorna resultado de um participante específico"""
+    
+    resultados = {}
+    
+    # Buscar resultados de todos os questionários
+    questionarios = ['estresse', 'menacme', 'personalizado']
+    
+    for questionario in questionarios:
+        arquivo = f"resultados/participante_{id_participante:03d}_{questionario}.json"
+        if os.path.exists(arquivo):
+            with open(arquivo, 'r', encoding='utf-8') as f:
+                resultados[questionario] = json.load(f)
+    
+    if not resultados:
+        return jsonify({'error': 'Participante não encontrado'}), 404
+    
+    return jsonify({
+        'id_participante': id_participante,
+        'resultados': resultados,
+        'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/api/participante/<int:id_participante>/diagnostico/<questionario>')
+def get_diagnostico(id_participante, questionario):
+    """Retorna diagnóstico HTML de um participante"""
+    
+    arquivo = f"diagnosticos/participante_{id_participante:03d}_{questionario}.html"
+    
+    if not os.path.exists(arquivo):
+        return jsonify({'error': 'Diagnóstico não encontrado'}), 404
+    
+    with open(arquivo, 'r', encoding='utf-8') as f:
+        diagnostico_html = f.read()
+    
+    return jsonify({
+        'id_participante': id_participante,
+        'questionario': questionario,
+        'diagnostico_html': diagnostico_html
+    })
+
+@app.route('/api/status')
+def get_status_sistema():
+    """Retorna status geral do sistema"""
+    
+    # Contar arquivos processados
+    resultados_dir = "resultados"
+    total_processados = len([f for f in os.listdir(resultados_dir) if f.endswith('.json')])
+    
+    # Ler controle de IDs
+    with open('controle_ids.json', 'r', encoding='utf-8') as f:
+        controle = json.load(f)
+    
+    return jsonify({
+        'total_processados': total_processados,
+        'ultimo_id': controle['ultimo_id_processado'],
+        'ultima_atualizacao': controle['ultima_atualizacao'],
+        'questionarios_processados': controle['questionarios_processados']
+    })
+
+@app.route('/api/aguardar/<int:id_participante>')
+def aguardar_resultado(id_participante):
+    """Endpoint para aguardar resultado de um participante"""
+    import time
+    
+    # Aguardar até 60 segundos pelo resultado
+    for tentativa in range(60):
+        arquivo = f"resultados/participante_{id_participante:03d}_estresse.json"
+        if os.path.exists(arquivo):
+            return get_resultado_participante(id_participante)
+        time.sleep(1)
+    
+    return jsonify({'error': 'Tempo limite esgotado'}), 408
+
+@app.route('/dashboard')
+def dashboard():
+    """Página de dashboard simples"""
+    
+    html = '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Dashboard - Questionários PIBITI</title>
+        <meta charset="utf-8">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .card { background: #f5f5f5; padding: 20px; margin: 10px 0; border-radius: 8px; }
+            .resultado { background: #e8f5e8; }
+            .erro { background: #ffeaea; }
+            button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        </style>
+    </head>
+    <body>
+        <h1>🔬 Dashboard - Análise de Questionários</h1>
+        
+        <div class="card">
+            <h3>Status do Sistema</h3>
+            <div id="status">Carregando...</div>
+            <button onclick="atualizarStatus()">Atualizar</button>
+        </div>
+        
+        <div class="card">
+            <h3>Buscar Resultado</h3>
+            <input type="number" id="idParticipante" placeholder="ID do Participante" min="1">
+            <button onclick="buscarResultado()">Buscar</button>
+            <div id="resultado"></div>
+        </div>
+        
+        <script>
+            function atualizarStatus() {
+                fetch('/api/status')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('status').innerHTML = `
+                            <p><strong>Total Processados:</strong> ${data.total_processados}</p>
+                            <p><strong>Último ID:</strong> ${data.ultimo_id}</p>
+                            <p><strong>Última Atualização:</strong> ${data.ultima_atualizacao}</p>
+                        `;
+                    })
+                    .catch(error => {
+                        document.getElementById('status').innerHTML = 
+                            '<p class="erro">Erro ao carregar status</p>';
+                    });
+            }
+            
+            function buscarResultado() {
+                const id = document.getElementById('idParticipante').value;
+                if (!id) return;
+                
+                document.getElementById('resultado').innerHTML = 'Buscando...';
+                
+                fetch(`/api/participante/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            document.getElementById('resultado').innerHTML = 
+                                `<p class="erro">${data.error}</p>`;
+                        } else {
+                            let html = '<div class="resultado"><h4>Resultados Encontrados:</h4>';
+                            for (const [questionario, resultado] of Object.entries(data.resultados)) {
+                                html += `
+                                    <p><strong>${questionario}:</strong> 
+                                    ${resultado.categoria} (${resultado.pontuacao_total} pontos)</p>
+                                `;
+                            }
+                            html += '</div>';
+                            document.getElementById('resultado').innerHTML = html;
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('resultado').innerHTML = 
+                            '<p class="erro">Erro ao buscar resultado</p>';
+                    });
+            }
+            
+            // Atualizar status automaticamente
+            atualizarStatus();
+            setInterval(atualizarStatus, 30000); // A cada 30 segundos
+        </script>
+    </body>
+    </html>
+    '''
+    return render_template_string(html)
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
+```
+
+INTEGRAÇÃO COM SEU SITE ATUAL
+==============================
+
+ARQUIVO: site_integration.js (adicionar ao seu script.js)
+```javascript
+// Funções para integração com API de resultados
+
+class QuestionarioAPI {
+    constructor(baseURL = 'http://localhost:5000/api') {
+        this.baseURL = baseURL;
+    }
+    
+    async buscarResultado(idParticipante) {
+        try {
+            const response = await fetch(`${this.baseURL}/participante/${idParticipante}`);
+            
+            if (!response.ok) {
+                throw new Error('Participante não encontrado');
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao buscar resultado:', error);
+            throw error;
+        }
+    }
+    
+    async aguardarResultado(idParticipante, callback) {
+        try {
+            const response = await fetch(`${this.baseURL}/aguardar/${idParticipante}`);
+            const data = await response.json();
+            
+            if (callback) callback(data);
+            return data;
+        } catch (error) {
+            console.error('Erro ao aguardar resultado:', error);
+            throw error;
+        }
+    }
+    
+    async buscarDiagnostico(idParticipante, questionario) {
+        try {
+            const response = await fetch(`${this.baseURL}/participante/${idParticipante}/diagnostico/${questionario}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao buscar diagnóstico:', error);
+            throw error;
+        }
+    }
+}
+
+// Exemplo de uso no site
+const api = new QuestionarioAPI();
+
+function mostrarResultadoAposQuestionario(idParticipante) {
+    // Mostrar loading
+    document.getElementById('resultado').innerHTML = `
+        <div class="loading">
+            <h3>Processando suas respostas...</h3>
+            <p>Aguarde enquanto geramos seu diagnóstico personalizado.</p>
+            <div class="spinner"></div>
+        </div>
+    `;
+    
+    // Aguardar resultado
+    api.aguardarResultado(idParticipante)
+        .then(data => {
+            mostrarResultadoCompleto(data);
+        })
+        .catch(error => {
+            document.getElementById('resultado').innerHTML = `
+                <div class="erro">
+                    <h3>Erro ao processar</h3>
+                    <p>Tente novamente em alguns minutos.</p>
+                </div>
+            `;
+        });
+}
+
+function mostrarResultadoCompleto(data) {
+    let html = '<div class="resultado-completo">';
+    html += `<h2>Seus Resultados - Participante ${data.id_participante}</h2>`;
+    
+    for (const [questionario, resultado] of Object.entries(data.resultados)) {
+        html += `
+            <div class="resultado-questionario">
+                <h3>${questionario.toUpperCase()}</h3>
+                <div class="categoria ${resultado.categoria}">
+                    <strong>Categoria:</strong> ${resultado.categoria}
+                </div>
+                <div class="pontuacao">
+                    <strong>Pontuação:</strong> ${resultado.pontuacao_total}
+                </div>
+                <button onclick="verDiagnosticoCompleto(${data.id_participante}, '${questionario}')">
+                    Ver Diagnóstico Completo
+                </button>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    document.getElementById('resultado').innerHTML = html;
+}
+
+async function verDiagnosticoCompleto(idParticipante, questionario) {
+    try {
+        const diagnostico = await api.buscarDiagnostico(idParticipante, questionario);
+        
+        // Abrir em nova janela ou modal
+        const novaJanela = window.open('', '_blank');
+        novaJanela.document.write(diagnostico.diagnostico_html);
+        novaJanela.document.close();
+        
+    } catch (error) {
+        alert('Erro ao carregar diagnóstico completo');
+    }
+}
+```
+
+OPÇÃO 2: WEBSOCKETS PARA TEMPO REAL
+====================================
+
+Para notificações em tempo real quando resultado estiver pronto:
+
+```python
+# Em api_web.py, adicionar SocketIO
+from flask_socketio import SocketIO, emit
+
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+@socketio.on('aguardar_resultado')
+def handle_aguardar_resultado(data):
+    id_participante = data['id_participante']
+    
+    # Monitorar arquivo de resultado
+    import time
+    for tentativa in range(60):
+        arquivo = f"resultados/participante_{id_participante:03d}_estresse.json"
+        if os.path.exists(arquivo):
+            # Resultado pronto! Notificar cliente
+            emit('resultado_pronto', {
+                'id_participante': id_participante,
+                'status': 'pronto'
+            })
+            return
+        time.sleep(1)
+    
+    # Timeout
+    emit('resultado_timeout', {'id_participante': id_participante})
+```
+
+JavaScript para receber notificações:
+```javascript
+// Conectar com WebSocket
+const socket = io('http://localhost:5000');
+
+socket.on('resultado_pronto', function(data) {
+    console.log('Resultado pronto para participante:', data.id_participante);
+    // Buscar e mostrar resultado
+    buscarResultado(data.id_participante);
+});
+
+socket.on('resultado_timeout', function(data) {
+    console.log('Timeout para participante:', data.id_participante);
+    mostrarErroTimeout();
+});
+
+// Solicitar monitoramento
+function aguardarResultadoTimeReal(idParticipante) {
+    socket.emit('aguardar_resultado', {id_participante: idParticipante});
+}
+```
+
+VANTAGENS DE CADA ABORDAGEM
+============================
+
+SEM JAVASCRIPT (Apenas Python):
+✅ Mais simples de implementar
+✅ Não depende de servidor web
+✅ Funciona offline
+❌ Sem interface dinâmica
+
+COM API REST:
+✅ Interface web moderna
+✅ Resultados acessíveis via web
+✅ Dashboard de monitoramento
+❌ Mais complexo de configurar
+
+COM WEBSOCKETS:
+✅ Notificações em tempo real
+✅ Melhor experiência do usuário
+✅ Atualizações instantâneas
+❌ Maior complexidade técnica
+
+RECOMENDAÇÃO
+============
+
+Para seu projeto, sugiro:
+
+1. COMEÇAR só com Python (monitor_tempo_real.py)
+2. TESTAR funcionamento completo
+3. SE NECESSÁRIO, adicionar API REST depois
+4. WebSockets apenas se precisar de tempo real
+
+O Python sozinho já resolve 90% do que você precisa!

@@ -1,0 +1,103 @@
+{
+  "questionarios": {
+    "estresse": {
+      "arquivo": "questionario_estresse.xlsx",
+      "colunas_perguntas": "B:Z",
+      "escala": {
+        "nunca": 0,
+        "quase nunca": 1,
+        "às vezes": 2,
+        "quase sempre": 3,
+        "sempre": 4
+      },
+      "interpretacao": {
+        "baixo": {
+          "min": 0,
+          "max": 30,
+          "cor": "verde",
+          "descricao": "Nível de estresse baixo e saudável"
+        },
+        "moderado": {
+          "min": 31,
+          "max": 60,
+          "cor": "amarelo",
+          "descricao": "Nível de estresse moderado - requer atenção"
+        },
+        "alto": {
+          "min": 61,
+          "max": 90,
+          "cor": "laranja",
+          "descricao": "Nível de estresse alto - intervenção necessária"
+        },
+        "muito_alto": {
+          "min": 91,
+          "max": 120,
+          "cor": "vermelho",
+          "descricao": "Nível de estresse muito alto - situação crítica"
+        }
+      }
+    },
+    "menacme": {
+      "arquivo": "questionario_menacme.xlsx",
+      "colunas_perguntas": "B:Z",
+      "interpretacao": {
+        "pre_menopausa": {
+          "descricao": "Fase pré-menopausa - período reprodutivo",
+          "caracteristicas": [
+            "Ciclos menstruais regulares",
+            "Sintomas mínimos ou ausentes",
+            "Função reprodutiva normal"
+          ]
+        },
+        "perimenopausa": {
+          "descricao": "Fase de perimenopausa - transição para a menopausa",
+          "caracteristicas": [
+            "Irregularidades menstruais",
+            "Flutuações hormonais",
+            "Sintomas variados da menopausa"
+          ]
+        },
+        "pos_menopausa": {
+          "descricao": "Fase pós-menopausa - após a menopausa",
+          "caracteristicas": [
+            "Ausência de menstruação por 12+ meses",
+            "Níveis hormonais baixos estabilizados",
+            "Possíveis sintomas persistentes"
+          ]
+        }
+      }
+    }
+  },
+  "diretorios": {
+    "entrada": "dados_entrada",
+    "saida": "resultados",
+    "diagnosticos": "diagnosticos",
+    "templates": "templates"
+  },
+  "configuracoes_gerais": {
+    "formato_data": "%d/%m/%Y %H:%M:%S",
+    "encoding": "utf-8",
+    "separador_csv": ";",
+    "nivel_log": "INFO"
+  },
+  "contatos_emergencia": {
+    "cvv": "188",
+    "samu": "192",
+    "emergencia": "193"
+  },
+  "recursos_apoio": {
+    "apps_meditacao": [
+      "Headspace",
+      "Calm",
+      "Lojong",
+      "Insight Timer"
+    ],
+    "atividades_recomendadas": [
+      "Yoga",
+      "Pilates",
+      "Caminhada",
+      "Natação",
+      "Meditação"
+    ]
+  }
+}

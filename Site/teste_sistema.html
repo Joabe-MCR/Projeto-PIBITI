@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Sistema de Questionários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #2980b9;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste do Sistema de Questionários</h1>
+    
+    <div class="test-section">
+        <h2>1. Teste de Consentimento TCLE</h2>
+        <p>Verifique se o usuário pode acessar os questionários apenas após consentir com o TCLE.</p>
+        <button class="test-button" onclick="testarTCLE()">Simular Consentimento TCLE</button>
+        <button class="test-button" onclick="limparTCLE()">Limpar Consentimento</button>
+        <div id="statusTCLE"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Teste de Geração de ID</h2>
+        <p>Verificar se o sistema gera IDs únicos para cada usuário.</p>
+        <button class="test-button" onclick="testarGeracaoID()">Gerar Novo ID</button>
+        <button class="test-button" onclick="mostrarIDAtual()">Mostrar ID Atual</button>
+        <div id="statusID"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Teste de Progresso</h2>
+        <p>Simular conclusão de questionários e verificar progresso.</p>
+        <button class="test-button" onclick="simularQuestionario(1)">Simular Q1 Completo</button>
+        <button class="test-button" onclick="simularQuestionario(2)">Simular Q2 Completo</button>
+        <button class="test-button" onclick="simularQuestionario(3)">Simular Q3 Completo</button>
+        <button class="test-button" onclick="limparProgresso()">Limpar Progresso</button>
+        <div id="statusProgresso"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Teste de Navegação</h2>
+        <p>Testar redirecionamentos entre páginas.</p>
+        <button class="test-button" onclick="irParaIndex()">Ir para Index</button>
+        <button class="test-button" onclick="irParaQuestionarios()">Ir para Questionários</button>
+        <button class="test-button" onclick="irParaDiagnostico()">Ir para Diagnóstico</button>
+    </div>
+
+    <script>
+        function mostrarStatus(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function testarTCLE() {
+            localStorage.setItem('tcleConsentimento', 'true');
+            localStorage.setItem('tcleDataConsentimento', new Date().toISOString());
+            mostrarStatus('statusTCLE', '✅ TCLE consentido com sucesso! Data: ' + new Date().toLocaleString());
+        }
+
+        function limparTCLE() {
+            localStorage.removeItem('tcleConsentimento');
+            localStorage.removeItem('tcleDataConsentimento');
+            mostrarStatus('statusTCLE', '🗑️ Consentimento TCLE removido', 'warning');
+        }
+
+        function gerarIdUnico() {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(2, 8);
+            return `USR_${timestamp}_${random}`.toUpperCase();
+        }
+
+        function testarGeracaoID() {
+            const novoId = gerarIdUnico();
+            localStorage.setItem('userSessionId', novoId);
+            mostrarStatus('statusID', `✅ Novo ID gerado: ${novoId}`);
+        }
+
+        function mostrarIDAtual() {
+            const idAtual = localStorage.getItem('userSessionId') || 'Nenhum ID encontrado';
+            mostrarStatus('statusID', `📋 ID atual: ${idAtual}`, 'warning');
+        }
+
+        function simularQuestionario(numero) {
+            const userId = localStorage.getItem('userSessionId') || 'teste_user';
+            let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{"questionario1":false,"questionario2":false,"questionario3":false}');
+            
+            progresso[`questionario${numero}`] = true;
+            localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+            
+            const completados = Object.values(progresso).filter(Boolean).length;
+            mostrarStatus('statusProgresso', `✅ Questionário ${numero} marcado como completo! Total: ${completados}/3`);
+        }
+
+        function limparProgresso() {
+            const userId = localStorage.getItem('userSessionId') || 'teste_user';
+            localStorage.removeItem(`progress_${userId}`);
+            mostrarStatus('statusProgresso', '🗑️ Progresso limpo', 'warning');
+        }
+
+        function irParaIndex() {
+            window.location.href = 'index.html';
+        }
+
+        function irParaQuestionarios() {
+            // Verificar se há consentimento antes de ir
+            const consentimento = localStorage.getItem('tcleConsentimento');
+            if (consentimento === 'true') {
+                window.location.href = 'questionarios.html';
+            } else {
+                alert('⚠️ É necessário consentir com o TCLE primeiro!');
+                mostrarStatus('statusProgresso', '⚠️ TCLE não encontrado - simule o consentimento primeiro', 'error');
+            }
+        }
+
+        function irParaDiagnostico() {
+            const userId = localStorage.getItem('userSessionId') || 'teste_user';
+            window.location.href = `diagnostico.html?userId=${userId}`;
+        }
+
+        // Mostrar status inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            mostrarIDAtual();
+        });
+    </script>
+</body>
+</html>

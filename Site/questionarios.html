@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Questionários - Projeto Stress e Menacme</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="questionarios.css">
+    <script src="questionarios.js"></script>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="menu">
+                <nav>
+                    <a href="index.html">Voltar ao início</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Botão Voltar ao Topo -->
+        <button id="voltarTopo" class="btn-voltar-topo" onclick="voltarAoTopo()" title="Voltar ao topo">
+            <span class="btn-texto">Voltar ao topo</span>
+            <span class="btn-icone">↑</span>
+        </button>
+
+        <!-- Seção: Questionários -->
+        <section class="questionarios" id="questionarios">
+            <div class="questionarios-container">
+                <div class="questionarios-header">
+                    <h1>QUESTIONÁRIOS</h1>
+                    <p class="subtitle">Complete todos os questionários para receber seu diagnóstico personalizado</p>
+                    <div class="id-display">
+                        <span class="id-label">Seu ID de acesso:</span>
+                        <span class="id-value" id="userIdDisplay"></span>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-text" id="progressText">0 de 3 questionários concluídos</div>
+                </div>
+
+                <div class="questionarios-list">
+                    <!-- Questionário 1 -->
+                    <div class="questionario-item" id="questionario1">
+                        <div class="questionario-icon">
+                            <div class="icon-circle" id="icon1">
+                                <span class="step-number">1</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                        </div>
+                        <div class="questionario-content">
+                            <h3>Escala de Percepção ao Stress</h3>
+                            <p>Avalie como você percebe e lida com situações estressantes do dia a dia.</p>
+                            <button class="btn-questionario" id="btn1" onclick="abrirQuestionario(1)">
+                                <span class="btn-text">Responder Questionário</span>
+                                <span class="btn-status">Não iniciado</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Questionário 2 -->
+                    <div class="questionario-item disabled" id="questionario2">
+                        <div class="questionario-icon">
+                            <div class="icon-circle" id="icon2">
+                                <span class="step-number">2</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                        </div>
+                        <div class="questionario-content">
+                            <h3>Escala de Vulnerabilidade ao Stress</h3>
+                            <p>Identifique sua suscetibilidade aos efeitos negativos do estresse.</p>
+                            <button class="btn-questionario disabled" id="btn2" onclick="abrirQuestionario(2)" disabled>
+                                <span class="btn-text">Responder Questionário</span>
+                                <span class="btn-status">Aguardando anterior</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Questionário 3 -->
+                    <div class="questionario-item disabled" id="questionario3">
+                        <div class="questionario-icon">
+                            <div class="icon-circle" id="icon3">
+                                <span class="step-number">3</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                        </div>
+                        <div class="questionario-content">
+                            <h3>Questionário de Desconforto Menstrual</h3>
+                            <p>Relate seus sintomas e experiências relacionados ao ciclo menstrual.</p>
+                            <button class="btn-questionario disabled" id="btn3" onclick="abrirQuestionario(3)" disabled>
+                                <span class="btn-text">Responder Questionário</span>
+                                <span class="btn-status">Aguardando anteriores</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botão Ver Diagnóstico -->
+                <div class="diagnostico-section" id="diagnosticoSection" style="display: none;">
+                    <div class="diagnostico-info">
+                        <h3>🎉 Parabéns! Todos os questionários foram concluídos</h3>
+                        <p>Seu diagnóstico personalizado está pronto. Clique no botão abaixo para visualizar seus resultados.</p>
+                    </div>
+                    <button class="btn-diagnostico" onclick="verDiagnostico()">
+                        <span class="btn-text">Ver Meu Diagnóstico</span>
+                        <span class="btn-icon">📊</span>
+                    </button>
+                </div>
+
+                <!-- Instruções -->
+                <div class="instrucoes">
+                    <h4>📋 Instruções Importantes:</h4>
+                    <ul>
+                        <li>Complete os questionários na ordem apresentada</li>
+                        <li>Responda com sinceridade para obter um diagnóstico preciso</li>
+                        <li>Após responder cada questionário, volte a esta página</li>
+                        <li>Mantenha seu ID de acesso anotado para consultas futuras</li>
+                        <li>O processo leva aproximadamente 15-20 minutos</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Confirmar Ação</h3>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-confirm" id="confirmBtn">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Voltar ao Topo -->
+    <button class="btn-topo-questionarios" onclick="voltarAoTopo()" title="Voltar ao topo">
+        ↑
+    </button>
+</body>
+</html>

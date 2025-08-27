@@ -80,6 +80,23 @@
     "separador_csv": ";",
     "nivel_log": "INFO"
   },
+  "google_forms": {
+    "questionario_percepcao_stress": {
+      "url": "https://forms.gle/SEU_LINK_PERCEPCAO_STRESS",
+      "nome": "Escala de Percepção ao Stress",
+      "descricao": "Avalie como você percebe e lida com situações estressantes do dia a dia"
+    },
+    "questionario_vulnerabilidade_stress": {
+      "url": "https://forms.gle/SEU_LINK_VULNERABILIDADE_STRESS", 
+      "nome": "Escala de Vulnerabilidade ao Stress",
+      "descricao": "Identifique sua suscetibilidade aos efeitos negativos do estresse"
+    },
+    "questionario_desconforto_menstrual": {
+      "url": "https://forms.gle/SEU_LINK_DESCONFORTO_MENSTRUAL",
+      "nome": "Questionário de Desconforto Menstrual", 
+      "descricao": "Relate seus sintomas e experiências relacionados ao ciclo menstrual"
+    }
+  },
   "contatos_emergencia": {
     "cvv": "188",
     "samu": "192",

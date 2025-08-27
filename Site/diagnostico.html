@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Diagnóstico - Projeto Stress e Menacme</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="diagnostico.css">
+    <script src="diagnostico.js"></script>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="menu">
+                <nav>
+                    <a href="index.html">Início</a>
+                    <a href="questionarios.html">Questionários</a>
+                </nav>
+            </div>
+        </header>
+
+        <section id="diagnostico" class="diagnostico">
+            <div class="diagnostico-container">
+                
+                <!-- Cabeçalho -->
+                <div class="diagnostico-header">
+                    <h1>🎯 Seu Diagnóstico Personalizado</h1>
+                    <p>Com base nas suas respostas aos questionários, geramos uma análise personalizada sobre seu perfil de stress e bem-estar.</p>
+                </div>
+
+                <!-- Informações do usuário -->
+                <div class="user-summary">
+                    <h3>📋 Resumo da Avaliação</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">ID da Sessão:</span>
+                            <span class="summary-value" id="userIdDisplay">Carregando...</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Data da Conclusão:</span>
+                            <span class="summary-value" id="dataCompleta">Carregando...</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Questionários Respondidos:</span>
+                            <span class="summary-value">3 de 3 ✅</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado de carregamento -->
+                <div id="loadingState" class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <h3>Analisando suas respostas...</h3>
+                    <p>Aguarde enquanto geramos seu diagnóstico personalizado.</p>
+                </div>
+
+                <!-- Resultado do diagnóstico -->
+                <div id="diagnosticoContent" class="diagnostico-content" style="display: none;">
+                    
+                    <!-- Nível de Stress Percebido -->
+                    <div class="resultado-secao">
+                        <div class="secao-header">
+                            <h2>📊 Escala de Percepção ao Stress</h2>
+                            <div class="nivel-badge" id="nivelStressBadge">
+                                <span id="nivelStressTexto">Carregando...</span>
+                            </div>
+                        </div>
+                        <div class="secao-content">
+                            <div class="grafico-container">
+                                <div class="grafico-barra">
+                                    <div class="barra-progresso">
+                                        <div id="barraStress" class="barra-fill"></div>
+                                    </div>
+                                    <div class="barra-labels">
+                                        <span>Baixo</span>
+                                        <span>Moderado</span>
+                                        <span>Alto</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="descricaoStress" class="secao-descricao">
+                                Analisando os resultados da sua percepção de stress...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Vulnerabilidade ao Stress -->
+                    <div class="resultado-secao">
+                        <div class="secao-header">
+                            <h2>🛡️ Vulnerabilidade ao Stress</h2>
+                            <div class="nivel-badge" id="nivelVulnerabilidadeBadge">
+                                <span id="nivelVulnerabilidadeTexto">Carregando...</span>
+                            </div>
+                        </div>
+                        <div class="secao-content">
+                            <div class="grafico-container">
+                                <div class="grafico-barra">
+                                    <div class="barra-progresso">
+                                        <div id="barraVulnerabilidade" class="barra-fill"></div>
+                                    </div>
+                                    <div class="barra-labels">
+                                        <span>Baixa</span>
+                                        <span>Moderada</span>
+                                        <span>Alta</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="descricaoVulnerabilidade" class="secao-descricao">
+                                Analisando sua vulnerabilidade ao stress...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Desconforto Menstrual -->
+                    <div class="resultado-secao">
+                        <div class="secao-header">
+                            <h2>🌺 Desconforto Menstrual</h2>
+                            <div class="nivel-badge" id="nivelDesconfortoBadge">
+                                <span id="nivelDesconfortoTexto">Carregando...</span>
+                            </div>
+                        </div>
+                        <div class="secao-content">
+                            <div class="grafico-container">
+                                <div class="grafico-barra">
+                                    <div class="barra-progresso">
+                                        <div id="barraDesconforto" class="barra-fill"></div>
+                                    </div>
+                                    <div class="barra-labels">
+                                        <span>Baixo</span>
+                                        <span>Moderado</span>
+                                        <span>Alto</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="descricaoDesconforto" class="secao-descricao">
+                                Analisando seu nível de desconforto menstrual...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Análise Integrada -->
+                    <div class="resultado-secao analise-integrada">
+                        <div class="secao-header">
+                            <h2>🔄 Análise Integrada</h2>
+                        </div>
+                        <div class="secao-content">
+                            <div id="analiseIntegrada" class="analise-texto">
+                                <p>Gerando análise integrada dos resultados...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recomendações -->
+                    <div class="resultado-secao recomendacoes">
+                        <div class="secao-header">
+                            <h2>💡 Recomendações Personalizadas</h2>
+                        </div>
+                        <div class="secao-content">
+                            <div id="recomendacoesList" class="recomendacoes-grid">
+                                <p>Preparando recomendações personalizadas...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações finais -->
+                <div id="acoesFinais" class="acoes-container" style="display: none;">
+                    <div class="acoes-grid">
+                        <button class="btn-acao btn-salvar" onclick="salvarDiagnostico()">
+                            💾 Salvar Diagnóstico
+                        </button>
+                        <button class="btn-acao btn-compartilhar" onclick="compartilharResultados()">
+                            📤 Compartilhar
+                        </button>
+                        <button class="btn-acao btn-novo" onclick="novaAvaliacao()">
+                            🔄 Nova Avaliação
+                        </button>
+                        <button class="btn-acao btn-contato" onclick="entrarEmContato()">
+                            📞 Contatar Pesquisadores
+                        </button>
+                    </div>
+                    
+                    <div class="disclaimer">
+                        <p><strong>⚠️ Importante:</strong> Este diagnóstico é uma ferramenta de autoavaliação para fins de pesquisa e não substitui consulta médica profissional. Se você está enfrentando níveis significativos de stress ou desconforto, recomendamos procurar orientação de um profissional de saúde.</p>
+                    </div>
+                </div>
+
+                <!-- Rodapé com informações da pesquisa -->
+                <div class="rodape-pesquisa">
+                    <h3>📚 Sobre Esta Pesquisa</h3>
+                    <p>Este diagnóstico faz parte do projeto PIBITI sobre a relação entre stress e sintomas menstruais. Seus dados contribuem para o avanço científico na compreensão do bem-estar feminino.</p>
+                    <div class="contato-pesquisadores">
+                        <strong>Contato dos Pesquisadores:</strong><br>
+                        📧 Email: pesquisa.stress@exemplo.com<br>
+                        📱 WhatsApp: (XX) XXXXX-XXXX
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de compartilhamento -->
+    <div id="modalCompartilhar" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>📤 Compartilhar Resultados</h3>
+            <p>Como você gostaria de compartilhar seu diagnóstico?</p>
+            <div class="compartilhar-opcoes">
+                <button class="btn-opcao" onclick="compartilharWhatsApp()">
+                    💬 WhatsApp
+                </button>
+                <button class="btn-opcao" onclick="compartilharEmail()">
+                    📧 Email
+                </button>
+                <button class="btn-opcao" onclick="copiarLink()">
+                    🔗 Copiar Link
+                </button>
+            </div>
+            <button class="btn-cancel" onclick="fecharModalCompartilhar()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Botão Voltar ao Topo -->
+    <button class="btn-topo-diagnostico" onclick="voltarAoTopo()" title="Voltar ao topo">
+        ↑
+    </button>
+
+</body>
+</html>

@@ -4,6 +4,21 @@ html {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
+  /* Melhorias para dispositivos móveis */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+/* Melhorias gerais para touch devices */
+.touch-device button,
+.touch-device .faq-question {
+  transition: transform 0.1s ease;
+}
+
+.touch-device button:active,
+.touch-device .faq-question:active {
+  transform: scale(0.95);
 }
 
 section {
@@ -15,11 +30,12 @@ section {
 }
 
 p .descricao {
-  font-size: 20px;
+  font-size: 1.2em;
   color: #814d4d;
-  margin: 20px auto;
-  max-width: 600px;
-  margin-top: 10px;
+  margin: 30px auto 40px auto;
+  max-width: 500px;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 .pg-inicial {
@@ -28,7 +44,12 @@ p .descricao {
   background-repeat: no-repeat;  
   background-position: center;    
   min-height: 100vh;              
-  padding: 60px 30px;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .projeto {
@@ -182,15 +203,205 @@ p .descricao {
   line-height: 1.5;
 }
 
+.perguntas {
+  background-image: url('assets/fundo_perguntascomuns.png');
+  
+  background-size: 95%;      /* cobre todo o espaço da seção */
+  background-repeat: no-repeat;   /* não repete */
+  background-position: center;    /* centraliza a imagem */
+  min-height: 100vh;              /* ocupa no mínimo 100% da altura da tela */
+  padding: 60px 30px;
+}
+
 
 .contato {
-  background-image: url('fundo_contato.png');
-  background-size: 95%;
+  background-image: url('assets/fundo_termodeconsentimento.png');
+  background-size: 95%;      /* cobre todo o espaço da seção */
+  background-repeat: no-repeat;   /* não repete */
+  background-position: center;    /* centraliza a imagem */
+  min-height: 100vh;              /* ocupa no mínimo 100% da altura da tela */
+  padding: 60px 30px;
 }
+  
+
 
 .termo-consentimento {
   background-image: url('assets/fundo_termodeconsentimento.png');
-  background-size: 95%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tcle-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.tcle-header h1 {
+  font-size: 2.8em;
+  color:#5a2a2a;
+  text-align: center;
+  margin: 0 0 25px 0;
+  font-weight: bold;
+  letter-spacing: 3px;
+  font-family: 'Playfair Display', serif;
+}
+
+.tcle-subtitle {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.tcle-subtitle p {
+  font-size: 1.2em;
+  color: #6e5353;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 400;
+}
+
+
+.tcle-content {
+  margin-bottom: 35px;
+  display: flex;
+  justify-content: center;
+}
+
+.tcle-box {
+  background-color: rgba(240, 235, 220, 0.9);
+  border: 2px solid #d4c4a8;
+  border-radius: 20px;
+  padding: 40px;
+  margin: 20px 0;
+  position: relative;
+  min-height: 350px;
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tcle-placeholder {
+  color: #a67c7c;
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.tcle-text {
+  display: none; /* Escondido inicialmente, só mostra o placeholder */
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  margin-top: 20px;
+}
+
+.tcle-text p {
+  color: #814d4d;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.tcle-text strong {
+  color: #6a2d2d;
+}
+
+.tcle-agreement {
+  text-align: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 35px;
+  padding: 0 20px;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: #a67c7c;
+}
+
+.checkbox-container label {
+  color: #814d4d;
+  font-size: 1.05em;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.5;
+  cursor: pointer;
+  max-width: 500px;
+}
+
+.btn-prosseguir {
+  background-color: #a67c7c;
+  color: white;
+  border: none;
+  padding: 18px 45px;
+  border-radius: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 10px 20px 10px;
+  min-width: 180px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-prosseguir:hover:not(:disabled) {
+  background-color: #8b6464;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(166, 124, 124, 0.4);
+}
+
+.btn-prosseguir:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-voltar {
+  background-color: transparent;
+  color: #a67c7c;
+  border: 2px solid #a67c7c;
+  padding: 13px 40px;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 10px;
+  min-width: 150px;
+}
+
+.btn-voltar:hover {
+  background-color: #a67c7c;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .questionarios {
@@ -203,7 +414,7 @@ nav {
   display: flex;
   justify-content: center;
   gap: 200px;
-  padding: 20px 0 10px;
+  padding: 15px 0 5px;
   font-style: italic;
   font-weight: 500;
   font-size: 20px;
@@ -224,23 +435,29 @@ nav a:hover {
 
 /* Textos principais */
 h1 {
-  font-size: 3em;
+  font-size: 3.5em;
   color: #814d4d;
-  margin-bottom: 0.3em;
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 h2 {
-  font-size: 2em;
+  font-size: 2.5em;
   color: #814d4d;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.8em;
+  font-weight: 500;
+  letter-spacing: 2px;
 }
 
 p {
-  font-size: 1em;
+  font-size: 1.1em;
   color: #814d4d;
-  max-width: 600px;
-  margin: 0 auto 1.5em auto;
-  line-height: 1.5;
+  max-width: 550px;
+  margin: 0 auto 2em auto;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* Botões */
@@ -248,16 +465,92 @@ button {
   background-color: #814d4d;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 20px;
-  font-size: 1.1em;
-  font-weight: bold;
+  padding: 15px 35px;
+  border-radius: 25px;
+  font-size: 1.2em;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-transform: capitalize;
+  letter-spacing: 1px;
 }
 
 button:hover {
   background-color: #5a2d2d;
+}
+
+/* ==========================================
+   BOTÃO VOLTAR AO TOPO
+   ========================================== */
+
+.btn-voltar-topo {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #814d4d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(129, 77, 77, 0.4);
+  text-transform: none;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.btn-voltar-topo:hover {
+  background-color: #5a2d2d;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(129, 77, 77, 0.6);
+}
+
+.btn-voltar-topo.mostrar {
+  display: flex;
+  animation: aparecer 0.3s ease-in-out;
+}
+
+.btn-voltar-topo.esconder {
+  animation: desaparecer 0.3s ease-in-out;
+}
+
+.btn-texto {
+  font-size: 0.85em;
+}
+
+.btn-icone {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes desaparecer {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
 /* Caixa do TCLE */
@@ -279,4 +572,333 @@ button:hover {
   gap: 10px;
   margin-bottom: 20px;
   color: #814d4d;
+}
+
+/* =============================================
+   RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS
+   ============================================= */
+
+/* Para tablets (768px e abaixo) */
+@media screen and (max-width: 768px) {
+  /* Menu responsivo */
+  nav {
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px 0;
+    font-size: 18px;
+  }
+  
+  /* Seções gerais */
+  section {
+    padding: 40px 15px;
+    min-height: auto;
+  }
+  
+  /* Textos responsivos */
+  h1 {
+    font-size: 2.2em;
+    line-height: 1.1;
+    margin-bottom: 0.5em;
+  }
+  
+  h2 {
+    font-size: 1.8em;
+    margin-bottom: 0.7em;
+  }
+  
+  p {
+    font-size: 1em;
+    padding: 0 10px;
+    max-width: 100%;
+  }
+  
+  /* Página inicial */
+  .pg-inicial {
+    background-size: contain;
+    padding: 40px 20px;
+    min-height: 90vh;
+  }
+  
+  /* Projeto - blocos de texto */
+  .blocos-texto {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .bloco {
+    max-width: 95%;
+    padding: 20px;
+    font-size: 15px;
+  }
+  
+  .bloco.roxo {
+    padding: 25px;
+    max-width: 95%;
+  }
+  
+  /* FAQ responsivo */
+  .faq-container {
+    width: 95%;
+  }
+  
+  .faq-question {
+    font-size: 1rem;
+    padding: 12px 15px;
+  }
+  
+  .faq-answer {
+    font-size: 0.9rem;
+    padding: 12px 15px;
+  }
+  
+  /* TCLE responsivo */
+  .tcle-container {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+  
+  .tcle-header h1 {
+    font-size: 2.2em;
+    letter-spacing: 2px;
+  }
+  
+  .tcle-subtitle p {
+    font-size: 1.1em;
+  }
+  
+  .tcle-box {
+    padding: 25px 20px;
+    min-height: 280px;
+  }
+  
+  .tcle-placeholder {
+    font-size: 1.2em;
+  }
+  
+  .checkbox-container {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .checkbox-container label {
+    max-width: 100%;
+    font-size: 1em;
+  }
+  
+  .btn-prosseguir {
+    padding: 15px 35px;
+    font-size: 1.1em;
+    min-width: 160px;
+  }
+  
+  .btn-voltar {
+    padding: 13px 35px;
+    font-size: 1.1em;
+    min-width: 160px;
+  }
+  
+  /* Botões responsivos */
+  button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    width: auto;
+    max-width: 280px;
+  }
+}
+
+/* Para smartphones (480px e abaixo) */
+@media screen and (max-width: 480px) {
+  /* Menu ainda mais compacto */
+  nav {
+    gap: 15px;
+    font-size: 16px;
+    padding: 12px 0;
+  }
+  
+  nav a {
+    padding: 5px;
+  }
+  
+  /* Seções mais compactas */
+  section {
+    padding: 30px 10px;
+  }
+  
+  /* Textos menores */
+  h1 {
+    font-size: 1.8em;
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+  }
+  
+  p {
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+  
+  /* Página inicial compacta */
+  .pg-inicial {
+    background-size: 120%;
+    background-position: center top;
+    padding: 30px 15px;
+  }
+  
+  .pg-inicial h1 {
+    font-size: 1.6em;
+    margin-bottom: 0.3em;
+  }
+  
+  .pg-inicial h2 {
+    font-size: 1.3em;
+    margin-bottom: 1em;
+  }
+  
+  /* Projeto compacto */
+  .projeto h2 {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+  }
+  
+  .bloco {
+    padding: 15px;
+    font-size: 14px;
+    max-width: 100%;
+    margin: 0 5px;
+  }
+  
+  .bloco.roxo {
+    padding: 20px 15px;
+    font-size: 14px;
+  }
+  
+  /* FAQ compacto */
+  .faq-question {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+  
+  .faq-answer {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+  
+  /* TCLE compacto */
+  .tcle-container {
+    padding: 25px 15px;
+    margin: 10px;
+  }
+  
+  .tcle-header h1 {
+    font-size: 1.9em;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  
+  .tcle-subtitle p {
+    font-size: 1em;
+    line-height: 1.4;
+  }
+  
+  .tcle-box {
+    padding: 20px 15px;
+    min-height: 250px;
+  }
+  
+  .tcle-placeholder {
+    font-size: 1.1em;
+  }
+  
+  .checkbox-container {
+    padding: 0 10px;
+  }
+  
+  .checkbox-container label {
+    font-size: 0.95em;
+  }
+  
+  .btn-prosseguir {
+    padding: 12px 25px;
+    font-size: 1em;
+    min-width: 140px;
+  }
+  
+  .btn-voltar {
+    padding: 10px 25px;
+    font-size: 1em;
+    min-width: 140px;
+  }
+  
+  /* Checkbox área */
+  .checkbox-area {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  /* Botão compacto */
+  button {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    width: 90%;
+    max-width: 250px;
+  }
+}
+
+/* Para telas muito pequenas (320px e abaixo) */
+@media screen and (max-width: 320px) {
+  h1 {
+    font-size: 1.5em;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  p {
+    font-size: 0.9em;
+  }
+  
+  .bloco {
+    font-size: 13px;
+    padding: 12px;
+  }
+  
+  button {
+    font-size: 0.85rem;
+    padding: 8px 15px;
+  }
+}
+
+/* Melhorias gerais para todos os dispositivos móveis */
+@media screen and (max-width: 768px) {
+  /* Tornar imagens de fundo mais flexíveis */
+  .pg-inicial,
+  .projeto,
+  .pesquisadores,
+  .perguntas,
+  .termo-consentimento,
+  .questionarios {
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll; /* Melhor performance no mobile */
+  }
+  
+  /* Ajustar para toque */
+  button, .faq-question {
+    min-height: 44px; /* Tamanho mínimo recomendado para toque */
+  }
+  
+  /* Melhorar espaçamento para toque */
+  nav a {
+    padding: 8px 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

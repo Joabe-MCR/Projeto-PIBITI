@@ -3,7 +3,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Projeto Stress e Menacme</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
@@ -16,10 +19,18 @@
 <nav>
 <a href="#projeto">O projeto</a>
 <a href="#pesquisadores">Os pesquisadores</a>
+<a href="questionarios.html">Questionários</a>
 <a href="#perguntas">Dúvidas comuns</a>
 <a href="#contato">Entre em contato</a>
+<a href="manual_completo.html" target="_blank">Manual</a>
 </nav>
     </header>
+
+<!-- Botão Voltar ao Topo -->
+<button id="voltarTopo" class="btn-voltar-topo" onclick="voltarAoTopo()" title="Voltar ao topo">
+  <span class="btn-texto">Voltar ao topo</span>
+  <span class="btn-icone">↑</span>
+</button>
 
 <!-- Seção: Página Inicial -->
 <section class="pg-inicial" id="pginicial">
@@ -28,9 +39,62 @@
   <p class="descricao" id="descricao">
     Clique no botão abaixo, responda aos questionários, veja seus níveis de estresse e como você pode lidar com eles
   </p>
-  <button >
+  <button onclick="irParaTCLE()">
     Começar
   </button>
+</section>
+
+<!-- Seção: Termo de Consentimento -->
+<section class="termo-consentimento" id="tcle" style="display: none;">
+  <div class="tcle-container">
+    <div class="tcle-header">
+      <h1>TERMO DE CONSENTIMENTO</h1>
+    </div>
+    
+    <div class="tcle-subtitle">
+      <p>Para dar procedimento aos questionários e saber seu resultado, leia<br>
+      o Termo de Consentimento Livre Esclarecido (TCLE) abaixo e<br>
+      assinale a caixa após a leitura, caso concorde com o mesmo.</p>
+    </div>
+    
+    <div class="tcle-content">
+      <div class="tcle-box">
+        <p class="tcle-placeholder">TCLE legível aqui</p>
+        <div class="tcle-text">
+          <p><strong>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</strong></p>
+          
+          <p>Você está sendo convidada a participar de uma pesquisa sobre estresse e sintomas relacionados à menopausa. Esta pesquisa tem como objetivo compreender melhor os níveis de estresse e sua relação com os sintomas da menopausa em mulheres.</p>
+          
+          <p><strong>Procedimentos:</strong> Você responderá a questionários online sobre estresse, sintomas da menopausa e estratégias de enfrentamento. O tempo estimado para responder é de aproximadamente 15-20 minutos.</p>
+          
+          <p><strong>Riscos e benefícios:</strong> Os riscos desta pesquisa são mínimos, podendo incluir algum desconforto emocional ao refletir sobre situações estressantes. Os benefícios incluem maior autoconhecimento sobre seus níveis de estresse e recebimento de orientações personalizadas.</p>
+          
+          <p><strong>Confidencialidade:</strong> Suas respostas serão mantidas em sigilo absoluto. Os dados serão utilizados apenas para fins de pesquisa e apresentados de forma agregada, sem identificação pessoal.</p>
+          
+          <p><strong>Participação voluntária:</strong> Sua participação é completamente voluntária e você pode desistir a qualquer momento, sem qualquer prejuízo.</p>
+          
+          <p><strong>Contato:</strong> Em caso de dúvidas, você pode entrar em contato com a equipe de pesquisa através das informações fornecidas na seção "Entre em Contato".</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tcle-agreement">
+      <div class="checkbox-container">
+        <input type="checkbox" id="consentimento" name="consentimento">
+        <label for="consentimento">
+          Eu li o Termo de Consentimento Livre e Esclarecido (TCLE) e aceito participar da pesquisa ao responder os questionários a seguir
+        </label>
+      </div>
+      
+      <button class="btn-prosseguir" onclick="prosseguirQuestionarios()" disabled>
+        Prosseguir
+      </button>
+      
+      <button class="btn-voltar" onclick="voltarInicio()">
+        Voltar
+      </button>
+    </div>
+  </div>
 </section>
 
 
@@ -109,28 +173,28 @@
     <div class="faq-item">
       <button class="faq-question" onclick="toggleResposta(0)">O que é o estresse?</button>
       <div class="faq-answer">
-        O estresse é uma resposta do corpo a qualquer demanda ou ameaça. Ele pode ser positivo em pequenas doses, mas o estresse crônico pode afetar a saúde física e mental.
+        O estresse é uma condição biológica natural e que se vê quase que diariamente na vida não só da espécie humana, mas de várias espécies, sendo seu enfrentamento e respostas orgânicas com o objetivo de garantir a sobrevivência e a reprodução. Apesar disso, sua manifestação exacerbada pode levar a diversas alterações, tanto a nível comportamental, quanto a nível orgânico, trazendo modificações endócrinas, como aumento crônico de cortisol, redução da leptina, glicose, insulina e IGF-1, além do aumento da grelina, hormônio do crescimento, entre outros, ocorrendo também a conversão de hormônio tireoidiano T4 em T3, induzindo a outras disfunções endócrinas.
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question" onclick="toggleResposta(1)">Como posso lidar com meu estresse?</button>
       <div class="faq-answer">
-        Técnicas de respiração, exercícios físicos, alimentação saudável, sono adequado e apoio psicológico são formas eficazes de lidar com o estresse.
+        Segundo a literatura científica, existem diversas maneiras de lidar com o estresse, que permitem lidar e se adpatar a situações estressantes ou adversas, permitindo o gerenciamento, a minimização e/ou tolerância destas. Algumas estratégias cientificamente comprovadas são, por exemplo, atividades de yoga, meditação, prática de exercícios físicos, musicoterapia, arteterapia e Terapia Cognitivo-Comportamental (TCC).
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question" onclick="toggleResposta(2)">O estresse pode alterar meu ciclo menstrual?</button>
       <div class="faq-answer">
-        Sim, o estresse pode influenciar o eixo hormonal, provocando atrasos, ausência ou irregularidade no ciclo menstrual.
+        Estudos como o de RIVIER E RIVEST (1991) demonstraram uma relação entre a presença do estresse e alterações consequentes no ciclo menstrual em razão de alterações endócrinas no chamado eixo hipotálamo-hipófise-adrenal (HHA), acarretando em sintomas como fase lútea reduzida, menstruação irregular, ciclos prolongados e até levar à amenorreia (interrupção da menstruação) e/ou anovulação como sinais tardios (RYTERSKA, KORDEK e ZAŁĘSKA, 2021). Tais alterações no ciclo menstrual, por sua vez, acarretam em consequências negativas à vida da mulher no menacme, podendo ser visualizadas  pelos sintomas já intensificados pelo estresse, como dor ou desconforto acentuado, além de sangramento prolongado e/ou aumentado, estes últimos relacionados a um aumento do transtorno disfórico pré-menstrual que também é estressante (NOHARA et al., 2011; SARITA; RICHA; MINAKSHI, 2024).
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question" onclick="toggleResposta(3)">O que é <em>coping</em>?</button>
       <div class="faq-answer">
-        <em>Coping</em> é o conjunto de estratégias cognitivas e comportamentais utilizadas para lidar com situações estressantes ou desafiadoras.
+        <em>Coping</em> O coping é um termo que, significando “lidar com” ou “enfrentar”, se refere a um conjunto de estratégias que podem ser utilizadas com o intuito de lidar e se adaptar a situações estressantes ou adversas, permitindo o gerenciamento, a minimização e/ou tolerância destas. A utilização do coping é primaz no combate ao estresse, visto que este trabalha de forma a regular o estado emocional e reduzir a tensão emocional, mas também a preparar o indivíduo para o contato com possíveis situações estressantes, com preparo mental e manejo adequado. Isto é de grande relevância para a população geral, mas também para a população feminina, sendo tal conjunto de estratégias inclusive de eficácia validada no estudo de LITTLETON E GRILLS (2019) em casos estressantes mais complexos e severos.
       </div>
     </div>
   </div>

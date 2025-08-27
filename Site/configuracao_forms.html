@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração dos Google Forms - PIBITI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .form-example {
+            border: 2px dashed #3498db;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9ff;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        ul li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Configuração dos Google Forms</h1>
+        <p><strong>Guia completo para configurar os questionários do projeto PIBITI</strong></p>
+
+        <div class="warning">
+            <h3>⚠️ ANTES DE COMEÇAR</h3>
+            <p>Este guia ajudará você a configurar corretamente os 3 questionários no Google Forms para que eles se integrem perfeitamente com o sistema web.</p>
+        </div>
+
+        <h2>🎯 Questionários Necessários</h2>
+        
+        <div class="step">
+            <h3>1. Escala de Percepção ao Stress</h3>
+            <p>Questionário para avaliar como a pessoa percebe situações estressantes.</p>
+            <ul>
+                <li><strong>Perguntas:</strong> 30 itens em escala Likert</li>
+                <li><strong>Opções:</strong> Nunca (0), Quase nunca (1), Às vezes (2), Quase sempre (3), Sempre (4)</li>
+                <li><strong>Tempo estimado:</strong> 5-7 minutos</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>2. Escala de Vulnerabilidade ao Stress</h3>
+            <p>Questionário para identificar vulnerabilidade aos efeitos do estresse.</p>
+            <ul>
+                <li><strong>Perguntas:</strong> 23 itens em escala Likert</li>
+                <li><strong>Opções:</strong> Nunca (1), Raramente (2), Às vezes (3), Frequentemente (4), Sempre (5)</li>
+                <li><strong>Tempo estimado:</strong> 4-6 minutos</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>3. Questionário de Desconforto Menstrual</h3>
+            <p>Questionário sobre sintomas relacionados ao ciclo menstrual.</p>
+            <ul>
+                <li><strong>Perguntas:</strong> Variadas sobre sintomas menstruais</li>
+                <li><strong>Opções:</strong> Múltiplas escalas dependendo do sintoma</li>
+                <li><strong>Tempo estimado:</strong> 6-8 minutos</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ Como Configurar Cada Formulário</h2>
+
+        <div class="step">
+            <h3>Passo 1: Criar o Formulário</h3>
+            <ol>
+                <li>Acesse <a href="https://forms.google.com" target="_blank">Google Forms</a></li>
+                <li>Clique em "Formulário em branco"</li>
+                <li>Dê um título ao formulário (ex: "Escala de Percepção ao Stress - PIBITI")</li>
+                <li>Adicione uma descrição explicativa</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>Passo 2: Configurar Campos Especiais</h3>
+            <p>Adicione estes campos <strong>PRIMEIRO</strong> em cada formulário:</p>
+            
+            <div class="form-example">
+                <strong>Campo 1: ID do Usuário</strong><br>
+                • Tipo: Resposta curta<br>
+                • Título: "ID do Participante"<br>
+                • Descrição: "Este campo será preenchido automaticamente"<br>
+                • ❌ NÃO marcar como obrigatório
+            </div>
+
+            <div class="form-example">
+                <strong>Campo 2: Timestamp</strong><br>
+                • Tipo: Resposta curta<br>
+                • Título: "Data/Hora de Início"<br>
+                • Descrição: "Campo automático - não editar"<br>
+                • ❌ NÃO marcar como obrigatório
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Passo 3: Adicionar as Perguntas do Questionário</h3>
+            <p>Adicione todas as perguntas específicas de cada escala conforme a literatura científica.</p>
+            
+            <div class="warning">
+                <strong>💡 DICA:</strong> Use "Múltipla escolha" para escalas Likert e configure todas as opções de resposta numericamente.
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Passo 4: Configurar Respostas</h3>
+            <ol>
+                <li>Clique na aba "Respostas"</li>
+                <li>Ative "Aceitar respostas"</li>
+                <li>Clique no ícone da planilha para vincular ao Google Sheets</li>
+                <li>Crie uma nova planilha ou use existente</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>Passo 5: Obter o Link</h3>
+            <ol>
+                <li>Clique no botão "Enviar" (ícone de avião)</li>
+                <li>Copie o link do formulário</li>
+                <li>Anote o link - você precisará dele para configurar o sistema</li>
+            </ol>
+        </div>
+
+        <h2>🔗 Configurar os Links no Sistema</h2>
+
+        <div class="step">
+            <p>Após criar todos os formulários, edite o arquivo <code>questionarios.js</code>:</p>
+            
+            <div class="code">
+// URLs dos Google Forms (substitua pelos seus links reais)
+const QUESTIONARIOS_URLS = {
+    1: 'https://docs.google.com/forms/d/e/1FAIpQLSe_SEU_ID_AQUI_Q1/viewform',
+    2: 'https://docs.google.com/forms/d/e/1FAIpQLSe_SEU_ID_AQUI_Q2/viewform',
+    3: 'https://docs.google.com/forms/d/e/1FAIpQLSe_SEU_ID_AQUI_Q3/viewform'
+};
+            </div>
+        </div>
+
+        <h2>📊 Como Analisar os Dados</h2>
+
+        <div class="step">
+            <p>O sistema Python já está configurado para processar os dados:</p>
+            <ol>
+                <li>Exporte as respostas do Google Sheets como Excel</li>
+                <li>Coloque o arquivo na pasta <code>dados_entrada/</code></li>
+                <li>Execute o sistema Python para gerar diagnósticos</li>
+            </ol>
+        </div>
+
+        <div class="success">
+            <h3>✅ Checklist de Finalização</h3>
+            <ul>
+                <li>☐ 3 formulários criados no Google Forms</li>
+                <li>☐ Campos ID e Timestamp adicionados em cada um</li>
+                <li>☐ Todas as perguntas científicas incluídas</li>
+                <li>☐ Google Sheets vinculado para cada formulário</li>
+                <li>☐ Links atualizados no questionarios.js</li>
+                <li>☐ Testado o fluxo completo</li>
+            </ul>
+        </div>
+
+        <h2>🧪 Testar o Sistema</h2>
+        <p>Use a página de testes para verificar se tudo está funcionando:</p>
+        <a href="teste_sistema.html" class="btn">Abrir Página de Testes</a>
+        <a href="index.html" class="btn">Voltar ao Projeto</a>
+
+        <div class="warning">
+            <h3>⚡ IMPORTANTE</h3>
+            <p>Não esqueça de testar todo o fluxo: TCLE → Questionários → Diagnóstico antes de compartilhar com participantes!</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -234,3 +234,224 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleProsseguirButton();
   }
 });
+
+// ==========================================
+// FUNÇÕES PARA SISTEMA DE DÚVIDAS
+// ==========================================
+
+// URL base da API (ajustar conforme necessário)
+const API_BASE_URL = 'http://localhost:5000'; // ou o endereço do seu servidor
+
+// Função para alternar formulário de dúvida
+function toggleFormularioDuvida() {
+  const formulario = document.getElementById('formulario-duvida');
+  const isVisible = formulario.style.display !== 'none';
+  
+  if (isVisible) {
+    formulario.style.display = 'none';
+    limparFormularioDuvida();
+  } else {
+    formulario.style.display = 'block';
+    // Fechar perguntas respondidas se estiver aberto
+    const perguntasRespondidas = document.getElementById('lista-perguntas-respondidas');
+    if (perguntasRespondidas.style.display !== 'none') {
+      perguntasRespondidas.style.display = 'none';
+    }
+  }
+}
+
+// Função para alternar perguntas respondidas
+function togglePerguntasRespondidas() {
+  const lista = document.getElementById('lista-perguntas-respondidas');
+  const isVisible = lista.style.display !== 'none';
+  
+  if (isVisible) {
+    lista.style.display = 'none';
+  } else {
+    lista.style.display = 'block';
+    // Fechar formulário de dúvida se estiver aberto
+    const formulario = document.getElementById('formulario-duvida');
+    if (formulario.style.display !== 'none') {
+      formulario.style.display = 'none';
+    }
+    carregarPerguntasRespondidas();
+  }
+}
+
+// Função para enviar dúvida
+async function enviarDuvida(event) {
+  event.preventDefault();
+  
+  const categoria = document.getElementById('categoria-duvida').value;
+  const duvida = document.getElementById('texto-duvida').value;
+  const btnEnviar = document.querySelector('.btn-enviar');
+  
+  // Validar campos
+  if (!categoria || !duvida.trim()) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
+  
+  // Desabilitar botão durante envio
+  btnEnviar.disabled = true;
+  btnEnviar.textContent = 'Enviando...';
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/duvidas/enviar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        categoria: categoria,
+        duvida: duvida.trim(),
+        timestamp: new Date().toISOString()
+      })
+    });
+    
+    if (response.ok) {
+      // Mostrar mensagem de sucesso
+      document.getElementById('mensagem-sucesso').style.display = 'flex';
+      limparFormularioDuvida();
+    } else {
+      throw new Error('Erro ao enviar dúvida');
+    }
+  } catch (error) {
+    console.error('Erro ao enviar dúvida:', error);
+    alert('Erro ao enviar dúvida. Tente novamente mais tarde.');
+  } finally {
+    // Reabilitar botão
+    btnEnviar.disabled = false;
+    btnEnviar.textContent = 'Enviar Dúvida';
+  }
+}
+
+// Função para carregar perguntas respondidas
+async function carregarPerguntasRespondidas() {
+  const container = document.getElementById('perguntas-container');
+  const loading = document.getElementById('loading-respondidas');
+  const semPerguntas = document.getElementById('sem-perguntas');
+  
+  // Mostrar loading
+  loading.style.display = 'flex';
+  semPerguntas.style.display = 'none';
+  
+  // Limpar container
+  const perguntasExistentes = container.querySelectorAll('.pergunta-respondida-item');
+  perguntasExistentes.forEach(p => p.remove());
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/duvidas/respondidas`);
+    
+    if (response.ok) {
+      const perguntas = await response.json();
+      
+      loading.style.display = 'none';
+      
+      if (perguntas.length === 0) {
+        semPerguntas.style.display = 'block';
+      } else {
+        exibirPerguntasRespondidas(perguntas);
+      }
+    } else {
+      throw new Error('Erro ao carregar perguntas');
+    }
+  } catch (error) {
+    console.error('Erro ao carregar perguntas:', error);
+    loading.style.display = 'none';
+    semPerguntas.innerHTML = '<p>Erro ao carregar perguntas. Tente novamente.</p>';
+    semPerguntas.style.display = 'block';
+  }
+}
+
+// Função para exibir perguntas respondidas
+function exibirPerguntasRespondidas(perguntas) {
+  const container = document.getElementById('perguntas-container');
+  
+  perguntas.forEach((pergunta, index) => {
+    const perguntaDiv = document.createElement('div');
+    perguntaDiv.className = 'pergunta-respondida-item';
+    perguntaDiv.innerHTML = `
+      <div class="pergunta-header" onclick="toggleResposta${index}()">
+        <div class="pergunta-info">
+          <div class="pergunta-categoria">${formatarCategoria(pergunta.categoria)}</div>
+          <div class="pergunta-texto">${pergunta.duvida}</div>
+        </div>
+        <div class="pergunta-data">${formatarData(pergunta.data_envio)}</div>
+      </div>
+      <div class="pergunta-resposta" id="resposta-${index}">
+        <div class="resposta-autor">Resposta da equipe:</div>
+        <div class="resposta-texto">${pergunta.resposta}</div>
+      </div>
+    `;
+    
+    container.appendChild(perguntaDiv);
+    
+    // Criar função específica para esta pergunta
+    window[`toggleResposta${index}`] = function() {
+      const resposta = document.getElementById(`resposta-${index}`);
+      resposta.style.display = resposta.style.display === 'block' ? 'none' : 'block';
+    };
+  });
+}
+
+// Função para atualizar perguntas respondidas
+function atualizarPerguntasRespondidas() {
+  carregarPerguntasRespondidas();
+}
+
+// Função para limpar formulário de dúvida
+function limparFormularioDuvida() {
+  document.getElementById('categoria-duvida').value = '';
+  document.getElementById('texto-duvida').value = '';
+  document.getElementById('char-counter').textContent = '0';
+}
+
+// Função para fechar mensagem de sucesso
+function fecharMensagemSucesso() {
+  document.getElementById('mensagem-sucesso').style.display = 'none';
+  document.getElementById('formulario-duvida').style.display = 'none';
+}
+
+// Função para formatar categoria
+function formatarCategoria(categoria) {
+  const categorias = {
+    'estresse': 'Sobre Estresse',
+    'menacme': 'Sobre Ciclo Menstrual',
+    'questionarios': 'Sobre os Questionários',
+    'pesquisa': 'Sobre a Pesquisa',
+    'outros': 'Outros'
+  };
+  return categorias[categoria] || categoria;
+}
+
+// Função para formatar data
+function formatarData(dataString) {
+  const data = new Date(dataString);
+  return data.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+}
+
+// Event listener para contador de caracteres
+document.addEventListener('DOMContentLoaded', function() {
+  const textarea = document.getElementById('texto-duvida');
+  const counter = document.getElementById('char-counter');
+  
+  if (textarea && counter) {
+    textarea.addEventListener('input', function() {
+      counter.textContent = this.value.length;
+      
+      // Mudar cor quando próximo do limite
+      if (this.value.length > 450) {
+        counter.style.color = '#e74c3c';
+      } else if (this.value.length > 400) {
+        counter.style.color = '#f39c12';
+      } else {
+        counter.style.color = '#7f8c8d';
+      }
+    });
+  }
+});

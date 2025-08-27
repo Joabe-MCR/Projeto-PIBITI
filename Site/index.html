@@ -141,7 +141,7 @@
       <h3>Antônio Mateus Alves</h3>
       <p>
         Discente de medicina do 9º semestre, decidiu realizar esta pesquisa por seu interesse na saúde pública
-        e no desenvolvimento de meios para melhoramento desta...
+        e no desenvolvimento de meios para melhoramento desta pauta, especialmente no que diz respeito ao impacto do estresse na saúde das mulheres.
       </p>
     </div>
 
@@ -150,7 +150,7 @@
       <h3>Joabe Messias Castro Ribeiro</h3>
       <p>
         Aluno do 7º semestre do curso de Engenharia da Computação, co-autor desse projeto e responsável
-        pela criação do site e da parte...
+        pela criação do site e da parte de processamento dos dados aqui recebidos, bem como pela criação do algoritmo que produz os diagnósticos específicos.
       </p>
     </div>
 
@@ -195,6 +195,100 @@
       <button class="faq-question" onclick="toggleResposta(3)">O que é <em>coping</em>?</button>
       <div class="faq-answer">
         <em>Coping</em> O coping é um termo que, significando “lidar com” ou “enfrentar”, se refere a um conjunto de estratégias que podem ser utilizadas com o intuito de lidar e se adaptar a situações estressantes ou adversas, permitindo o gerenciamento, a minimização e/ou tolerância destas. A utilização do coping é primaz no combate ao estresse, visto que este trabalha de forma a regular o estado emocional e reduzir a tensão emocional, mas também a preparar o indivíduo para o contato com possíveis situações estressantes, com preparo mental e manejo adequado. Isto é de grande relevância para a população geral, mas também para a população feminina, sendo tal conjunto de estratégias inclusive de eficácia validada no estudo de LITTLETON E GRILLS (2019) em casos estressantes mais complexos e severos.
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção para Tirar Dúvidas -->
+  <div class="duvidas-container">
+    <div class="tirar-duvida">
+      <button class="duvida-btn" onclick="toggleFormularioDuvida()">
+        <span>Tirar Dúvida</span>
+        <span class="duvida-icon">?</span>
+      </button>
+      
+      <div id="formulario-duvida" class="formulario-duvida" style="display: none;">
+        <div class="form-content">
+          <h3>Envie sua dúvida anonimamente</h3>
+          <p class="form-subtitle">Sua pergunta será enviada aos pesquisadores e a resposta ficará disponível aqui para todos.</p>
+          
+          <form id="form-enviar-duvida" onsubmit="enviarDuvida(event)">
+            <div class="form-group">
+              <label for="categoria-duvida">Categoria da dúvida:</label>
+              <select id="categoria-duvida" name="categoria" required>
+                <option value="">Selecione uma categoria</option>
+                <option value="estresse">Sobre estresse</option>
+                <option value="menacme">Sobre ciclo menstrual</option>
+                <option value="questionarios">Sobre os questionários</option>
+                <option value="pesquisa">Sobre a pesquisa</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="texto-duvida">Sua dúvida:</label>
+              <textarea id="texto-duvida" name="duvida" rows="4" 
+                        placeholder="Digite sua pergunta aqui..." 
+                        maxlength="500" required></textarea>
+              <div class="char-count">
+                <span id="char-counter">0</span>/500 caracteres
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" onclick="toggleFormularioDuvida()" class="btn-cancelar">
+                Cancelar
+              </button>
+              <button type="submit" class="btn-enviar">
+                Enviar Dúvida
+              </button>
+            </div>
+          </form>
+          
+          <div id="mensagem-sucesso" class="mensagem-sucesso" style="display: none;">
+            <div class="success-content">
+              <span class="success-icon">✓</span>
+              <h4>Dúvida enviada com sucesso!</h4>
+              <p>Sua pergunta foi enviada anonimamente aos pesquisadores. A resposta ficará disponível na seção "Perguntas Respondidas" em breve.</p>
+              <button onclick="fecharMensagemSucesso()" class="btn-ok">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção para Perguntas Respondidas -->
+    <div class="perguntas-respondidas">
+      <button class="respondidas-btn" onclick="togglePerguntasRespondidas()">
+        <span>Perguntas Respondidas</span>
+        <span class="respondidas-icon">💬</span>
+      </button>
+      
+      <div id="lista-perguntas-respondidas" class="lista-respondidas" style="display: none;">
+        <div class="respondidas-content">
+          <h3>Dúvidas já respondidas pela equipe</h3>
+          <p class="respondidas-subtitle">Confira as perguntas enviadas por outros usuários e suas respectivas respostas.</p>
+          
+          <div id="perguntas-container" class="perguntas-container-respondidas">
+            <div class="loading-respondidas" id="loading-respondidas">
+              <div class="spinner"></div>
+              <p>Carregando perguntas...</p>
+            </div>
+            
+            <div id="sem-perguntas" class="sem-perguntas" style="display: none;">
+              <p>Ainda não há perguntas respondidas. Seja o primeiro a enviar uma dúvida!</p>
+            </div>
+          </div>
+          
+          <div class="respondidas-actions">
+            <button onclick="togglePerguntasRespondidas()" class="btn-fechar">
+              Fechar
+            </button>
+            <button onclick="atualizarPerguntasRespondidas()" class="btn-atualizar">
+              Atualizar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

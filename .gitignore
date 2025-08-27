@@ -57,3 +57,13 @@ resultados/*.csv
 diagnosticos/*.txt
 diagnosticos/*.json
 !diagnosticos/.gitkeep
+
+# Sistema de Dúvidas - dados temporários e sensíveis
+Sistema_Analise/duvidas/*.json
+!Sistema_Analise/duvidas/.gitkeep
+
+Sistema_Analise/emails_enviados/*.html
+!Sistema_Analise/emails_enviados/.gitkeep
+
+# Configurações sensíveis (emails dos pesquisadores)
+Sistema_Analise/config_duvidas.json

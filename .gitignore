@@ -67,3 +67,32 @@ Sistema_Analise/emails_enviados/*.html
 
 # Configurações sensíveis (emails dos pesquisadores)
 Sistema_Analise/config_duvidas.json
+
+# Arquivos de documentação (manter apenas principais)
+FLUXOGRAMA_FUNCIONAMENTO_SITE.md
+GUIA_DEPLOY_COMPLETO.md
+PACOTE_DOCUMENTACAO_PARA_IAS.md
+GUIA_DE_LEITURA.md
+
+# Documentação técnica detalhada (muito específica)
+Sistema_Analise/documentacao/01_visao_geral_sistema.txt
+Sistema_Analise/documentacao/02_implementacao_passo_a_passo.txt
+Sistema_Analise/documentacao/03_configuracao_tecnica.txt
+Sistema_Analise/documentacao/04_codigo_monitor_tempo_real.txt
+Sistema_Analise/documentacao/05_integracao_javascript_opcional.txt
+Sistema_Analise/documentacao/06_guia_rapido_implementacao.txt
+Sistema_Analise/documentacao/07_hospedagem_vercel_opcoes.txt
+
+# Arquivos de exemplo e teste
+Sistema_Analise/criar_dados_exemplo.py
+Sistema_Analise/criar_duvidas_exemplo.py
+Sistema_Analise/exemplo_dados.md
+
+# Resultados já gerados (dados temporários)
+Sistema_Analise/resultados/resultados_completos.json
+Sistema_Analise/diagnosticos/indice_diagnosticos.json
+
+# Páginas de teste do site
+Site/teste_sistema.html
+Site/configuracao_forms.html
+Site/manual_completo.html

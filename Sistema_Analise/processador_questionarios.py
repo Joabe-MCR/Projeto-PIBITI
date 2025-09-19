@@ -134,14 +134,16 @@ class ProcessadorQuestionarios:
                 # Extrair informações básicas
                 timestamp = row.iloc[0] if pd.notna(
                     row.iloc[0]) else datetime.now()
-                email = row.iloc[1] if len(row) > 1 and pd.notna(
-                    row.iloc[1]) else f"participante_{index+1}"
 
-                # Processar respostas (assumindo que começam na coluna 2)
+                # Usar ID da usuária da coluna 11 (índice 11) ou gerar fallback
+                user_id = str(row.iloc[11]).strip() if pd.notna(row.iloc[11]) and len(str(
+                    row.iloc[11]).strip()) > 0 else f"USR_{timestamp.strftime('%Y%m%d_%H%M%S')}_{index+1:03d}"
+
+                # Processar respostas (colunas 1-10, perguntas do questionário)
                 respostas = []
                 pontuacao_total = 0
 
-                for i in range(2, len(row)):
+                for i in range(1, 11):  # Apenas as 10 perguntas (colunas 1-10)
                     resposta = str(row.iloc[i]).lower(
                     ).strip() if pd.notna(row.iloc[i]) else ""
 
@@ -153,7 +155,7 @@ class ProcessadorQuestionarios:
                             break
 
                     respostas.append({
-                        "pergunta": f"Q{i-1}",
+                        "pergunta": f"Q{i}",
                         "resposta": resposta,
                         "pontos": pontos
                     })
@@ -168,8 +170,8 @@ class ProcessadorQuestionarios:
 
                 resultado = {
                     "id": f"EST_{index+1}",
+                    "user_id": user_id,
                     "timestamp": timestamp,
-                    "email": email,
                     "respostas": respostas,
                     "pontuacao_total": pontuacao_total,
                     "nivel_estresse": nivel_estresse,
@@ -179,7 +181,7 @@ class ProcessadorQuestionarios:
 
                 resultados.append(resultado)
                 logger.info(
-                    f"Processado questionário de estresse para {email}: {pontuacao_total} pontos - {nivel_estresse}")
+                    f"Processado questionário de estresse para {user_id}: {pontuacao_total} pontos - {nivel_estresse}")
 
             except Exception as e:
                 logger.error(f"Erro ao processar linha {index}: {e}")
@@ -204,32 +206,35 @@ class ProcessadorQuestionarios:
                 # Extrair informações básicas
                 timestamp = row.iloc[0] if pd.notna(
                     row.iloc[0]) else datetime.now()
-                email = row.iloc[1] if len(row) > 1 and pd.notna(
-                    row.iloc[1]) else f"participante_{index+1}"
 
-                # Processar respostas específicas do menacme
+                # Usar ID da usuária da última coluna ou gerar fallback
+                user_id = str(row.iloc[-1]).strip() if pd.notna(row.iloc[-1]) and len(str(
+                    row.iloc[-1]).strip()) > 0 else f"USR_{timestamp.strftime('%Y%m%d_%H%M%S')}_{index+1:03d}"
+
+                # Processar respostas específicas do menacme (todas as colunas exceto primeira e última)
                 respostas = []
                 sintomas_menacme = []
 
-                for i in range(2, len(row)):
+                # Excluir primeira (timestamp) e última (user_id)
+                for i in range(1, len(row)-1):
                     resposta = str(row.iloc[i]).strip(
                     ) if pd.notna(row.iloc[i]) else ""
                     respostas.append({
-                        "pergunta": f"M{i-1}",
+                        "pergunta": f"M{i}",
                         "resposta": resposta
                     })
 
                     # Identificar sintomas (você pode personalizar esta lógica)
                     if any(palavra in resposta.lower() for palavra in ["sim", "frequente", "intenso"]):
-                        sintomas_menacme.append(f"M{i-1}")
+                        sintomas_menacme.append(f"M{i}")
 
                 # Determinar fase da menopausa (lógica personalizada)
                 fase_menopausa = self.determinar_fase_menopausa(respostas)
 
                 resultado = {
                     "id": f"MEN_{index+1}",
+                    "user_id": user_id,
                     "timestamp": timestamp,
-                    "email": email,
                     "respostas": respostas,
                     "sintomas_identificados": sintomas_menacme,
                     "fase_menopausa": fase_menopausa,
@@ -238,7 +243,7 @@ class ProcessadorQuestionarios:
 
                 resultados.append(resultado)
                 logger.info(
-                    f"Processado questionário de menacme para {email}: {fase_menopausa}")
+                    f"Processado questionário de menacme para {user_id}: {fase_menopausa}")
 
             except Exception as e:
                 logger.error(f"Erro ao processar linha {index}: {e}")
@@ -291,7 +296,7 @@ class ProcessadorQuestionarios:
         """
         return {
             "id_combinado": f"COMB_{resultado_estresse['id']}_{resultado_menacme['id']}",
-            "email": resultado_estresse["email"],
+            "user_id": resultado_estresse["user_id"],
             "timestamp": max(resultado_estresse["timestamp"], resultado_menacme["timestamp"]),
             "estresse": {
                 "pontuacao": resultado_estresse["pontuacao_total"],
@@ -336,10 +341,10 @@ class ProcessadorQuestionarios:
             resultados["menacme"] = self.processar_questionario_menacme(
                 df_menacme)
 
-        # Combinar resultados por email
+        # Combinar resultados por user_id
         for est in resultados["estresse"]:
             for men in resultados["menacme"]:
-                if est["email"] == men["email"]:
+                if est["user_id"] == men["user_id"]:
                     resultado_combinado = self.combinar_resultados(est, men)
                     resultados["combinados"].append(resultado_combinado)
 

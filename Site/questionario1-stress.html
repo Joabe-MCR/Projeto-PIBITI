@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Questionário 1 - Escala de Percepção ao Stress</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos do questionário */
+        .questionario-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .questionario-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .questionario-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2em;
+        }
+
+        .questionario-header .subtitulo {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+
+        .progresso-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progresso-barra {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progresso-texto {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .questao {
+            margin: 30px 0;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .questao.active {
+            background: #ffffff;
+            border-left-color: #4CAF50;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .questao-numero {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .questao-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .questao-texto {
+            flex: 1;
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: #333;
+            text-align: left;
+        }
+
+        .opcoes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .opcao {
+            position: relative;
+        }
+
+        .opcao input[type="radio"] {
+            display: none;
+        }
+
+        .opcao label {
+            display: block;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .opcao label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .opcao input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .opcao input[type="radio"]:checked + label::after {
+            content: "✓";
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .instrucoes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .instrucoes h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        .instrucoes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-voltar {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-voltar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-finalizar {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-finalizar.ativo {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .btn-finalizar.ativo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .resultado-preview {
+            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .resultado-preview.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .resultado-score {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #28a745;
+            margin: 10px 0;
+        }
+
+        .resultado-interpretacao {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .resultado-barra {
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .resultado-barra-fill {
+            height: 100%;
+            border-radius: 20px;
+            transition: all 0.8s ease;
+        }
+
+        .resultado-barra-texto {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .questionario-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .opcoes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .botoes-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main style="background: #f5f5f5; min-height: 100vh; padding: 20px 0;">
+        
+        <div class="questionario-container">
+            
+            <!-- Cabeçalho do Questionário -->
+            <div class="questionario-header">
+                <h1>📊 Escala de Percepção ao Stress</h1>
+                <p class="subtitulo">EPS-10 (Escala de Percepção de Estresse-10)</p>
+                <div class="user-info">
+                    <strong>Seu ID:</strong> <span id="userIdDisplay">Carregando...</span>
+                </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="instrucoes">
+                <h3>📋 Instruções</h3>
+                <p><strong>As questões nesta escala perguntam a respeito dos seus sentimentos e pensamentos durante os últimos 30 dias (último mês).</strong></p>
+                <p>Em cada questão <strong>indique a frequência</strong> com que você <strong>se sentiu ou pensou</strong> a respeito da situação.</p>
+                <ul>
+                    <li>Leia cada pergunta com atenção</li>
+                    <li>Selecione a opção que melhor representa sua experiência</li>
+                    <li>Considere sempre os <strong>últimos 30 dias</strong></li>
+                    <li>Não há respostas certas ou erradas</li>
+                </ul>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="progresso-container">
+                <div class="progresso-barra">
+                    <div class="progresso-fill" id="progressoFill"></div>
+                </div>
+                <div class="progresso-texto">
+                    <span id="progressoTexto">0 de 10 questões respondidas</span>
+                </div>
+            </div>
+
+            <!-- Formulário com as 10 Questões -->
+            <form id="questionarioForm">
+                
+                <!-- Questão 1 -->
+                <div class="questao" style="animation-delay: 0.1s">
+                    <div class="questao-header">
+                        <div class="questao-numero">1</div>
+                        <div class="questao-texto">
+                            Com que frequência você ficou aborrecido por causa de algo que aconteceu inesperadamente? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="0" id="q1_0">
+                            <label for="q1_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="1" id="q1_1">
+                            <label for="q1_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="2" id="q1_2">
+                            <label for="q1_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="3" id="q1_3">
+                            <label for="q1_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="4" id="q1_4">
+                            <label for="q1_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 2 -->
+                <div class="questao" style="animation-delay: 0.2s">
+                    <div class="questao-header">
+                        <div class="questao-numero">2</div>
+                        <div class="questao-texto">
+                            Com que frequência você sentiu que foi incapaz de controlar coisas importantes na sua vida? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="0" id="q2_0">
+                            <label for="q2_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="1" id="q2_1">
+                            <label for="q2_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="2" id="q2_2">
+                            <label for="q2_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="3" id="q2_3">
+                            <label for="q2_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="4" id="q2_4">
+                            <label for="q2_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 3 -->
+                <div class="questao" style="animation-delay: 0.3s">
+                    <div class="questao-header">
+                        <div class="questao-numero">3</div>
+                        <div class="questao-texto">
+                            Com que frequência você esteve nervoso ou estressado? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="0" id="q3_0">
+                            <label for="q3_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="1" id="q3_1">
+                            <label for="q3_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="2" id="q3_2">
+                            <label for="q3_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="3" id="q3_3">
+                            <label for="q3_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="4" id="q3_4">
+                            <label for="q3_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 4 -->
+                <div class="questao" style="animation-delay: 0.4s">
+                    <div class="questao-header">
+                        <div class="questao-numero">4</div>
+                        <div class="questao-texto">
+                            Com que frequência você esteve confiante em sua capacidade de lidar com seus problemas pessoais? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="4" id="q4_0">
+                            <label for="q4_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="3" id="q4_1">
+                            <label for="q4_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="2" id="q4_2">
+                            <label for="q4_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="1" id="q4_3">
+                            <label for="q4_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="0" id="q4_4">
+                            <label for="q4_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 5 -->
+                <div class="questao" style="animation-delay: 0.5s">
+                    <div class="questao-header">
+                        <div class="questao-numero">5</div>
+                        <div class="questao-texto">
+                            Com que frequência você sentiu que as coisas aconteceram da maneira que você esperava? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="4" id="q5_0">
+                            <label for="q5_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="3" id="q5_1">
+                            <label for="q5_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="2" id="q5_2">
+                            <label for="q5_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="1" id="q5_3">
+                            <label for="q5_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="0" id="q5_4">
+                            <label for="q5_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 6 -->
+                <div class="questao" style="animation-delay: 0.6s">
+                    <div class="questao-header">
+                        <div class="questao-numero">6</div>
+                        <div class="questao-texto">
+                            Com que frequência você achou que não conseguiria lidar com todas as coisas que tinha por fazer? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="0" id="q6_0">
+                            <label for="q6_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="1" id="q6_1">
+                            <label for="q6_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="2" id="q6_2">
+                            <label for="q6_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="3" id="q6_3">
+                            <label for="q6_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="4" id="q6_4">
+                            <label for="q6_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 7 (REVERSA) -->
+                <div class="questao" style="animation-delay: 0.7s">
+                    <div class="questao-header">
+                        <div class="questao-numero">7</div>
+                        <div class="questao-texto">
+                            Com que frequência você foi capaz de controlar irritações na sua vida? (considere os últimos 30 dias)
+                            
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="4" id="q7_0">
+                            <label for="q7_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="3" id="q7_1">
+                            <label for="q7_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="2" id="q7_2">
+                            <label for="q7_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="1" id="q7_3">
+                            <label for="q7_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="0" id="q7_4">
+                            <label for="q7_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 8 (REVERSA) -->
+                <div class="questao" style="animation-delay: 0.8s">
+                    <div class="questao-header">
+                        <div class="questao-numero">8</div>
+                        <div class="questao-texto">
+                            Com que frequência você sentiu que todos os aspectos de sua vida estavam sob controle? (considere os últimos 30 dias)
+                            
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="4" id="q8_0">
+                            <label for="q8_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="3" id="q8_1">
+                            <label for="q8_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="2" id="q8_2">
+                            <label for="q8_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="1" id="q8_3">
+                            <label for="q8_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="0" id="q8_4">
+                            <label for="q8_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 9 -->
+                <div class="questao" style="animation-delay: 0.9s">
+                    <div class="questao-header">
+                        <div class="questao-numero">9</div>
+                        <div class="questao-texto">
+                            Com que frequência você esteve bravo por causa de coisas que estiveram fora de seu controle? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="0" id="q9_0">
+                            <label for="q9_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="1" id="q9_1">
+                            <label for="q9_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="2" id="q9_2">
+                            <label for="q9_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="3" id="q9_3">
+                            <label for="q9_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="4" id="q9_4">
+                            <label for="q9_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 10 -->
+                <div class="questao" style="animation-delay: 1.0s">
+                    <div class="questao-header">
+                        <div class="questao-numero">10</div>
+                        <div class="questao-texto">
+                            Com que frequência você sentiu que os problemas acumularam tanto que você não conseguiria resolvê-los? (considere os últimos 30 dias)
+                        </div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="0" id="q10_0">
+                            <label for="q10_0">[0] Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="1" id="q10_1">
+                            <label for="q10_1">[1] Quase Nunca</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="2" id="q10_2">
+                            <label for="q10_2">[2] Às Vezes</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="3" id="q10_3">
+                            <label for="q10_3">[3] Pouco Frequente</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="4" id="q10_4">
+                            <label for="q10_4">[4] Muito Frequente</label>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Preview do Resultado -->
+            <div id="resultadoPreview" class="resultado-preview">
+                <h3>📊 Seu Resultado Preliminar</h3>
+                <div class="resultado-score" id="scoreDisplay">0</div>
+                <div class="resultado-interpretacao" id="interpretacaoDisplay">Complete todas as questões</div>
+                <div class="resultado-barra">
+                    <div class="resultado-barra-fill" id="resultadoBarraFill"></div>
+                    <div class="resultado-barra-texto" id="resultadoBarraTexto">0/40</div>
+                </div>
+                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                    <strong>Referência:</strong> P50 = 14 pontos (média da população)
+                </p>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="botoes-container">
+                <a href="questionarios.html" class="btn btn-voltar">
+                    ← Voltar aos Questionários
+                </a>
+                
+                <button type="button" id="btnFinalizar" class="btn btn-finalizar" onclick="finalizarQuestionario()">
+                    Finalizar Questionário →
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Variáveis globais
+        let userId = null;
+        let respostasUsuario = {};
+        let totalRespondidas = 0;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter ou gerar ID do usuário
+            userId = obterOuCriarUserId();
+            document.getElementById('userIdDisplay').textContent = userId;
+            
+            // Configurar eventos
+            configurarFormulario();
+            
+            console.log('Questionário 1 inicializado para usuário:', userId);
+        });
+
+        function obterOuCriarUserId() {
+            // Verificar se há ID salvo no localStorage
+            let savedId = localStorage.getItem('userSessionId');
+            if (savedId) {
+                return savedId;
+            }
+            
+            // Gerar novo ID único
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(2, 8);
+            const newId = `USR_${timestamp}_${random}`.toUpperCase();
+            localStorage.setItem('userSessionId', newId);
+            return newId;
+        }
+
+        function configurarFormulario() {
+            const form = document.getElementById('questionarioForm');
+            const inputs = form.querySelectorAll('input[type="radio"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Marcar questão como ativa
+                    const questao = this.closest('.questao');
+                    questao.classList.add('active');
+                    
+                    // Atualizar respostas
+                    const pergunta = this.name;
+                    const valor = parseInt(this.value);
+                    respostasUsuario[pergunta] = valor;
+                    
+                    // Atualizar progresso
+                    atualizarProgresso();
+                    
+                    // Calcular e mostrar resultado em tempo real
+                    calcularResultado();
+                });
+            });
+        }
+
+        function atualizarProgresso() {
+            totalRespondidas = Object.keys(respostasUsuario).length;
+            const porcentagem = (totalRespondidas / 10) * 100;
+            
+            // Atualizar barra de progresso
+            document.getElementById('progressoFill').style.width = porcentagem + '%';
+            document.getElementById('progressoTexto').textContent = `${totalRespondidas} de 10 questões respondidas`;
+            
+            // Habilitar botão finalizar se todas respondidas
+            const btnFinalizar = document.getElementById('btnFinalizar');
+            if (totalRespondidas === 10) {
+                btnFinalizar.classList.add('ativo');
+                btnFinalizar.removeAttribute('disabled');
+            } else {
+                btnFinalizar.classList.remove('ativo');
+                btnFinalizar.setAttribute('disabled', 'true');
+            }
+        }
+
+        function calcularResultado() {
+            if (totalRespondidas === 0) return;
+            
+            // Calcular pontuação total
+            let pontuacaoTotal = 0;
+            for (let pergunta in respostasUsuario) {
+                pontuacaoTotal += respostasUsuario[pergunta];
+            }
+            
+            // Determinar interpretação baseada no P50 = 14
+            let interpretacao, cor, porcentagemBarra;
+            
+            if (pontuacaoTotal <= 13) {
+                interpretacao = "Abaixo da Média (P50)";
+                cor = "#28a745"; // Verde
+                porcentagemBarra = (pontuacaoTotal / 40) * 100;
+            } else {
+                interpretacao = "Acima da Média (P50)";
+                // Gradiente do amarelo para vermelho
+                const intensidade = Math.min((pontuacaoTotal - 14) / 26, 1); // 0 a 1
+                const red = Math.round(255);
+                const green = Math.round(255 - (intensidade * 200));
+                cor = `rgb(${red}, ${green}, 0)`;
+                porcentagemBarra = (pontuacaoTotal / 40) * 100;
+            }
+            
+            // Atualizar display do resultado
+            document.getElementById('scoreDisplay').textContent = pontuacaoTotal;
+            document.getElementById('interpretacaoDisplay').textContent = interpretacao;
+            document.getElementById('resultadoBarraFill').style.width = porcentagemBarra + '%';
+            document.getElementById('resultadoBarraFill').style.background = cor;
+            document.getElementById('resultadoBarraTexto').textContent = `${pontuacaoTotal}/40`;
+            
+            // Mostrar preview do resultado
+            const preview = document.getElementById('resultadoPreview');
+            if (totalRespondidas >= 5) { // Mostrar quando pelo menos metade respondida
+                preview.classList.add('show');
+            }
+        }
+
+        function finalizarQuestionario() {
+            if (totalRespondidas !== 10) {
+                alert('Por favor, responda todas as 10 questões antes de finalizar.');
+                return;
+            }
+            
+            // Calcular resultado final
+            let pontuacaoTotal = 0;
+            for (let pergunta in respostasUsuario) {
+                pontuacaoTotal += respostasUsuario[pergunta];
+            }
+            
+            // Preparar dados para salvar
+            const resultadoFinal = {
+                questionario: 'escala_percepcao_stress',
+                userId: userId,
+                timestamp: new Date().toISOString(),
+                respostas: respostasUsuario,
+                pontuacaoTotal: pontuacaoTotal,
+                interpretacao: pontuacaoTotal <= 13 ? 'Abaixo da Média' : 'Acima da Média',
+                percentil: pontuacaoTotal <= 13 ? 'P50-' : 'P50+',
+                dataCompleta: new Date().toLocaleString('pt-BR')
+            };
+            
+            // Salvar resultado no localStorage
+            localStorage.setItem(`resultado_q1_${userId}`, JSON.stringify(resultadoFinal));
+            
+            // Marcar questionário 1 como completo
+            let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+            progresso.questionario1 = true;
+            localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+            
+            // Mostrar confirmação e redirecionar
+            alert(`✅ Questionário concluído!\n\nSua pontuação: ${pontuacaoTotal}/40\nInterpretação: ${resultadoFinal.interpretacao}\n\nVocê será redirecionado para os questionários. O Questionário 2 já estará disponível!`);
+            
+            // Redirecionar para página de questionários
+            window.location.href = 'questionarios.html';
+        }
+
+    </script>
+
+</body>
+</html>

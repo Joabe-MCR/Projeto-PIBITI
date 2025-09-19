@@ -1,3 +1,18 @@
+# Arquivos de documentação e explicação
+*.pdf
+*.md
+README*.md
+GUIA_*.md
+MANUAL_*.md
+SISTEMA_*.md
+FLUXOGRAMA_*.md
+PACOTE_*.md
+
+# Diretórios de documentação
+documentacao/
+docs/
+explicacoes/
+
 # Python
 __pycache__/
 *.py[cod]

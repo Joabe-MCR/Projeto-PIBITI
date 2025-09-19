@@ -2,11 +2,11 @@
 // SISTEMA DE GERENCIAMENTO DE QUESTIONÁRIOS
 // ==========================================
 
-// URLs dos Google Forms (substitua pelos links reais dos seus formulários)
+// URLs dos questionários HTML locais
 const QUESTIONARIOS_URLS = {
-    1: 'https://docs.google.com/forms/d/e/1FAIpQLSe_EXEMPLO1/viewform', // Escala de Percepção ao Stress
-    2: 'https://docs.google.com/forms/d/e/1FAIpQLSe_EXEMPLO2/viewform', // Escala de Vulnerabilidade ao Stress  
-    3: 'https://docs.google.com/forms/d/e/1FAIpQLSe_EXEMPLO3/viewform'  // Questionário de Desconforto Menstrual
+    1: 'questionario1-stress.html', // Escala de Percepção ao Stress
+    2: 'questionario2-vulnerabilidade.html', // Escala de Vulnerabilidade ao Stress  
+    3: 'questionario3-menstrual.html'  // Questionário de Desconforto Menstrual
 };
 
 // Variáveis globais
@@ -130,6 +130,19 @@ function todosQuestionariosCompletos() {
            progressoUsuario.questionario3;
 }
 
+function questionarioDesbloqueado(numero) {
+    // Questionário 1 sempre está desbloqueado
+    if (numero === 1) return true;
+    
+    // Questionário 2 só se questionário 1 estiver completo
+    if (numero === 2) return progressoUsuario.questionario1;
+    
+    // Questionário 3 só se questionários 1 e 2 estiverem completos
+    if (numero === 3) return progressoUsuario.questionario1 && progressoUsuario.questionario2;
+    
+    return false;
+}
+
 // ==========================================
 // ATUALIZAÇÃO DA INTERFACE
 // ==========================================
@@ -214,45 +227,20 @@ function abrirQuestionario(numero) {
         return;
     }
     
-    // Construir URL do questionário com ID do usuário
-    const baseUrl = QUESTIONARIOS_URLS[numero];
+    // Verificar se questionário está desbloqueado
+    if (!questionarioDesbloqueado(numero)) {
+        alert(`Complete o questionário ${numero - 1} primeiro!`);
+        return;
+    }
     
-    // Para Google Forms, adicionar parâmetros via URL
-    // Você deve configurar campos no seu Google Form com nomes específicos
-    const urlComId = `${baseUrl}?entry.USER_ID=${userId}&entry.TIMESTAMP=${Date.now()}`;
+    // URL do questionário HTML local
+    const urlQuestionario = QUESTIONARIOS_URLS[numero];
     
-    // Mostrar modal de confirmação
-    mostrarModal(
-        `Você será redirecionado para o questionário "${obterTituloQuestionario(numero)}". 
-         
-         📝 IMPORTANTE:
-         • Anote seu ID: ${userId}
-         • Complete todo o questionário
-         • Após enviar, volte para esta página
-         • O sistema detectará automaticamente que você completou`,
-        () => {
-            // Salvar timestamp de início
-            localStorage.setItem(`inicio_q${numero}_${userId}`, Date.now());
-            
-            // Abrir questionário em nova aba
-            const novaAba = window.open(urlComId, '_blank');
-            
-            // Se o popup foi bloqueado, mostrar instrução
-            if (!novaAba || novaAba.closed || typeof novaAba.closed == 'undefined') {
-                alert('⚠️ Pop-ups bloqueados! Clique no link abaixo para acessar o questionário:\n\n' + urlComId);
-            }
-            
-            // Simular progresso após 30 segundos (método de fallback)
-            setTimeout(() => {
-                if (!progressoUsuario[`questionario${numero}`]) {
-                    mostrarModal(
-                        `Você completou o questionário ${numero}?`,
-                        () => marcarQuestionarioCompleto(numero)
-                    );
-                }
-            }, 30000); // 30 segundos
-        }
-    );
+    // Salvar timestamp de início
+    localStorage.setItem(`inicio_q${numero}_${userId}`, Date.now());
+    
+    // Redirecionar diretamente para o questionário HTML
+    window.location.href = urlQuestionario;
 }
 
 function obterTituloQuestionario(numero) {
@@ -313,38 +301,25 @@ function mostrarBotaoDiagnostico() {
 // ==========================================
 
 function configurarDeteccaoRetorno() {
-    // Verificar parâmetros da URL para detectar retorno
-    const urlParams = new URLSearchParams(window.location.search);
-    const completed = urlParams.get('completed');
+    // Sistema simplificado - os questionários HTML já marcam como completo automaticamente
+    // Apenas verificar se há atualizações no progresso quando a página é carregada
     
-    if (completed) {
-        const numeroQuestionario = parseInt(completed);
+    // Detectar se voltou de um questionário
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromQuestionario = urlParams.get('from');
+    
+    if (fromQuestionario) {
+        // Mostrar mensagem de sucesso se especificado
+        const numeroQuestionario = parseInt(fromQuestionario);
         if (numeroQuestionario >= 1 && numeroQuestionario <= 3) {
-            // Marcar como completo com delay para animação
             setTimeout(() => {
-                marcarQuestionarioCompleto(numeroQuestionario);
                 mostrarMensagemSucesso(numeroQuestionario);
-            }, 1000);
+            }, 500);
         }
         
         // Limpar URL
         window.history.replaceState({}, '', window.location.pathname);
     }
-    
-    // Detectar retorno por foco na janela (método alternativo)
-    let windowFocused = true;
-    
-    window.addEventListener('blur', () => {
-        windowFocused = false;
-    });
-    
-    window.addEventListener('focus', () => {
-        if (!windowFocused) {
-            // Usuário voltou para a página - verificar se completou algum questionário
-            setTimeout(verificarCompletudePorTempo, 2000);
-        }
-        windowFocused = true;
-    });
 }
 
 function verificarCompletudePorTempo() {

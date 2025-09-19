@@ -365,23 +365,23 @@ Uma abordagem que considere ambos os fatores será mais eficaz.
             Diagnóstico completo formatado
         """
         # Buscar resultados individuais
-        email = resultado_combinado["email"]
+        user_id = resultado_combinado["user_id"]
         resultado_estresse = None
         resultado_menacme = None
 
         for est in self.processador.resultados["estresse"]:
-            if est["email"] == email:
+            if est["user_id"] == user_id:
                 resultado_estresse = est
                 break
 
         for men in self.processador.resultados["menacme"]:
-            if men["email"] == email:
+            if men["user_id"] == user_id:
                 resultado_menacme = men
                 break
 
         if not resultado_estresse or not resultado_menacme:
             raise ValueError(
-                f"Não foi possível encontrar resultados completos para {email}")
+                f"Não foi possível encontrar resultados completos para {user_id}")
 
         # Gerar diagnósticos individuais
         diagnostico_estresse = self.gerar_diagnostico_estresse(
@@ -417,24 +417,24 @@ Uma abordagem que considere ambos os fatores será mais eficaz.
                     resultado_combinado)
 
                 # Salvar arquivo individual
-                nome_arquivo = f"diagnostico_{resultado_combinado['email'].replace('@', '_').replace('.', '_')}.md"
+                nome_arquivo = f"diagnostico_{resultado_combinado['user_id']}.md"
                 caminho_arquivo = os.path.join(diretorio_saida, nome_arquivo)
 
                 with open(caminho_arquivo, 'w', encoding='utf-8') as f:
                     f.write(diagnostico)
 
                 diagnosticos_gerados.append({
-                    "email": resultado_combinado["email"],
+                    "user_id": resultado_combinado["user_id"],
                     "arquivo": nome_arquivo,
                     "timestamp": resultado_combinado["timestamp"]
                 })
 
                 logger.info(
-                    f"Diagnóstico gerado para {resultado_combinado['email']}")
+                    f"Diagnóstico gerado para {resultado_combinado['user_id']}")
 
             except Exception as e:
                 logger.error(
-                    f"Erro ao gerar diagnóstico para {resultado_combinado['email']}: {e}")
+                    f"Erro ao gerar diagnóstico para {resultado_combinado['user_id']}: {e}")
 
         # Salvar índice de diagnósticos
         with open(os.path.join(diretorio_saida, "indice_diagnosticos.json"), 'w', encoding='utf-8') as f:

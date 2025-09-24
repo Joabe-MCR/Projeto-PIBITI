@@ -19,10 +19,8 @@
 <nav>
 <a href="#projeto">O projeto</a>
 <a href="#pesquisadores">Os pesquisadores</a>
-<a href="questionarios.html">Questionários</a>
 <a href="#perguntas">Dúvidas comuns</a>
 <a href="#contato">Entre em contato</a>
-<a href="manual_completo.html" target="_blank">Manual</a>
 </nav>
     </header>
 
@@ -51,10 +49,8 @@
       <h1>TERMO DE CONSENTIMENTO</h1>
     </div>
     
-    <div class="tcle-subtitle">
-      <p>Para dar procedimento aos questionários e saber seu resultado, leia<br>
-      o Termo de Consentimento Livre Esclarecido (TCLE) abaixo e<br>
-      assinale a caixa após a leitura, caso concorde com o mesmo.</p>
+    <div class="tcle-subtitle" style="text-align: center !important;">
+      <p style="text-align: center !important;">Para dar procedimento aos questionários e saber seu resultado, leia o Termo de Consentimento Livre Esclarecido (TCLE) abaixo e assinale a caixa após a leitura, caso concorde com o mesmo.</p>
     </div>
     
     <div class="tcle-content">
@@ -96,6 +92,71 @@
     </div>
   </div>
 </section>
+
+<script>
+// Funções para o TCLE e redirecionamento
+
+function irParaTCLE() {
+    // Gerar ID único para o usuário
+    const userId = generateUserId();
+    localStorage.setItem('userSessionId', userId);
+    
+    // Mostrar seção do TCLE
+    document.getElementById('pginicial').style.display = 'none';
+    document.getElementById('tcle').style.display = 'block';
+    
+    // Configurar evento para checkbox
+    const checkbox = document.getElementById('consentimento');
+    const btnProsseguir = document.querySelector('.btn-prosseguir');
+    
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            btnProsseguir.disabled = false;
+            btnProsseguir.style.opacity = '1';
+            btnProsseguir.style.cursor = 'pointer';
+        } else {
+            btnProsseguir.disabled = true;
+            btnProsseguir.style.opacity = '0.5';
+            btnProsseguir.style.cursor = 'not-allowed';
+        }
+    });
+}
+
+function voltarInicio() {
+    document.getElementById('tcle').style.display = 'none';
+    document.getElementById('pginicial').style.display = 'block';
+}
+
+function prosseguirQuestionarios() {
+    const checkbox = document.getElementById('consentimento');
+    
+    if (!checkbox.checked) {
+        alert('Você precisa aceitar o Termo de Consentimento para prosseguir.');
+        return;
+    }
+    
+    // Salvar consentimento
+    const userId = localStorage.getItem('userSessionId');
+    const consentimento = {
+        userId: userId,
+        aceito: true,
+        timestamp: new Date().toISOString(),
+        data_aceite: new Date().toLocaleString('pt-BR')
+    };
+    
+    localStorage.setItem(`tcle_${userId}`, JSON.stringify(consentimento));
+    
+    // Redirecionar para questionário sociodemográfico
+    window.location.href = 'questionario0-sociodemografico.html';
+}
+
+function generateUserId() {
+    // Gerar ID único usando timestamp + números aleatórios
+    const timestamp = Date.now().toString(36);
+    const randomNum = Math.random().toString(36).substr(2, 5);
+    return `user_${timestamp}_${randomNum}`;
+}
+</script>
 
 
 <!-- Seção: O Projeto -->
@@ -297,6 +358,42 @@
     <!--Seção: Entre em Contato-->
 <section class="contato" id="contato">
     <h2>Entre em Contato</h2>
+    
+    <div class="contato-container">
+        <p class="contato-intro">Para dúvidas, sugestões ou mais informações sobre a pesquisa, entre em contato conosco:</p>
+        
+        <div class="contatos-grid">
+            <div class="contato-item">
+                <h3>📧 Pesquisador Principal</h3>
+                <p><strong>Demétrio Antônio Gonçalves da Silva Gomes</strong></p>
+                <p>Universidade Católica de Brasília</p>
+                <p>Campus I - QS 07 - Lote 01 - EPCT Águas Claras - Brasília - DF</p>
+                <p><strong>Email:</strong> <a href="mailto:demetrio@p.ucb.br">demetrio@p.ucb.br</a></p>
+                <p><strong>Telefone:</strong> <a href="tel:+5561982842823">(61) 98284-2823</a></p>
+                <p><strong>Horário:</strong> 8:00 às 17:00</p>
+            </div>
+            
+            <div class="contato-item">
+                <h3>📱 Pesquisador Colaborador</h3>
+                <p><strong>Antônio Mateus Alves de Lima Batista</strong></p>
+                <p><strong>Telefone:</strong> <a href="tel:+5561995634884">(61) 99563-4884</a></p>
+                <p><strong>Email:</strong> <a href="mailto:antonio.batista@a.ucb.br">antonio.batista@a.ucb.br</a></p>
+            </div>
+            
+            <div class="contato-item">
+                <h3>🏛️ Comitê de Ética</h3>
+                <p><strong>Comitê de Ética em Pesquisa da UCB (CEP-UCB)</strong></p>
+                <p>Sala R-201, Campus I QS 07 - Lote 01 - EPCT - Águas Claras - Brasília - DF</p>
+                <p><strong>Telefones:</strong></p>
+                <p><a href="tel:+5561335697847">(61) 3356-9784</a> ou <a href="tel:+55613356963636">(61) 3356-9636</a></p>
+                <p><strong>Email:</strong> <a href="mailto:cep@ucb.br">cep@ucb.br</a></p>
+            </div>
+        </div>
+        
+        <div class="contato-observacao">
+            <p><strong>📝 Importante:</strong> O Comitê de Ética está disponível para esclarecimentos sobre aspectos éticos da pesquisa e direitos dos participantes.</p>
+        </div>
+    </div>
 </section>
 
 

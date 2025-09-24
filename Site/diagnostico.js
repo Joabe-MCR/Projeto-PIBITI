@@ -10,7 +10,82 @@ const CONFIGURACAO_DIAGNOSTICO = {
         alto: { min: 67, max: 100, cor: '#dc3545', classe: 'nivel-alto' }
     },
     
-    // Textos base para diagnósticos (serão personalizados)
+    // Pontos de corte para classificação binária
+    pontosCorte: {
+        stress: 50, // Acima de 50 = estressada
+        vulnerabilidade: 50, // Acima de 50 = vulnerável
+        desconforto: 2.0 // MSD acima de 2.0 = alteração no ciclo menstrual
+    },
+    
+    // 8 Diagnósticos personalizados baseados na combinação binária
+    diagnosticosPersonalizados: {
+        '000': { // Não estressada + Não vulnerável + Sem alteração
+            codigo: 'perfil_saudavel',
+            titulo: '💚 Perfil Saudável',
+            subtitulo: 'Parabéns! Você apresenta um perfil equilibrado',
+            descricao: 'Você demonstra baixos níveis de estresse, boa resistência ao estresse e ciclo menstrual sem alterações significativas.',
+            cor: '#28a745',
+            prioridade: 'baixa'
+        },
+        '001': { // Não estressada + Não vulnerável + Com alteração
+            codigo: 'alteracao_isolada',
+            titulo: '🟡 Alteração Menstrual Isolada',
+            subtitulo: 'Alteração no ciclo sem fatores de estresse evidentes',
+            descricao: 'Apesar de não apresentar estresse elevado ou alta vulnerabilidade, você tem desconforto menstrual que merece atenção.',
+            cor: '#ffc107',
+            prioridade: 'media'
+        },
+        '010': { // Não estressada + Vulnerável + Sem alteração
+            codigo: 'vulnerabilidade_latente',
+            titulo: '🟠 Vulnerabilidade Latente',
+            subtitulo: 'Potencial para desenvolver sintomas sob estresse',
+            descricao: 'Você tem características de vulnerabilidade ao estresse, mas mantém níveis baixos de estresse atual e ciclo estável.',
+            cor: '#ff8c00',
+            prioridade: 'media'
+        },
+        '011': { // Não estressada + Vulnerável + Com alteração
+            codigo: 'vulneravel_com_alteracao',
+            titulo: '🟠 Vulnerável com Alteração Menstrual',
+            subtitulo: 'Combinação de vulnerabilidade e alterações no ciclo',
+            descricao: 'Mesmo sem estresse elevado atual, sua vulnerabilidade pode estar contribuindo para alterações menstruais.',
+            cor: '#ff6b35',
+            prioridade: 'media'
+        },
+        '100': { // Estressada + Não vulnerável + Sem alteração
+            codigo: 'estresse_situacional',
+            titulo: '🔶 Estresse Situacional',
+            subtitulo: 'Estresse atual sem grandes repercussões',
+            descricao: 'Você apresenta níveis elevados de estresse, mas sua baixa vulnerabilidade e ciclo estável indicam boa capacidade de adaptação.',
+            cor: '#ff9500',
+            prioridade: 'media'
+        },
+        '101': { // Estressada + Não vulnerável + Com alteração
+            codigo: 'estresse_com_impacto',
+            titulo: '🔥 Estresse com Impacto Menstrual',
+            subtitulo: 'O estresse está afetando seu ciclo menstrual',
+            descricao: 'Seus níveis elevados de estresse estão se manifestando através de alterações no ciclo menstrual.',
+            cor: '#ff6b00',
+            prioridade: 'alta'
+        },
+        '110': { // Estressada + Vulnerável + Sem alteração
+            codigo: 'alto_risco',
+            titulo: '⚠️ Perfil de Alto Risco',
+            subtitulo: 'Combinação preocupante que requer atenção',
+            descricao: 'Você apresenta estresse elevado e alta vulnerabilidade. É importante agir preventivamente antes que alterações menstruais apareçam.',
+            cor: '#dc3545',
+            prioridade: 'alta'
+        },
+        '111': { // Estressada + Vulnerável + Com alteração
+            codigo: 'perfil_critico',
+            titulo: '🚨 Perfil Crítico',
+            subtitulo: 'Situação que requer atenção médica especializada',
+            descricao: 'Você apresenta a combinação de estresse elevado, alta vulnerabilidade e alterações menstruais significativas. Recomendamos fortemente buscar acompanhamento profissional.',
+            cor: '#8b0000',
+            prioridade: 'critica'
+        }
+    },
+    
+    // Textos base para os níveis (mantidos para as barras)
     textos: {
         stress: {
             baixo: "Sua percepção de stress está em um nível controlável. Você demonstra boa capacidade de gerenciar situações desafiadoras.",
@@ -78,21 +153,25 @@ function redirecionarParaQuestionarios() {
 
 async function gerarDiagnostico() {
     try {
-        // Primeiro, tentar buscar resultado real da API
-        const resultadoReal = await buscarResultadoAPI(userId);
+        // Carregar dados dos questionários do localStorage
+        const dadosReais = carregarDadosQuestionarios();
         
-        if (resultadoReal) {
-            // Usar dados reais da API
-            dadosDiagnostico = processarDadosReais(resultadoReal);
+        if (dadosReais.completo) {
+            // Usar dados reais dos questionários
+            dadosDiagnostico = processarDadosReais(dadosReais);
         } else {
             // Fallback para dados simulados
             dadosDiagnostico = gerarDadosSimulados();
         }
         
     } catch (error) {
-        console.log('API não disponível, usando dados simulados:', error);
+        console.log('Erro ao carregar dados, usando simulados:', error);
         dadosDiagnostico = gerarDadosSimulados();
     }
+    
+    // Gerar classificação binária e diagnóstico personalizado
+    const classificacaoBinaria = gerarClassificacaoBinaria(dadosDiagnostico);
+    dadosDiagnostico.classificacao = classificacaoBinaria;
     
     // Ocultar loading e mostrar conteúdo
     document.getElementById('loadingState').style.display = 'none';
@@ -112,6 +191,272 @@ async function gerarDiagnostico() {
     
     // Salvar no localStorage
     localStorage.setItem(`diagnostico_${userId}`, JSON.stringify(dadosDiagnostico));
+}
+
+// ==========================================
+// FUNÇÕES DE CLASSIFICAÇÃO BINÁRIA
+// ==========================================
+
+function carregarDadosQuestionarios() {
+    try {
+        const resultadoQ1 = JSON.parse(localStorage.getItem(`resultado_q1_${userId}`) || 'null');
+        const resultadoQ2 = JSON.parse(localStorage.getItem(`resultado_q2_${userId}`) || 'null');
+        const resultadoQ3 = JSON.parse(localStorage.getItem(`resultado_q3_${userId}`) || 'null');
+        
+        const completo = resultadoQ1 && resultadoQ2 && resultadoQ3;
+        
+        return {
+            completo: completo,
+            stress: resultadoQ1,
+            vulnerabilidade: resultadoQ2,
+            desconforto: resultadoQ3
+        };
+    } catch (error) {
+        console.error('Erro ao carregar dados dos questionários:', error);
+        return { completo: false };
+    }
+}
+
+function processarDadosReais(dadosReais) {
+    const processados = {
+        stress: {
+            pontuacao: dadosReais.stress?.pontuacaoTotal || 0,
+            porcentagem: dadosReais.stress?.porcentagem || 0,
+            nivel: determinarNivel(dadosReais.stress?.porcentagem || 0)
+        },
+        vulnerabilidade: {
+            pontuacao: dadosReais.vulnerabilidade?.pontuacaoTotal || 0,
+            porcentagem: dadosReais.vulnerabilidade?.porcentagem || 0,
+            nivel: determinarNivel(dadosReais.vulnerabilidade?.porcentagem || 0)
+        },
+        desconforto: {
+            pontuacao: dadosReais.desconforto?.pontuacaoTotal || 0,
+            msd: dadosReais.desconforto?.indiceMSD || 0,
+            mesi: dadosReais.desconforto?.indiceMESI || 0,
+            sintomasComImpacto: dadosReais.desconforto?.sintomasComImpacto || 0,
+            nivel: determinarNivelDesconforto(dadosReais.desconforto?.indiceMSD || 0),
+            porcentagem: calcularPorcentagemDesconforto(dadosReais.desconforto?.indiceMSD || 0)
+        },
+        origem: 'real',
+        timestamp: new Date().toISOString()
+    };
+    
+    return processados;
+}
+
+function calcularPorcentagemDesconforto(msd) {
+    // Converter MSD para porcentagem (0-100%)
+    // MSD varia de 0 a 5, então convertemos para porcentagem
+    return Math.min(100, Math.max(0, (msd / 5) * 100));
+}
+
+function gerarClassificacaoBinaria(dados) {
+    const { pontosCorte, diagnosticosPersonalizados } = CONFIGURACAO_DIAGNOSTICO;
+    
+    // Classificação binária baseada nos pontos de corte
+    const estressada = dados.stress.porcentagem > pontosCorte.stress;
+    const vulneravel = dados.vulnerabilidade.porcentagem > pontosCorte.vulnerabilidade;
+    const alteracaoMenstrual = dados.desconforto.msd > pontosCorte.desconforto;
+    
+    // Gerar código binário (000 a 111)
+    const codigoBinario = `${estressada ? '1' : '0'}${vulneravel ? '1' : '0'}${alteracaoMenstrual ? '1' : '0'}`;
+    
+    // Obter diagnóstico personalizado
+    const diagnosticoPersonalizado = diagnosticosPersonalizados[codigoBinario];
+    
+    return {
+        estressada: estressada,
+        vulneravel: vulneravel,
+        alteracaoMenstrual: alteracaoMenstrual,
+        codigoBinario: codigoBinario,
+        diagnostico: diagnosticoPersonalizado,
+        pontosCorte: {
+            stress: pontosCorte.stress,
+            vulnerabilidade: pontosCorte.vulnerabilidade,
+            desconforto: pontosCorte.desconforto
+        }
+    };
+}
+
+function determinarNivelDesconforto(msd) {
+    if (msd <= 1) return 'baixo';
+    if (msd <= 3) return 'moderado';
+    return 'alto';
+}
+
+function exibirDiagnosticoPersonalizado(classificacao) {
+    const { diagnostico } = classificacao;
+    
+    // Atualizar cabeçalho com diagnóstico personalizado
+    const tituloElement = document.querySelector('.diagnostico-header h2');
+    const subtituloElement = document.querySelector('.diagnostico-header p');
+    
+    if (tituloElement && subtituloElement) {
+        tituloElement.innerHTML = diagnostico.titulo;
+        subtituloElement.textContent = diagnostico.subtitulo;
+        
+        // Atualizar cor do cabeçalho
+        document.querySelector('.diagnostico-header').style.background = 
+            `linear-gradient(135deg, ${diagnostico.cor}15, ${diagnostico.cor}25)`;
+    }
+    
+    // Criar seção de diagnóstico personalizado
+    criarSecaoDetalhePersonalizado(diagnostico, classificacao);
+    
+    // Aplicar diagnósticos tradicionais (gráficos de barras)
+    setTimeout(() => {
+        aplicarDiagnosticoStress();
+        aplicarDiagnosticoVulnerabilidade();
+        aplicarDiagnosticoDesconforto();
+        
+        // Ocultar loading e mostrar conteúdo
+        document.getElementById('statusCarregamento').style.display = 'none';
+        document.getElementById('conteudoDiagnostico').style.display = 'block';
+        
+        // Gerar análise integrada personalizada
+        setTimeout(() => {
+            gerarAnaliseIntegradaPersonalizada(classificacao);
+        }, 1500);
+    }, 1000);
+}
+
+function criarSecaoDetalhePersonalizado(diagnostico, classificacao) {
+    const container = document.getElementById('analiseIntegrada') || 
+                     document.querySelector('.diagnostico-detalhes');
+    
+    if (!container) return;
+    
+    const secaoPersonalizada = document.createElement('div');
+    secaoPersonalizada.className = 'diagnostico-personalizado';
+    secaoPersonalizada.innerHTML = `
+        <div class="card-personalizado" style="border-left: 5px solid ${diagnostico.cor};">
+            <div class="diagnostico-personalizado-header">
+                <h3 style="color: ${diagnostico.cor};">${diagnostico.titulo}</h3>
+                <span class="prioridade-badge prioridade-${diagnostico.prioridade}">
+                    Prioridade ${diagnostico.prioridade.toUpperCase()}
+                </span>
+            </div>
+            
+            <p class="diagnostico-descricao">${diagnostico.descricao}</p>
+            
+            <div class="classificacao-detalhes">
+                <h4>📊 Sua Classificação:</h4>
+                <ul class="classificacao-lista">
+                    <li class="item-classificacao ${classificacao.estressada ? 'ativo' : 'inativo'}">
+                        <strong>Nível de Estresse:</strong> 
+                        ${classificacao.estressada ? 'Elevado' : 'Controlado'} 
+                        (${dadosDiagnostico.stress.porcentagem}%)
+                    </li>
+                    <li class="item-classificacao ${classificacao.vulneravel ? 'ativo' : 'inativo'}">
+                        <strong>Vulnerabilidade:</strong> 
+                        ${classificacao.vulneravel ? 'Alta' : 'Baixa'} 
+                        (${dadosDiagnostico.vulnerabilidade.porcentagem}%)
+                    </li>
+                    <li class="item-classificacao ${classificacao.alteracaoMenstrual ? 'ativo' : 'inativo'}">
+                        <strong>Ciclo Menstrual:</strong> 
+                        ${classificacao.alteracaoMenstrual ? 'Com alterações' : 'Estável'} 
+                        (MSD: ${dadosDiagnostico.desconforto.msd.toFixed(2)})
+                    </li>
+                </ul>
+                
+                <div class="codigo-classificacao">
+                    <small>Código de classificação: <code>${classificacao.codigoBinario}</code></small>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.insertBefore(secaoPersonalizada, container.firstChild);
+}
+
+function gerarAnaliseIntegradaPersonalizada(classificacao) {
+    const { diagnostico } = classificacao;
+    let analise = [];
+    
+    // Análise baseada no perfil específico
+    switch(diagnostico.codigo) {
+        case 'perfil_saudavel':
+            analise.push("🎉 Excelente! Você mantém um equilíbrio saudável entre bem-estar emocional e físico. Continue praticando seus hábitos saudáveis como forma de prevenção.");
+            break;
+            
+        case 'alteracao_isolada':
+            analise.push("🔍 Suas alterações menstruais podem ter causas fisiológicas independentes do estresse. Considere acompanhamento médico para investigar possíveis causas hormonais ou outras condições.");
+            break;
+            
+        case 'vulnerabilidade_latente':
+            analise.push("⚠️ Sua vulnerabilidade indica que você pode se beneficiar de estratégias preventivas de manejo do estresse antes que situações desafiadoras se intensifiquem.");
+            break;
+            
+        case 'vulneravel_com_alteracao':
+            analise.push("🎯 A combinação de vulnerabilidade com alterações menstruais sugere uma possível conexão. Técnicas de relaxamento podem beneficiar tanto o bem-estar emocional quanto o ciclo menstrual.");
+            break;
+            
+        case 'estresse_controlado':
+            analise.push("📈 Apesar do estresse atual, sua baixa vulnerabilidade é um fator protetor importante. Foque em reduzir o estresse para prevenir impactos no ciclo menstrual.");
+            break;
+            
+        case 'estresse_com_impacto':
+            analise.push("🚨 O estresse atual está impactando seu ciclo menstrual. Esta é uma situação que requer atenção imediata para técnicas de manejo do estresse e cuidado menstrual.");
+            break;
+            
+        case 'perfil_alto_risco':
+            analise.push("⛔ Você apresenta uma combinação preocupante que requer atenção profissional. O estresse elevado e alta vulnerabilidade podem estar intensificando alterações menstruais.");
+            break;
+            
+        case 'perfil_critico':
+            analise.push("🆘 Seu perfil indica uma situação crítica que requer intervenção imediata. Recomendamos buscar apoio profissional para manejo integrado do estresse e saúde menstrual.");
+            break;
+    }
+    
+    // Adicionar recomendações específicas
+    analise.push(gerarRecomendacoesPersonalizadas(classificacao));
+    
+    // Atualizar na página
+    const analiseContainer = document.getElementById('analiseIntegrada') || 
+                            document.querySelector('.analise-integrada');
+    
+    if (analiseContainer) {
+        const analisePersonalizada = document.createElement('div');
+        analisePersonalizada.className = 'analise-personalizada';
+        analisePersonalizada.innerHTML = `
+            <h4>💡 Análise Personalizada</h4>
+            ${analise.map(item => `<p>${item}</p>`).join('')}
+        `;
+        
+        analiseContainer.appendChild(analisePersonalizada);
+    }
+}
+
+function gerarRecomendacoesPersonalizadas(classificacao) {
+    const { diagnostico } = classificacao;
+    let recomendacoes = "🎯 <strong>Recomendações específicas para seu perfil:</strong><br>";
+    
+    // Recomendações baseadas na classificação binária
+    if (classificacao.estressada) {
+        recomendacoes += "• Pratique técnicas de respiração profunda diariamente<br>";
+        recomendacoes += "• Considere meditação ou mindfulness<br>";
+    }
+    
+    if (classificacao.vulneravel) {
+        recomendacoes += "• Desenvolva estratégias preventivas de manejo do estresse<br>";
+        recomendacoes += "• Identifique seus gatilhos de estresse pessoais<br>";
+    }
+    
+    if (classificacao.alteracaoMenstrual) {
+        recomendacoes += "• Mantenha um diário menstrual detalhado<br>";
+        recomendacoes += "• Considere acompanhamento ginecológico<br>";
+    }
+    
+    // Prioridade de ação
+    if (diagnostico.prioridade === 'alta') {
+        recomendacoes += "<br><strong>⚡ Ação recomendada:</strong> Busque acompanhamento profissional nos próximos dias.";
+    } else if (diagnostico.prioridade === 'media') {
+        recomendacoes += "<br><strong>📅 Ação recomendada:</strong> Agende acompanhamento preventivo nas próximas semanas.";
+    } else {
+        recomendacoes += "<br><strong>✅ Continue:</strong> Mantendo seus hábitos saudáveis atuais.";
+    }
+    
+    return recomendacoes;
 }
 
 async function buscarResultadoAPI(userId) {
@@ -184,10 +529,31 @@ function gerarDadosSimulados() {
     // Gerar dados baseados em padrões de pesquisa
     const base = parseInt(userId.slice(-3)) % 100; // Usar final do ID para consistência
     
+    const stressPorcentagem = Math.max(10, Math.min(90, 30 + (base % 60)));
+    const vulnerabilidadePorcentagem = Math.max(10, Math.min(90, 25 + ((base * 1.3) % 65)));
+    const msdSimulado = Math.max(0.5, Math.min(4.5, 1.5 + ((base * 0.05) % 3)));
+    const desconfortoPorcentagem = calcularPorcentagemDesconforto(msdSimulado);
+    
     return {
-        stress: Math.max(10, Math.min(90, 30 + (base % 60))),
-        vulnerabilidade: Math.max(10, Math.min(90, 25 + ((base * 1.3) % 65))),
-        desconforto: Math.max(10, Math.min(90, 20 + ((base * 0.8) % 70))),
+        stress: {
+            pontuacao: Math.round(stressPorcentagem * 0.5), // Aproximação para pontuação
+            porcentagem: stressPorcentagem,
+            nivel: determinarNivel(stressPorcentagem)
+        },
+        vulnerabilidade: {
+            pontuacao: Math.round(vulnerabilidadePorcentagem * 0.5),
+            porcentagem: vulnerabilidadePorcentagem,
+            nivel: determinarNivel(vulnerabilidadePorcentagem)
+        },
+        desconforto: {
+            pontuacao: Math.round(desconfortoPorcentagem * 0.24), // Máximo 24 no MEDI-Q
+            msd: msdSimulado,
+            mesi: Math.floor(msdSimulado * 3), // Estimativa
+            sintomasComImpacto: Math.floor(msdSimulado * 5),
+            porcentagem: desconfortoPorcentagem,
+            nivel: determinarNivelDesconforto(msdSimulado)
+        },
+        origem: 'simulado',
         timestamp: new Date().toISOString()
     };
 }
@@ -197,69 +563,90 @@ function gerarDadosSimulados() {
 // ==========================================
 
 function aplicarDiagnosticoStress() {
-    const valor = dadosDiagnostico.stress;
+    const dados = dadosDiagnostico.stress;
+    const valor = dados.porcentagem || dados || 0;
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
     const badge = document.getElementById('nivelStressBadge');
     const texto = document.getElementById('nivelStressTexto');
-    badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-    texto.textContent = `${nivel.toUpperCase()} (${valor}%)`;
+    if (badge && texto) {
+        badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
+        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    }
     
     // Animar barra
     const barra = document.getElementById('barraStress');
-    setTimeout(() => {
-        barra.style.width = `${valor}%`;
-        barra.style.background = gerarGradienteBarra(valor);
-    }, 500);
+    if (barra) {
+        setTimeout(() => {
+            barra.style.width = `${valor}%`;
+            barra.style.background = gerarGradienteBarra(valor);
+        }, 500);
+    }
     
     // Atualizar descrição
-    document.getElementById('descricaoStress').textContent = 
-        CONFIGURACAO_DIAGNOSTICO.textos.stress[nivel];
+    const descricaoElement = document.getElementById('descricaoStress');
+    if (descricaoElement && CONFIGURACAO_DIAGNOSTICO.textos?.stress) {
+        descricaoElement.textContent = CONFIGURACAO_DIAGNOSTICO.textos.stress[nivel];
+    }
 }
 
 function aplicarDiagnosticoVulnerabilidade() {
-    const valor = dadosDiagnostico.vulnerabilidade;
+    const dados = dadosDiagnostico.vulnerabilidade;
+    const valor = dados.porcentagem || dados || 0;
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
     const badge = document.getElementById('nivelVulnerabilidadeBadge');
     const texto = document.getElementById('nivelVulnerabilidadeTexto');
-    badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-    texto.textContent = `${nivel.toUpperCase()} (${valor}%)`;
+    if (badge && texto) {
+        badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
+        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    }
     
     // Animar barra
     const barra = document.getElementById('barraVulnerabilidade');
-    setTimeout(() => {
-        barra.style.width = `${valor}%`;
-        barra.style.background = gerarGradienteBarra(valor);
-    }, 800);
+    if (barra) {
+        setTimeout(() => {
+            barra.style.width = `${valor}%`;
+            barra.style.background = gerarGradienteBarra(valor);
+        }, 800);
+    }
     
     // Atualizar descrição
-    document.getElementById('descricaoVulnerabilidade').textContent = 
-        CONFIGURACAO_DIAGNOSTICO.textos.vulnerabilidade[nivel];
+    const descricaoElement = document.getElementById('descricaoVulnerabilidade');
+    if (descricaoElement && CONFIGURACAO_DIAGNOSTICO.textos?.vulnerabilidade) {
+        descricaoElement.textContent = CONFIGURACAO_DIAGNOSTICO.textos.vulnerabilidade[nivel];
+    }
 }
 
 function aplicarDiagnosticoDesconforto() {
-    const valor = dadosDiagnostico.desconforto;
+    const dados = dadosDiagnostico.desconforto;
+    const valor = dados.porcentagem || dados || 0;
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
     const badge = document.getElementById('nivelDesconfortoBadge');
     const texto = document.getElementById('nivelDesconfortoTexto');
-    badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-    texto.textContent = `${nivel.toUpperCase()} (${valor}%)`;
+    if (badge && texto) {
+        badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
+        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    }
     
     // Animar barra
     const barra = document.getElementById('barraDesconforto');
-    setTimeout(() => {
-        barra.style.width = `${valor}%`;
-        barra.style.background = gerarGradienteBarra(valor);
-    }, 1100);
+    if (barra) {
+        setTimeout(() => {
+            barra.style.width = `${valor}%`;
+            barra.style.background = gerarGradienteBarra(valor);
+        }, 1100);
+    }
     
     // Atualizar descrição
-    document.getElementById('descricaoDesconforto').textContent = 
-        CONFIGURACAO_DIAGNOSTICO.textos.desconforto[nivel];
+    const descricaoElement = document.getElementById('descricaoDesconforto');
+    if (descricaoElement && CONFIGURACAO_DIAGNOSTICO.textos?.desconforto) {
+        descricaoElement.textContent = CONFIGURACAO_DIAGNOSTICO.textos.desconforto[nivel];
+    }
 }
 
 // ==========================================
@@ -269,24 +656,29 @@ function aplicarDiagnosticoDesconforto() {
 function gerarAnaliseIntegrada() {
     const { stress, vulnerabilidade, desconforto } = dadosDiagnostico;
     
+    // Extrair valores de porcentagem
+    const stressValor = stress.porcentagem || stress || 0;
+    const vulnerabilidadeValor = vulnerabilidade.porcentagem || vulnerabilidade || 0;
+    const desconfortoValor = desconforto.porcentagem || desconforto || 0;
+    
     let analise = [];
     
     // Análise da correlação entre stress e desconforto
-    if (stress > 60 && desconforto > 60) {
+    if (stressValor > 60 && desconfortoValor > 60) {
         analise.push("Há uma possível correlação entre seus níveis elevados de stress e desconforto menstrual. Esta é uma observação comum em nossa pesquisa, sugerindo que o manejo do stress pode contribuir para o alívio dos sintomas menstruais.");
-    } else if (stress < 40 && desconforto < 40) {
+    } else if (stressValor < 40 && desconfortoValor < 40) {
         analise.push("Seus baixos níveis de stress parecem correlacionados com menores níveis de desconforto menstrual, o que está alinhado com os achados de nossa pesquisa sobre a relação entre bem-estar emocional e saúde menstrual.");
     }
     
     // Análise da vulnerabilidade
-    if (vulnerabilidade > 70) {
+    if (vulnerabilidadeValor > 70) {
         analise.push("Sua alta vulnerabilidade ao stress sugere que você pode se beneficiar especialmente de estratégias preventivas e técnicas de manejo do stress antes que situações desafiadoras se intensifiquem.");
-    } else if (vulnerabilidade < 30) {
+    } else if (vulnerabilidadeValor < 30) {
         analise.push("Sua baixa vulnerabilidade ao stress indica boa capacidade de resiliência. Isso é um fator protetor importante para seu bem-estar geral.");
     }
     
     // Análise do perfil geral
-    const media = (stress + vulnerabilidade + desconforto) / 3;
+    const media = (stressValor + vulnerabilidadeValor + desconfortoValor) / 3;
     if (media < 35) {
         analise.push("De forma geral, seu perfil indica bons níveis de bem-estar e capacidade de manejo das situações avaliadas. Continue mantendo seus hábitos saudáveis.");
     } else if (media > 65) {

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Questionário Sociodemográfico</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos do questionário sociodemográfico */
+        .questionario-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .questionario-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .questionario-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2em;
+        }
+
+        .questionario-header .subtitulo {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+
+        .instrucoes {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .instrucoes h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+
+        .instrucoes .destaque {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .pergunta-item {
+            margin: 25px 0;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .pergunta-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .pergunta-numero {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+
+        .pergunta-texto {
+            flex: 1;
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .opcoes-container {
+            margin-top: 15px;
+        }
+
+        .opcoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .opcoes-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opcao input[type="radio"] {
+            display: none;
+        }
+
+        .opcao label {
+            display: block;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .opcao label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-1px);
+        }
+
+        .opcao input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .input-personalizado {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .input-personalizado:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .progresso-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progresso-barra {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progresso-texto {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+
+        .btn-voltar {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-voltar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-pular {
+            background: #ffc107;
+            color: #212529;
+            border: 2px solid #ffc107;
+        }
+
+        .btn-pular:hover {
+            background: #e0a800;
+            border-color: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .btn-continuar {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-continuar.ativo {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .btn-continuar.ativo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .aviso-opcional {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .aviso-opcional .icone {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .aviso-opcional h3 {
+            color: #856404;
+            margin: 10px 0;
+        }
+
+        .aviso-opcional p {
+            color: #856404;
+            margin: 10px 0;
+        }
+
+        /* Melhorias de responsividade para mobile */
+        @media (max-width: 768px) {
+            .questionario-container {
+                margin: 10px;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            .questionario-header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .questionario-header h1 {
+                font-size: 1.8em;
+            }
+
+            .questionario-header .subtitulo {
+                font-size: 1em;
+            }
+            
+            .opcoes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .botoes-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 15px 20px;
+                font-size: 1em;
+            }
+
+            .pergunta-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .pergunta-numero {
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .instrucoes {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .instrucoes .destaque {
+                padding: 12px;
+                margin: 12px 0;
+            }
+
+            .aviso-opcional {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .progresso-container {
+                margin: 15px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .questionario-container {
+                margin: 5px;
+                padding: 12px;
+            }
+
+            .questionario-header h1 {
+                font-size: 1.6em;
+            }
+
+            .questionario-header .subtitulo {
+                font-size: 0.9em;
+            }
+
+            .pergunta-item {
+                padding: 15px;
+                margin: 20px 0;
+            }
+
+            .pergunta-texto {
+                font-size: 1em;
+                line-height: 1.3;
+            }
+
+            .opcao label {
+                padding: 12px 15px;
+                font-size: 0.9em;
+                line-height: 1.3;
+            }
+
+            .btn {
+                padding: 14px 20px;
+                font-size: 0.95em;
+            }
+
+            .instrucoes h3 {
+                font-size: 1.1em;
+            }
+
+            .aviso-opcional h3 {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .questionario-container {
+                margin: 2px;
+                padding: 10px;
+            }
+
+            .questionario-header {
+                padding: 12px;
+            }
+
+            .questionario-header h1 {
+                font-size: 1.4em;
+            }
+
+            .pergunta-item {
+                padding: 12px;
+                margin: 15px 0;
+            }
+
+            .opcao label {
+                padding: 10px 12px;
+                font-size: 0.85em;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main style="background: #f5f5f5; min-height: 100vh; padding: 20px 0;">
+        
+        <div class="questionario-container">
+            
+            <!-- Cabeçalho -->
+            <div class="questionario-header">
+                <h1>📊 Questionário Sociodemográfico</h1>
+                <p class="subtitulo">Informações Pessoais para Análise</p>
+                <div class="user-info">
+                    <strong>Seu ID:</strong> <span id="userIdDisplay">Carregando...</span>
+                </div>
+            </div>
+
+            <!-- Aviso de que é opcional -->
+            <div class="aviso-opcional">
+                <div class="icone">ℹ️</div>
+                <h3>Este questionário é OPCIONAL</h3>
+                <p>As informações coletadas são para fins de análise sociodemográfica e ajudam a melhorar nossa pesquisa.</p>
+                <p><strong>Você pode pular este questionário</strong> se preferir ir direto para os questionários principais.</p>
+            </div>
+
+            <!-- Instruções -->
+            <div class="instrucoes">
+                <h3>📋 Instruções</h3>
+                <p><strong>Estas informações são confidenciais e usadas apenas para análise científica.</strong></p>
+                <div class="destaque">
+                    <p><strong>Dados coletados:</strong></p>
+                    <ul>
+                        <li>Idade (faixas etárias de 5 anos)</li>
+                        <li>Cor/raça (conforme IBGE)</li>
+                        <li>Nível de escolaridade</li>
+                        <li>Renda familiar (em salários mínimos)</li>
+                    </ul>
+                </div>
+                <ul>
+                    <li>Todas as perguntas são <strong>opcionais</strong></li>
+                    <li>Você pode pular qualquer pergunta que não quiser responder</li>
+                    <li>Os dados são anônimos e confidenciais</li>
+                </ul>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="progresso-container">
+                <div class="progresso-barra">
+                    <div class="progresso-fill" id="progressoFill"></div>
+                </div>
+                <div class="progresso-texto">
+                    <span id="progressoTexto">0 de 4 perguntas respondidas</span>
+                </div>
+            </div>
+
+            <!-- Formulário -->
+            <form id="questionarioSocioForm">
+                
+                <!-- Pergunta 1: Idade -->
+                <div class="pergunta-item" data-pergunta="1">
+                    <div class="pergunta-header">
+                        <div class="pergunta-numero">1</div>
+                        <div class="pergunta-texto">Qual a sua faixa etária?</div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcoes-vertical">
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="18-22" id="idade_18_22">
+                                <label for="idade_18_22">18-22 anos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="23-27" id="idade_23_27">
+                                <label for="idade_23_27">23-27 anos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="28-32" id="idade_28_32">
+                                <label for="idade_28_32">28-32 anos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="33-37" id="idade_33_37">
+                                <label for="idade_33_37">33-37 anos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="38-40" id="idade_38_40">
+                                <label for="idade_38_40">38-40 anos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="idade" value="nao_informar" id="idade_nao_informar">
+                                <label for="idade_nao_informar">Prefiro não informar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pergunta 2: Cor/Raça -->
+                <div class="pergunta-item" data-pergunta="2">
+                    <div class="pergunta-header">
+                        <div class="pergunta-numero">2</div>
+                        <div class="pergunta-texto">Como você se identifica quanto à cor/raça? (Classificação IBGE)</div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcoes-vertical">
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="branca" id="cor_branca">
+                                <label for="cor_branca">Branca</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="preta" id="cor_preta">
+                                <label for="cor_preta">Preta</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="parda" id="cor_parda">
+                                <label for="cor_parda">Parda</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="amarela" id="cor_amarela">
+                                <label for="cor_amarela">Amarela</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="indigena" id="cor_indigena">
+                                <label for="cor_indigena">Indígena</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="cor_raca" value="nao_informar" id="cor_nao_informar">
+                                <label for="cor_nao_informar">Prefiro não informar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pergunta 3: Escolaridade -->
+                <div class="pergunta-item" data-pergunta="3">
+                    <div class="pergunta-header">
+                        <div class="pergunta-numero">3</div>
+                        <div class="pergunta-texto">Qual o seu nível de escolaridade?</div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcoes-vertical">
+                            <div class="opcao">
+                                <input type="radio" name="escolaridade" value="fundamental_incompleto" id="esc_fund_inc">
+                                <label for="esc_fund_inc">Estudaram por até 4 anos (fundamental incompleto)</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="escolaridade" value="fundamental_completo" id="esc_fund_comp">
+                                <label for="esc_fund_comp">5 a 9 anos de estudo (até fundamental)</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="escolaridade" value="medio_incompleto" id="esc_medio_inc">
+                                <label for="esc_medio_inc">10 a 12 anos de estudo (até Ensino médio)</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="escolaridade" value="superior_pos" id="esc_sup_pos">
+                                <label for="esc_sup_pos">Graduação completa ou pós-graduação</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="escolaridade" value="nao_informar" id="esc_nao_informar">
+                                <label for="esc_nao_informar">Prefiro não informar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pergunta 4: Renda -->
+                <div class="pergunta-item" data-pergunta="4">
+                    <div class="pergunta-header">
+                        <div class="pergunta-numero">4</div>
+                        <div class="pergunta-texto">Qual a renda familiar mensal? (em salários mínimos)</div>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcoes-vertical">
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="menos_1_sm" id="renda_menos_1">
+                                <label for="renda_menos_1">Menos de 1 salário mínimo</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="1_sm" id="renda_1">
+                                <label for="renda_1">1 salário mínimo</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="1_a_2_sm" id="renda_1_2">
+                                <label for="renda_1_2">1 a 2 salários mínimos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="2_a_3_sm" id="renda_2_3">
+                                <label for="renda_2_3">2 a 3 salários mínimos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="3_a_4_sm" id="renda_3_4">
+                                <label for="renda_3_4">3 a 4 salários mínimos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="4_a_5_sm" id="renda_4_5">
+                                <label for="renda_4_5">4 a 5 salários mínimos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="mais_5_sm" id="renda_mais_5">
+                                <label for="renda_mais_5">Mais de 5 salários mínimos</label>
+                            </div>
+                            <div class="opcao">
+                                <input type="radio" name="renda" value="nao_informar" id="renda_nao_informar">
+                                <label for="renda_nao_informar">Prefiro não informar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Botões de Ação -->
+            <div class="botoes-container">
+                <a href="index.html" class="btn btn-voltar">
+                    ← Voltar
+                </a>
+                
+                <button type="button" id="btnPular" class="btn btn-pular" onclick="pularQuestionario()">
+                    Pular Questionário →
+                </button>
+                
+                <button type="button" id="btnContinuar" class="btn btn-continuar" onclick="finalizarQuestionario()">
+                    Continuar →
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Variáveis globais
+        let userId = null;
+        let respostasUsuario = {};
+        let totalPerguntasRespondidas = 0;
+        const totalPerguntas = 4;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter ID do usuário
+            userId = localStorage.getItem('userSessionId');
+            if (!userId) {
+                alert('Erro: ID do usuário não encontrado. Redirecionando para a página inicial.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('userIdDisplay').textContent = userId;
+            
+            // Configurar eventos
+            configurarFormulario();
+            
+            console.log('Questionário Sociodemográfico inicializado para usuário:', userId);
+        });
+
+        function configurarFormulario() {
+            // Configurar eventos para todas as perguntas
+            const perguntas = ['idade', 'cor_raca', 'escolaridade', 'renda'];
+            
+            perguntas.forEach(pergunta => {
+                document.querySelectorAll(`input[name="${pergunta}"]`).forEach(input => {
+                    input.addEventListener('change', function() {
+                        respostasUsuario[pergunta] = this.value;
+                        atualizarProgresso();
+                    });
+                });
+            });
+        }
+
+        function atualizarProgresso() {
+            // Contar perguntas respondidas
+            const perguntasRespondidas = Object.keys(respostasUsuario).length;
+            totalPerguntasRespondidas = perguntasRespondidas;
+            
+            const porcentagem = (perguntasRespondidas / totalPerguntas) * 100;
+            
+            // Atualizar interface
+            document.getElementById('progressoFill').style.width = porcentagem + '%';
+            document.getElementById('progressoTexto').textContent = `${perguntasRespondidas} de ${totalPerguntas} perguntas respondidas`;
+            
+            // Habilitar botão continuar se pelo menos uma pergunta respondida
+            const btnContinuar = document.getElementById('btnContinuar');
+            if (perguntasRespondidas > 0) {
+                btnContinuar.classList.add('ativo');
+                btnContinuar.removeAttribute('disabled');
+            } else {
+                btnContinuar.classList.remove('ativo');
+                btnContinuar.setAttribute('disabled', 'true');
+            }
+        }
+
+        async function salvarDadosGoogleSheets(dados, pulado = false) {
+            try {
+                // Dados para enviar ao Google Sheets
+                const dadosParaSalvar = {
+                    userId: userId,
+                    timestamp: new Date().toISOString(),
+                    data_completa: new Date().toLocaleString('pt-BR'),
+                    questionario_pulado: pulado,
+                    idade: dados.idade || 'não_informado',
+                    cor_raca: dados.cor_raca || 'não_informado',
+                    escolaridade: dados.escolaridade || 'não_informado',
+                    renda: dados.renda || 'não_informado'
+                };
+
+                // Integração com Google Sheets via Apps Script
+                const GOOGLE_SHEETS_URL = 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI'; // Substituir pela URL real
+                
+                if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI') {
+                    const response = await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Necessário para Google Apps Script
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            planilha: 'dados_sociodemograficos',
+                            dados: dadosParaSalvar
+                        })
+                    });
+                    
+                    console.log('Dados enviados para Google Sheets');
+                } else {
+                    console.log('URL do Google Sheets não configurada, salvando apenas localmente');
+                }
+                
+                // Sempre salvar no localStorage como backup
+                localStorage.setItem(`dados_sociodemograficos_${userId}`, JSON.stringify(dadosParaSalvar));
+                
+                return true;
+            } catch (error) {
+                console.error('Erro ao salvar dados sociodemográficos:', error);
+                // Mesmo com erro na API, salvar localmente
+                localStorage.setItem(`dados_sociodemograficos_${userId}`, JSON.stringify(dadosParaSalvar));
+                return true; // Não falhar por causa da API
+            }
+        }
+
+        async function pularQuestionario() {
+            const confirmacao = confirm('Tem certeza de que deseja pular o questionário sociodemográfico?\n\nVocê pode voltar depois se mudar de ideia.');
+            
+            if (confirmacao) {
+                // Salvar que foi pulado
+                await salvarDadosGoogleSheets({}, true);
+                
+                // Marcar como pulado no localStorage
+                let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+                progresso.sociodemografico = 'pulado';
+                localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+                
+                alert('Questionário sociodemográfico pulado. Redirecionando para os questionários principais.');
+                window.location.href = 'questionarios.html';
+            }
+        }
+
+        async function finalizarQuestionario() {
+            if (totalPerguntasRespondidas === 0) {
+                alert('Por favor, responda pelo menos uma pergunta antes de continuar, ou clique em "Pular Questionário".');
+                return;
+            }
+            
+            // Salvar dados
+            const sucesso = await salvarDadosGoogleSheets(respostasUsuario, false);
+            
+            if (sucesso) {
+                // Marcar como completo no localStorage
+                let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+                progresso.sociodemografico = 'completo';
+                localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+                
+                alert(`✅ Questionário sociodemográfico concluído!\n\nRespostas registradas: ${totalPerguntasRespondidas}/${totalPerguntas}\n\nRedirecionando para os questionários principais.`);
+                window.location.href = 'questionarios.html';
+            } else {
+                alert('Erro ao salvar os dados. Tente novamente.');
+            }
+        }
+
+    </script>
+
+</body>
+</html>

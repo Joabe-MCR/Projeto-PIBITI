@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Questionário 2 - Escala de Vulnerabilidade ao Estresse</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <style>
+        /* Estilos específicos do questionário */
+        .questionario-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .questionario-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .questionario-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2em;
+        }
+
+        .questionario-header .subtitulo {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+
+        .progresso-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progresso-barra {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progresso-texto {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .questao {
+            margin: 30px 0;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .questao.active {
+            background: #ffffff;
+            border-left-color: #4CAF50;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .questao-numero {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .questao-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .questao-texto {
+            flex: 1;
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: #333;
+            text-align: left;
+        }
+
+        .opcoes-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .opcao {
+            position: relative;
+        }
+
+        .opcao input[type="radio"] {
+            display: none;
+        }
+
+        .opcao label {
+            display: block;
+            padding: 15px 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            position: relative;
+            font-size: 0.9em;
+        }
+
+        .opcao label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .opcao input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .opcao input[type="radio"]:checked + label::after {
+            content: "✓";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .escala-legenda {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .instrucoes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .instrucoes h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        .instrucoes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-voltar {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-voltar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-finalizar {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-finalizar.ativo {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .btn-finalizar.ativo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .questionario-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .opcoes-container {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+            
+            .opcao label {
+                padding: 12px 5px;
+                font-size: 0.8em;
+            }
+            
+            .botoes-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main style="background: #f5f5f5; min-height: 100vh; padding: 20px 0;">
+        
+        <div class="questionario-container">
+            
+            <!-- Cabeçalho do Questionário -->
+            <div class="questionario-header">
+                <h1>🛡️ Escala de Vulnerabilidade ao Estresse</h1>
+                <p class="subtitulo">Avalie como você lida com situações estressantes do dia a dia</p>
+                <div class="user-info">
+                    <strong>Seu ID:</strong> <span id="userIdDisplay">Carregando...</span>
+                </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="instrucoes">
+                <h3>📋 Instruções</h3>
+                <p><strong>A seguir estão alguns fatores que influenciam sua capacidade de lidar com o estresse.</strong></p>
+                <p>Um aspecto comum de cada item é <strong>"Seja bom consigo mesmo"</strong>. Circule um número de <strong>1 (quase sempre) a 5 (nunca)</strong> de acordo com o tempo em que um item é verdadeiro para você.</p>
+                <ul>
+                    <li>Leia cada pergunta com atenção</li>
+                    <li>Selecione o número que melhor representa sua realidade</li>
+                    <li>Seja honesto consigo mesmo</li>
+                    <li>Não há respostas certas ou erradas</li>
+                </ul>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="progresso-container">
+                <div class="progresso-barra">
+                    <div class="progresso-fill" id="progressoFill"></div>
+                </div>
+                <div class="progresso-texto">
+                    <span id="progressoTexto">0 de 20 questões respondidas</span>
+                </div>
+            </div>
+
+            <!-- Formulário com as 20 Questões -->
+            <form id="questionarioForm">
+                
+                <!-- Questão 1 -->
+                <div class="questao" style="animation-delay: 0.1s">
+                    <div class="questao-header">
+                        <div class="questao-numero">1</div>
+                        <div class="questao-texto">
+                            Eu como pelo menos uma refeição quente e balanceada por dia.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="1" id="q1_1">
+                            <label for="q1_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="2" id="q1_2">
+                            <label for="q1_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="3" id="q1_3">
+                            <label for="q1_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="4" id="q1_4">
+                            <label for="q1_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q1" value="5" id="q1_5">
+                            <label for="q1_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 2 -->
+                <div class="questao" style="animation-delay: 0.2s">
+                    <div class="questao-header">
+                        <div class="questao-numero">2</div>
+                        <div class="questao-texto">
+                            Eu durmo de 7 a 8 horas pelo menos 4 noites por semana.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="1" id="q2_1">
+                            <label for="q2_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="2" id="q2_2">
+                            <label for="q2_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="3" id="q2_3">
+                            <label for="q2_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="4" id="q2_4">
+                            <label for="q2_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q2" value="5" id="q2_5">
+                            <label for="q2_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 3 -->
+                <div class="questao" style="animation-delay: 0.3s">
+                    <div class="questao-header">
+                        <div class="questao-numero">3</div>
+                        <div class="questao-texto">
+                            Eu dou e recebo carinho regularmente.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="1" id="q3_1">
+                            <label for="q3_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="2" id="q3_2">
+                            <label for="q3_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="3" id="q3_3">
+                            <label for="q3_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="4" id="q3_4">
+                            <label for="q3_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q3" value="5" id="q3_5">
+                            <label for="q3_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 4 -->
+                <div class="questao" style="animation-delay: 0.4s">
+                    <div class="questao-header">
+                        <div class="questao-numero">4</div>
+                        <div class="questao-texto">
+                            Tenho pelo menos um parente em um raio de 50 milhas em quem posso confiar.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="1" id="q4_1">
+                            <label for="q4_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="2" id="q4_2">
+                            <label for="q4_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="3" id="q4_3">
+                            <label for="q4_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="4" id="q4_4">
+                            <label for="q4_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q4" value="5" id="q4_5">
+                            <label for="q4_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 5 -->
+                <div class="questao" style="animation-delay: 0.5s">
+                    <div class="questao-header">
+                        <div class="questao-numero">5</div>
+                        <div class="questao-texto">
+                            Eu me exercito até o ponto de transpirar pelo menos duas vezes por semana.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="1" id="q5_1">
+                            <label for="q5_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="2" id="q5_2">
+                            <label for="q5_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="3" id="q5_3">
+                            <label for="q5_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="4" id="q5_4">
+                            <label for="q5_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q5" value="5" id="q5_5">
+                            <label for="q5_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 6 -->
+                <div class="questao" style="animation-delay: 0.6s">
+                    <div class="questao-header">
+                        <div class="questao-numero">6</div>
+                        <div class="questao-texto">
+                            Eu fumo menos de meio maço de cigarros por dia.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="1" id="q6_1">
+                            <label for="q6_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="2" id="q6_2">
+                            <label for="q6_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="3" id="q6_3">
+                            <label for="q6_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="4" id="q6_4">
+                            <label for="q6_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q6" value="5" id="q6_5">
+                            <label for="q6_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 7 -->
+                <div class="questao" style="animation-delay: 0.7s">
+                    <div class="questao-header">
+                        <div class="questao-numero">7</div>
+                        <div class="questao-texto">
+                            Eu tomo menos de 3 bebidas alcoólicas por semana.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="1" id="q7_1">
+                            <label for="q7_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="2" id="q7_2">
+                            <label for="q7_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="3" id="q7_3">
+                            <label for="q7_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="4" id="q7_4">
+                            <label for="q7_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q7" value="5" id="q7_5">
+                            <label for="q7_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 8 -->
+                <div class="questao" style="animation-delay: 0.8s">
+                    <div class="questao-header">
+                        <div class="questao-numero">8</div>
+                        <div class="questao-texto">
+                            Eu tenho o peso apropriado para minha altura.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="1" id="q8_1">
+                            <label for="q8_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="2" id="q8_2">
+                            <label for="q8_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="3" id="q8_3">
+                            <label for="q8_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="4" id="q8_4">
+                            <label for="q8_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q8" value="5" id="q8_5">
+                            <label for="q8_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 9 -->
+                <div class="questao" style="animation-delay: 0.9s">
+                    <div class="questao-header">
+                        <div class="questao-numero">9</div>
+                        <div class="questao-texto">
+                            Tenho renda adequada para cobrir despesas básicas.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="1" id="q9_1">
+                            <label for="q9_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="2" id="q9_2">
+                            <label for="q9_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="3" id="q9_3">
+                            <label for="q9_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="4" id="q9_4">
+                            <label for="q9_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q9" value="5" id="q9_5">
+                            <label for="q9_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 10 -->
+                <div class="questao" style="animation-delay: 1.0s">
+                    <div class="questao-header">
+                        <div class="questao-numero">10</div>
+                        <div class="questao-texto">
+                            Eu recebo força de minhas crenças espirituais.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="1" id="q10_1">
+                            <label for="q10_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="2" id="q10_2">
+                            <label for="q10_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="3" id="q10_3">
+                            <label for="q10_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="4" id="q10_4">
+                            <label for="q10_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q10" value="5" id="q10_5">
+                            <label for="q10_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 11 -->
+                <div class="questao" style="animation-delay: 1.1s">
+                    <div class="questao-header">
+                        <div class="questao-numero">11</div>
+                        <div class="questao-texto">
+                            Frequento regularmente atividades sociais ou de clubes.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q11" value="1" id="q11_1">
+                            <label for="q11_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q11" value="2" id="q11_2">
+                            <label for="q11_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q11" value="3" id="q11_3">
+                            <label for="q11_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q11" value="4" id="q11_4">
+                            <label for="q11_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q11" value="5" id="q11_5">
+                            <label for="q11_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 12 -->
+                <div class="questao" style="animation-delay: 1.2s">
+                    <div class="questao-header">
+                        <div class="questao-numero">12</div>
+                        <div class="questao-texto">
+                            Tenho uma rede de amigos e conhecidos.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q12" value="1" id="q12_1">
+                            <label for="q12_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q12" value="2" id="q12_2">
+                            <label for="q12_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q12" value="3" id="q12_3">
+                            <label for="q12_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q12" value="4" id="q12_4">
+                            <label for="q12_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q12" value="5" id="q12_5">
+                            <label for="q12_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 13 -->
+                <div class="questao" style="animation-delay: 1.3s">
+                    <div class="questao-header">
+                        <div class="questao-numero">13</div>
+                        <div class="questao-texto">
+                            Tenho um ou mais amigos em quem confiar sobre pessoal Importa.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q13" value="1" id="q13_1">
+                            <label for="q13_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q13" value="2" id="q13_2">
+                            <label for="q13_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q13" value="3" id="q13_3">
+                            <label for="q13_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q13" value="4" id="q13_4">
+                            <label for="q13_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q13" value="5" id="q13_5">
+                            <label for="q13_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 14 -->
+                <div class="questao" style="animation-delay: 1.4s">
+                    <div class="questao-header">
+                        <div class="questao-numero">14</div>
+                        <div class="questao-texto">
+                            Estou bem de saúde (incluindo visão, audição, dentes).
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q14" value="1" id="q14_1">
+                            <label for="q14_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q14" value="2" id="q14_2">
+                            <label for="q14_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q14" value="3" id="q14_3">
+                            <label for="q14_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q14" value="4" id="q14_4">
+                            <label for="q14_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q14" value="5" id="q14_5">
+                            <label for="q14_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 15 -->
+                <div class="questao" style="animation-delay: 1.5s">
+                    <div class="questao-header">
+                        <div class="questao-numero">15</div>
+                        <div class="questao-texto">
+                            Sou capaz de falar abertamente sobre meus sentimentos quando estou com raiva preocupado.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q15" value="1" id="q15_1">
+                            <label for="q15_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q15" value="2" id="q15_2">
+                            <label for="q15_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q15" value="3" id="q15_3">
+                            <label for="q15_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q15" value="4" id="q15_4">
+                            <label for="q15_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q15" value="5" id="q15_5">
+                            <label for="q15_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 16 -->
+                <div class="questao" style="animation-delay: 1.6s">
+                    <div class="questao-header">
+                        <div class="questao-numero">16</div>
+                        <div class="questao-texto">
+                            Tenho conversas regulares com as pessoas com quem moro.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q16" value="1" id="q16_1">
+                            <label for="q16_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q16" value="2" id="q16_2">
+                            <label for="q16_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q16" value="3" id="q16_3">
+                            <label for="q16_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q16" value="4" id="q16_4">
+                            <label for="q16_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q16" value="5" id="q16_5">
+                            <label for="q16_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 17 -->
+                <div class="questao" style="animation-delay: 1.7s">
+                    <div class="questao-header">
+                        <div class="questao-numero">17</div>
+                        <div class="questao-texto">
+                            Eu faço algo para me divertir pelo menos uma vez por semana.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q17" value="1" id="q17_1">
+                            <label for="q17_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q17" value="2" id="q17_2">
+                            <label for="q17_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q17" value="3" id="q17_3">
+                            <label for="q17_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q17" value="4" id="q17_4">
+                            <label for="q17_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q17" value="5" id="q17_5">
+                            <label for="q17_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 18 -->
+                <div class="questao" style="animation-delay: 1.8s">
+                    <div class="questao-header">
+                        <div class="questao-numero">18</div>
+                        <div class="questao-texto">
+                            Sou capaz de organizar meu tempo de forma eficaz.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q18" value="1" id="q18_1">
+                            <label for="q18_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q18" value="2" id="q18_2">
+                            <label for="q18_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q18" value="3" id="q18_3">
+                            <label for="q18_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q18" value="4" id="q18_4">
+                            <label for="q18_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q18" value="5" id="q18_5">
+                            <label for="q18_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 19 -->
+                <div class="questao" style="animation-delay: 1.9s">
+                    <div class="questao-header">
+                        <div class="questao-numero">19</div>
+                        <div class="questao-texto">
+                            Eu bebo menos de 3 xícaras de café (ou chá ou refrigerantes de cola) por dia.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q19" value="1" id="q19_1">
+                            <label for="q19_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q19" value="2" id="q19_2">
+                            <label for="q19_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q19" value="3" id="q19_3">
+                            <label for="q19_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q19" value="4" id="q19_4">
+                            <label for="q19_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q19" value="5" id="q19_5">
+                            <label for="q19_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questão 20 -->
+                <div class="questao" style="animation-delay: 2.0s">
+                    <div class="questao-header">
+                        <div class="questao-numero">20</div>
+                        <div class="questao-texto">
+                            Eu tiro um tempo de silêncio para mim durante o dia.
+                        </div>
+                    </div>
+                    <div class="escala-legenda">
+                        <span>Quase sempre (1)</span>
+                        <span>Nunca (5)</span>
+                    </div>
+                    <div class="opcoes-container">
+                        <div class="opcao">
+                            <input type="radio" name="q20" value="1" id="q20_1">
+                            <label for="q20_1">1<br>Quase sempre</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q20" value="2" id="q20_2">
+                            <label for="q20_2">2</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q20" value="3" id="q20_3">
+                            <label for="q20_3">3</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q20" value="4" id="q20_4">
+                            <label for="q20_4">4</label>
+                        </div>
+                        <div class="opcao">
+                            <input type="radio" name="q20" value="5" id="q20_5">
+                            <label for="q20_5">5<br>Nunca</label>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Botões de Ação -->
+            <div class="botoes-container">
+                <a href="questionarios.html" class="btn btn-voltar">
+                    ← Voltar aos Questionários
+                </a>
+                
+                <button type="button" id="btnFinalizar" class="btn btn-finalizar" onclick="finalizarQuestionario()">
+                    Finalizar Questionário →
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Variáveis globais
+        let userId = null;
+        let respostasUsuario = {};
+        let totalRespondidas = 0;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter ID do usuário do localStorage
+            userId = localStorage.getItem('userSessionId');
+            if (!userId) {
+                alert('Erro: ID do usuário não encontrado. Redirecionando para os questionários.');
+                window.location.href = 'questionarios.html';
+                return;
+            }
+            
+            document.getElementById('userIdDisplay').textContent = userId;
+            
+            // Verificar se questionário 1 foi completado
+            const progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+            if (!progresso.questionario1) {
+                alert('Complete o Questionário 1 primeiro!');
+                window.location.href = 'questionarios.html';
+                return;
+            }
+            
+            // Configurar eventos
+            configurarFormulario();
+            
+            console.log('Questionário 2 inicializado para usuário:', userId);
+        });
+
+        function configurarFormulario() {
+            const form = document.getElementById('questionarioForm');
+            const inputs = form.querySelectorAll('input[type="radio"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Marcar questão como ativa
+                    const questao = this.closest('.questao');
+                    questao.classList.add('active');
+                    
+                    // Atualizar respostas
+                    const pergunta = this.name;
+                    const valor = parseInt(this.value);
+                    respostasUsuario[pergunta] = valor;
+                    
+                    // Atualizar progresso
+                    atualizarProgresso();
+                });
+            });
+        }
+
+        function atualizarProgresso() {
+            totalRespondidas = Object.keys(respostasUsuario).length;
+            const porcentagem = (totalRespondidas / 20) * 100;
+            
+            // Atualizar barra de progresso
+            document.getElementById('progressoFill').style.width = porcentagem + '%';
+            document.getElementById('progressoTexto').textContent = `${totalRespondidas} de 20 questões respondidas`;
+            
+            // Habilitar botão finalizar se todas respondidas
+            const btnFinalizar = document.getElementById('btnFinalizar');
+            if (totalRespondidas === 20) {
+                btnFinalizar.classList.add('ativo');
+                btnFinalizar.removeAttribute('disabled');
+            } else {
+                btnFinalizar.classList.remove('ativo');
+                btnFinalizar.setAttribute('disabled', 'true');
+            }
+        }
+
+        function finalizarQuestionario() {
+            if (totalRespondidas !== 20) {
+                alert('Por favor, responda todas as 20 questões antes de finalizar.');
+                return;
+            }
+            
+            // Calcular pontuação total (soma simples - menor pontuação = menor vulnerabilidade)
+            let pontuacaoTotal = 0;
+            for (let pergunta in respostasUsuario) {
+                pontuacaoTotal += respostasUsuario[pergunta];
+            }
+            
+            // Determinar nível de vulnerabilidade
+            let nivelVulnerabilidade, interpretacao;
+            if (pontuacaoTotal <= 35) {
+                nivelVulnerabilidade = 'Baixa';
+                interpretacao = 'Você possui recursos adequados para lidar com o estresse';
+            } else if (pontuacaoTotal <= 70) {
+                nivelVulnerabilidade = 'Moderada';
+                interpretacao = 'Você possui alguns recursos, mas pode se beneficiar de estratégias adicionais';
+            } else {
+                nivelVulnerabilidade = 'Alta';
+                interpretacao = 'Você pode se beneficiar significativamente do desenvolvimento de estratégias de enfrentamento';
+            }
+            
+            // Preparar dados para salvar
+            const resultadoFinal = {
+                questionario: 'escala_vulnerabilidade_estresse',
+                userId: userId,
+                timestamp: new Date().toISOString(),
+                respostas: respostasUsuario,
+                pontuacaoTotal: pontuacaoTotal,
+                nivelVulnerabilidade: nivelVulnerabilidade,
+                interpretacao: interpretacao,
+                dataCompleta: new Date().toLocaleString('pt-BR')
+            };
+            
+            // Salvar resultado no localStorage
+            localStorage.setItem(`resultado_q2_${userId}`, JSON.stringify(resultadoFinal));
+            
+            // Marcar questionário 2 como completo
+            let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+            progresso.questionario2 = true;
+            localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+            
+            // Mostrar confirmação e redirecionar
+            alert(`✅ Questionário 2 concluído!\n\nSua pontuação: ${pontuacaoTotal}/100\nNível de Vulnerabilidade: ${nivelVulnerabilidade}\n\nVocê será redirecionado para os questionários. O Questionário 3 já estará disponível!`);
+            
+            // Redirecionar para página de questionários
+            window.location.href = 'questionarios.html';
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Questionário 3 - MEDI-Q (Desconforto Menstrual)</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <style>
+        /* Estilos específicos do MEDI-Q */
+        .questionario-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .questionario-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .questionario-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2em;
+        }
+
+        .questionario-header .subtitulo {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+
+        .progresso-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progresso-barra {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progresso-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progresso-texto {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sintoma-item {
+            margin: 25px 0;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sintoma-item.ativo {
+            border-left-color: #4CAF50;
+            background: #f8fff8;
+        }
+
+        .sintoma-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .sintoma-numero {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+
+        .sintoma-texto {
+            flex: 1;
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Pergunta A - Frequência */
+        .pergunta-frequencia {
+            margin: 15px 0;
+        }
+
+        .pergunta-frequencia .titulo {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .opcoes-frequencia {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .opcao-freq input[type="radio"] {
+            display: none;
+        }
+
+        .opcao-freq label {
+            display: block;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .opcao-freq label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-1px);
+        }
+
+        .opcao-freq input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        /* Perguntas B, C, D - Condicionais */
+        .perguntas-condicionais {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            border: 1px solid #e0e8ff;
+            display: none;
+            animation: slideDown 0.4s ease;
+        }
+
+        .perguntas-condicionais.visivel {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pergunta-condicional {
+            margin: 20px 0;
+        }
+
+        .pergunta-condicional .titulo {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .opcoes-intensidade {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .opcao-int input[type="radio"] {
+            display: none;
+        }
+
+        .opcao-int label {
+            display: block;
+            padding: 10px 8px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .opcao-int label:hover {
+            border-color: #4CAF50;
+            background: #f0fff0;
+        }
+
+        .opcao-int input[type="radio"]:checked + label {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .pergunta-especial {
+            margin: 30px 0;
+            padding: 25px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+        }
+
+        .pergunta-especial .titulo {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .pergunta-especial .opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pergunta-especial .opcao {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            border: 2px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pergunta-especial .opcao:hover {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .pergunta-especial input[type="radio"] {
+            display: none;
+        }
+
+        .pergunta-especial input[type="radio"]:checked + .opcao {
+            border-color: #ffc107;
+            background: #fff3cd;
+            font-weight: 600;
+        }
+
+        .pergunta-especial .opcao label {
+            margin: 0;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .instrucoes {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .instrucoes h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+
+        .instrucoes ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .instrucoes .destaque {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-voltar {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-voltar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-finalizar {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-finalizar.ativo {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .btn-finalizar.ativo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .resultado-preview {
+            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .resultado-preview.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .resultado-indices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .indice-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .indice-valor {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .indice-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .interpretacao-msd {
+            background: #ffffff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .interpretacao-msd h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .nivel-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .nivel-muito-baixo { background: #d4edda; color: #155724; }
+        .nivel-baixo { background: #cce5ff; color: #0056b3; }
+        .nivel-moderado { background: #fff3cd; color: #856404; }
+        .nivel-significativo { background: #f8d7da; color: #721c24; }
+        .nivel-muito-elevado { background: #dc3545; color: white; }
+
+        @media (max-width: 768px) {
+            .questionario-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .opcoes-frequencia {
+                grid-template-columns: 1fr;
+            }
+            
+            .opcoes-intensidade {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .botoes-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main style="background: #f5f5f5; min-height: 100vh; padding: 20px 0;">
+        
+        <div class="questionario-container">
+            
+            <!-- Cabeçalho -->
+            <div class="questionario-header">
+                <h1>🌺 Questionário MEDI-Q</h1>
+                <p class="subtitulo">Questionário de Desconforto Menstrual</p>
+                <div class="user-info">
+                    <strong>Seu ID:</strong> <span id="userIdDisplay">Carregando...</span>
+                </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="instrucoes">
+                <h3>📋 Instruções</h3>
+                <p><strong>Por favor, revise cuidadosamente a lista de sintomas fornecidos.</strong></p>
+                <div class="destaque">
+                    <p><strong>Para cada sintoma durante seus períodos nos últimos 12 meses:</strong></p>
+                    <ul>
+                        <li>Se você <strong>NÃO</strong> teve um sintoma específico, responda também "Não" no próximo sintoma da lista</li>
+                        <li>Se você <strong>teve</strong> um sintoma, responda também às perguntas B, C e D sobre o impacto desse sintoma em seu funcionamento e qualidade de vida</li>
+                    </ul>
+                </div>
+                <ul>
+                    <li>Leia cada sintoma com atenção</li>
+                    <li>Considere os <strong>últimos 12 meses</strong></li>
+                    <li>As perguntas adicionais aparecem automaticamente quando necessário</li>
+                    <li>Seja honesta sobre o impacto dos sintomas em sua vida</li>
+                </ul>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="progresso-container">
+                <div class="progresso-barra">
+                    <div class="progresso-fill" id="progressoFill"></div>
+                </div>
+                <div class="progresso-texto">
+                    <span id="progressoTexto">0 de 25 sintomas avaliados</span>
+                </div>
+            </div>
+
+            <!-- Formulário com os 25 Sintomas -->
+            <form id="questionarioForm">
+                <div id="sintomasContainer"></div>
+
+                <!-- Pergunta Especial 25 -->
+                <div class="pergunta-especial">
+                    <div class="titulo">25. Você teve interações sexuais que incluíram penetração vaginal no último ano?</div>
+                    <div class="opcoes">
+                        <input type="radio" name="q25" value="sim" id="q25_sim">
+                        <div class="opcao">
+                            <label for="q25_sim">✓ Sim</label>
+                        </div>
+                        
+                        <input type="radio" name="q25" value="nao" id="q25_nao">
+                        <div class="opcao">
+                            <label for="q25_nao">✗ Não (terminar o questionário)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Perguntas 25A, 25B, 25C, 25D (condicionais) -->
+                <div id="perguntas_25_extras" style="display: none;">
+                    <div class="sintoma-item" style="border-left-color: #ffc107; background: #fffbf0;">
+                        <div class="sintoma-header">
+                            <div class="sintoma-numero" style="background: #ffc107;">25A</div>
+                            <div class="sintoma-texto">Tem dor durante a penetração vaginal?</div>
+                        </div>
+                        
+                        <div class="pergunta-frequencia">
+                            <div class="titulo">Em média, no ano passado, nos dias em que você menstruou, você...</div>
+                            <div class="opcoes-frequencia">
+                                <div class="opcao-freq">
+                                    <input type="radio" name="s25a_freq" value="2" id="s25a_freq_2">
+                                    <label for="s25a_freq_2">Sim, mais da metade das vezes que menstruei</label>
+                                </div>
+                                <div class="opcao-freq">
+                                    <input type="radio" name="s25a_freq" value="1" id="s25a_freq_1">
+                                    <label for="s25a_freq_1">Sim, menos da metade das vezes que menstruei</label>
+                                </div>
+                                <div class="opcao-freq">
+                                    <input type="radio" name="s25a_freq" value="0" id="s25a_freq_0">
+                                    <label for="s25a_freq_0">Não</label>
+                                </div>
+                                <div class="opcao-freq">
+                                    <input type="radio" name="s25a_freq" value="2_never_pain" id="s25a_freq_2_never_pain">
+                                    <label for="s25a_freq_2_never_pain">Nunca tive penetração menstrual por dor</label>
+                                </div>
+                                <div class="opcao-freq">
+                                    <input type="radio" name="s25a_freq" value="0_never_other" id="s25a_freq_0_never_other">
+                                    <label for="s25a_freq_0_never_other">Nunca tive penetração menstrual por outros motivos</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="perguntas-condicionais" id="s25a_condicionais">
+                            <p><strong>Se você teve esse sintoma, até que ponto ele interferiu na sua qualidade de vida, nas suas atividades recreativas ou de trabalho, ou nas suas relações sociais...</strong></p>
+                            
+                            <div class="pergunta-condicional">
+                                <div class="titulo">B. ... Nos dias em que você estava menstruada?</div>
+                                <div class="opcoes-intensidade">
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_mens" value="0" id="s25a_mens_0">
+                                        <label for="s25a_mens_0">De modo algum</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_mens" value="1" id="s25a_mens_1">
+                                        <label for="s25a_mens_1">Um pouco</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_mens" value="2" id="s25a_mens_2">
+                                        <label for="s25a_mens_2">Moderadamente</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_mens" value="3" id="s25a_mens_3">
+                                        <label for="s25a_mens_3">Muito</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_mens" value="never" id="s25a_mens_never">
+                                        <label for="s25a_mens_never">Nunca tive esse sintoma</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pergunta-condicional">
+                                <div class="titulo">C. ... Durante a fase pré-menstrual (nos 7 dias anteriores ao início da menstruação)?</div>
+                                <div class="opcoes-intensidade">
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_pre" value="0" id="s25a_pre_0">
+                                        <label for="s25a_pre_0">De modo algum / Nunca tive esse sintoma durante a fase pré-menstrual</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_pre" value="1" id="s25a_pre_1">
+                                        <label for="s25a_pre_1">Um pouco</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_pre" value="2" id="s25a_pre_2">
+                                        <label for="s25a_pre_2">Moderadamente</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_pre" value="3" id="s25a_pre_3">
+                                        <label for="s25a_pre_3">Muito</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pergunta-condicional">
+                                <div class="titulo">D. ... durante os outros dias (fora da fase menstrual/pré-menstrual)?</div>
+                                <div class="opcoes-intensidade">
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_outros" value="0" id="s25a_outros_0">
+                                        <label for="s25a_outros_0">De modo algum / Nunca tive esse sintoma durante os outros dias</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_outros" value="1" id="s25a_outros_1">
+                                        <label for="s25a_outros_1">Um pouco</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_outros" value="2" id="s25a_outros_2">
+                                        <label for="s25a_outros_2">Moderadamente</label>
+                                    </div>
+                                    <div class="opcao-int">
+                                        <input type="radio" name="s25a_outros" value="3" id="s25a_outros_3">
+                                        <label for="s25a_outros_3">Muito</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Preview do Resultado -->
+            <div id="resultadoPreview" class="resultado-preview">
+                <h3>📊 Resultados Preliminares MEDI-Q</h3>
+                <div class="resultado-indices">
+                    <div class="indice-card">
+                        <div class="indice-valor" id="pontuacaoTotal">0</div>
+                        <div class="indice-label">Pontuação Total</div>
+                    </div>
+                    <div class="indice-card">
+                        <div class="indice-valor" id="sintomasEM">0</div>
+                        <div class="indice-label">Sintomas Menstruais (MS)</div>
+                    </div>
+                    <div class="indice-card">
+                        <div class="indice-valor" id="indiceMSD">0.0</div>
+                        <div class="indice-label">MSD</div>
+                    </div>
+                    <div class="indice-card">
+                        <div class="indice-valor" id="indiceMESI">0.0</div>
+                        <div class="indice-label">MESI</div>
+                    </div>
+                </div>
+                
+                <div class="interpretacao-msd" id="interpretacaoMSD">
+                    <h4>Interpretação do Nível de Desconforto:</h4>
+                    <p id="textoInterpretacao">Complete o questionário para ver a interpretação.</p>
+                </div>
+                
+                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                    <strong>Legenda:</strong> MS = Sintomas com impacto, MSD = Índice de Sofrimento, MESI = Índice de Especificidade
+                </p>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="botoes-container">
+                <a href="questionarios.html" class="btn btn-voltar">
+                    ← Voltar aos Questionários
+                </a>
+                
+                <button type="button" id="btnFinalizar" class="btn btn-finalizar" onclick="finalizarQuestionario()">
+                    Finalizar MEDI-Q →
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        // Variáveis globais
+        let userId = null;
+        let respostasUsuario = {};
+        let totalSintomasAvaliados = 0;
+        const totalSintomas = 25;
+
+        // Sintomas completos do MEDI-Q (todos os 24 + pergunta 25A)
+        const sintomas = [
+            "Tem dor na parte inferior do abdômen?",
+            "Tem dor ao urinar?",
+            "Tem dor durante a evacuação?",
+            "Tem dores musculares/ósseas/articulares?",
+            "Sente-se inchado ou sentiu sensibilidade nos seios?",
+            "Sente náuseas?",
+            "Tem dores de cabeça?",
+            "Tem problemas digestivos (azia, sensação desconfortável de saciedade após as refeições...)?",
+            "Tem diarreia?",
+            "Tem constipação?",
+            "Tem desconforto devido ao sangramento vaginal (medo de manchas ou odores, desconforto do tampão, dificuldade ou constrangimento durante as atividades sexuais...)?",
+            "Tem a sensação de estar suja?",
+            "Sente-se excessivamente triste (chorar facilmente, pouca vontade de fazer as coisas, perda de interesse pelas atividades habituais...)?",
+            "Sente-se emocionalmente instável (humor flutuante, transição rápida de um humor para outro, mesmo em resposta a estímulos mínimos...)?",
+            "Sente-se irritada ou mal-humorada (sentir-se nervosa, não ser capaz de suportar eventos, pessoas ou situações inesperadas, sentir-se com raiva facilmente...)?",
+            "Sente-se impulsiva (levada a agir sem pensar ou planejar...)?",
+            "Sente-se ansiosa (agitada, tensa, excessivamente insegura ou indecisa, com medo de que algo ruim possa acontecer a qualquer momento...)?",
+            "Tem fome excessiva (vontade de comer demais, perda de controle sobre a comida...)?",
+            "Sente falta de fome?",
+            "Tem insônia (incapacidade de adormecer ou permanecer dormindo)?",
+            "Sente sonolência excessiva (dormir durante o dia, não conseguir levantar-se de manhã...)?",
+            "Sente-se excessivamente cansada (lenta, com pouca energia...)?",
+            "Tem baixo desejo sexual (redução do desejo de ter atividades sexuais, falta de fantasias sexuais...)?",
+            "Tem dificuldade de concentração?"
+        ];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter ID do usuário
+            userId = localStorage.getItem('userSessionId');
+            if (!userId) {
+                alert('Erro: ID do usuário não encontrado. Redirecionando para os questionários.');
+                window.location.href = 'questionarios.html';
+                return;
+            }
+            
+            document.getElementById('userIdDisplay').textContent = userId;
+            
+            // Verificar se questionários 1 e 2 foram completados
+            const progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+            if (!progresso.questionario1 || !progresso.questionario2) {
+                alert('Complete os Questionários 1 e 2 primeiro!');
+                window.location.href = 'questionarios.html';
+                return;
+            }
+            
+            // Gerar sintomas dinamicamente
+            gerarSintomas();
+            
+            // Configurar eventos
+            configurarFormulario();
+            
+            console.log('MEDI-Q inicializado para usuário:', userId);
+        });
+
+        function gerarSintomas() {
+            const container = document.getElementById('sintomasContainer');
+            
+            sintomas.forEach((texto, index) => {
+                const numeroSintoma = index + 1;
+                
+                const sintomaDiv = document.createElement('div');
+                sintomaDiv.className = 'sintoma-item';
+                sintomaDiv.setAttribute('data-sintoma', numeroSintoma);
+                
+                sintomaDiv.innerHTML = `
+                    <div class="sintoma-header">
+                        <div class="sintoma-numero">${numeroSintoma}</div>
+                        <div class="sintoma-texto">${texto}</div>
+                    </div>
+                    
+                    <div class="pergunta-frequencia">
+                        <div class="titulo">Em média, no ano passado, nos dias em que você menstruou, você...</div>
+                        <div class="opcoes-frequencia">
+                            <div class="opcao-freq">
+                                <input type="radio" name="s${numeroSintoma}_freq" value="2" id="s${numeroSintoma}_freq_2">
+                                <label for="s${numeroSintoma}_freq_2">Sim, mais da metade das vezes que menstruei</label>
+                            </div>
+                            <div class="opcao-freq">
+                                <input type="radio" name="s${numeroSintoma}_freq" value="1" id="s${numeroSintoma}_freq_1">
+                                <label for="s${numeroSintoma}_freq_1">Sim, menos da metade das vezes que menstruei</label>
+                            </div>
+                            <div class="opcao-freq">
+                                <input type="radio" name="s${numeroSintoma}_freq" value="0" id="s${numeroSintoma}_freq_0">
+                                <label for="s${numeroSintoma}_freq_0">Não</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="perguntas-condicionais" id="s${numeroSintoma}_condicionais">
+                        <p><strong>Se você teve esse sintoma, até que ponto ele interferiu na sua qualidade de vida, nas suas atividades recreativas ou de trabalho, ou nas suas relações sociais...</strong></p>
+                        
+                        <div class="pergunta-condicional">
+                            <div class="titulo">B. ... Nos dias em que você estava menstruada?</div>
+                            <div class="opcoes-intensidade">
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_mens" value="0" id="s${numeroSintoma}_mens_0">
+                                    <label for="s${numeroSintoma}_mens_0">De modo algum</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_mens" value="1" id="s${numeroSintoma}_mens_1">
+                                    <label for="s${numeroSintoma}_mens_1">Um pouco</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_mens" value="2" id="s${numeroSintoma}_mens_2">
+                                    <label for="s${numeroSintoma}_mens_2">Moderadamente</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_mens" value="3" id="s${numeroSintoma}_mens_3">
+                                    <label for="s${numeroSintoma}_mens_3">Muito</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pergunta-condicional">
+                            <div class="titulo">C. ... Durante a fase pré-menstrual (nos 7 dias anteriores ao início da menstruação)?</div>
+                            <div class="opcoes-intensidade">
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_pre" value="0" id="s${numeroSintoma}_pre_0">
+                                    <label for="s${numeroSintoma}_pre_0">De modo algum / Nunca tive esse sintoma durante a fase pré-menstrual</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_pre" value="1" id="s${numeroSintoma}_pre_1">
+                                    <label for="s${numeroSintoma}_pre_1">Um pouco</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_pre" value="2" id="s${numeroSintoma}_pre_2">
+                                    <label for="s${numeroSintoma}_pre_2">Moderadamente</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_pre" value="3" id="s${numeroSintoma}_pre_3">
+                                    <label for="s${numeroSintoma}_pre_3">Muito</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pergunta-condicional">
+                            <div class="titulo">D. ... durante os outros dias (fora da fase menstrual/pré-menstrual)?</div>
+                            <div class="opcoes-intensidade">
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_outros" value="0" id="s${numeroSintoma}_outros_0">
+                                    <label for="s${numeroSintoma}_outros_0">De modo algum / Nunca tive esse sintoma durante os outros dias</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_outros" value="1" id="s${numeroSintoma}_outros_1">
+                                    <label for="s${numeroSintoma}_outros_1">Um pouco</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_outros" value="2" id="s${numeroSintoma}_outros_2">
+                                    <label for="s${numeroSintoma}_outros_2">Moderadamente</label>
+                                </div>
+                                <div class="opcao-int">
+                                    <input type="radio" name="s${numeroSintoma}_outros" value="3" id="s${numeroSintoma}_outros_3">
+                                    <label for="s${numeroSintoma}_outros_3">Muito</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(sintomaDiv);
+            });
+        }
+
+        function configurarFormulario() {
+            // Configurar eventos para perguntas de frequência
+            document.querySelectorAll('input[name$="_freq"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const sintomaNum = this.name.split('_')[0].substring(1);
+                    const valor = parseInt(this.value);
+                    
+                    // Salvar resposta
+                    if (!respostasUsuario[`sintoma${sintomaNum}`]) {
+                        respostasUsuario[`sintoma${sintomaNum}`] = {};
+                    }
+                    respostasUsuario[`sintoma${sintomaNum}`].frequencia = valor;
+                    
+                    // Mostrar/ocultar perguntas condicionais
+                    const condicionais = document.getElementById(`s${sintomaNum}_condicionais`);
+                    const sintomaItem = document.querySelector(`[data-sintoma="${sintomaNum}"]`);
+                    
+                    if (valor > 0) {
+                        // Mostrar perguntas condicionais
+                        condicionais.classList.add('visivel');
+                        sintomaItem.classList.add('ativo');
+                    } else {
+                        // Ocultar perguntas condicionais
+                        condicionais.classList.remove('visivel');
+                        sintomaItem.classList.remove('ativo');
+                        
+                        // Limpar respostas condicionais
+                        ['mens', 'pre', 'outros'].forEach(tipo => {
+                            const inputs = document.querySelectorAll(`input[name="s${sintomaNum}_${tipo}"]`);
+                            inputs.forEach(inp => inp.checked = false);
+                            if (respostasUsuario[`sintoma${sintomaNum}`]) {
+                                delete respostasUsuario[`sintoma${sintomaNum}`][tipo];
+                            }
+                        });
+                    }
+                    
+                    atualizarProgresso();
+                    calcularResultados();
+                });
+            });
+
+            // Configurar eventos para perguntas condicionais
+            document.querySelectorAll('input[name$="_mens"], input[name$="_pre"], input[name$="_outros"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parts = this.name.split('_');
+                    const sintomaNum = parts[0].substring(1);
+                    const tipo = parts[1];
+                    const valor = this.value === 'never' ? 0 : parseInt(this.value);
+                    
+                    // Salvar resposta
+                    if (!respostasUsuario[`sintoma${sintomaNum}`]) {
+                        respostasUsuario[`sintoma${sintomaNum}`] = {};
+                    }
+                    respostasUsuario[`sintoma${sintomaNum}`][tipo] = valor;
+                    
+                    calcularResultados();
+                });
+            });
+
+            // Configurar pergunta 25
+            document.querySelectorAll('input[name="q25"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const perguntasExtras = document.getElementById('perguntas_25_extras');
+                    if (this.value === 'sim') {
+                        perguntasExtras.style.display = 'block';
+                    } else {
+                        perguntasExtras.style.display = 'none';
+                        // Limpar respostas da 25A
+                        if (respostasUsuario.sintoma25a) {
+                            delete respostasUsuario.sintoma25a;
+                        }
+                    }
+                    
+                    respostasUsuario.q25 = this.value;
+                    atualizarProgresso();
+                    calcularResultados();
+                });
+            });
+
+            // Configurar pergunta 25A
+            document.querySelectorAll('input[name="s25a_freq"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    let valor;
+                    if (this.value.startsWith('2_never')) {
+                        valor = 2;
+                    } else if (this.value.startsWith('0_never')) {
+                        valor = 0;
+                    } else {
+                        valor = parseInt(this.value);
+                    }
+                    
+                    if (!respostasUsuario.sintoma25a) {
+                        respostasUsuario.sintoma25a = {};
+                    }
+                    respostasUsuario.sintoma25a.frequencia = valor;
+                    
+                    // Mostrar/ocultar perguntas condicionais da 25A
+                    const condicionais = document.getElementById('s25a_condicionais');
+                    if (valor > 0) {
+                        condicionais.classList.add('visivel');
+                    } else {
+                        condicionais.classList.remove('visivel');
+                        // Limpar respostas condicionais
+                        ['mens', 'pre', 'outros'].forEach(tipo => {
+                            const inputs = document.querySelectorAll(`input[name="s25a_${tipo}"]`);
+                            inputs.forEach(inp => inp.checked = false);
+                            if (respostasUsuario.sintoma25a) {
+                                delete respostasUsuario.sintoma25a[tipo];
+                            }
+                        });
+                    }
+                    
+                    atualizarProgresso();
+                    calcularResultados();
+                });
+            });
+
+            // Configurar eventos condicionais da 25A
+            document.querySelectorAll('input[name="s25a_mens"], input[name="s25a_pre"], input[name="s25a_outros"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const parts = this.name.split('_');
+                    const tipo = parts[1];
+                    const valor = this.value === 'never' ? 0 : parseInt(this.value);
+                    
+                    if (!respostasUsuario.sintoma25a) {
+                        respostasUsuario.sintoma25a = {};
+                    }
+                    respostasUsuario.sintoma25a[tipo] = valor;
+                    
+                    calcularResultados();
+                });
+            });
+        }
+
+        function atualizarProgresso() {
+            // Contar sintomas avaliados (que têm pelo menos a frequência respondida)
+            let sintomasAvaliados = 0;
+            
+            // Sintomas 1-24
+            for (let i = 1; i <= 24; i++) {
+                if (respostasUsuario[`sintoma${i}`] && respostasUsuario[`sintoma${i}`].frequencia !== undefined) {
+                    sintomasAvaliados++;
+                }
+            }
+            
+            // Pergunta 25
+            if (respostasUsuario.q25) {
+                sintomasAvaliados++;
+            }
+            
+            totalSintomasAvaliados = sintomasAvaliados;
+            const porcentagem = (sintomasAvaliados / totalSintomas) * 100;
+            
+            // Atualizar interface
+            document.getElementById('progressoFill').style.width = porcentagem + '%';
+            document.getElementById('progressoTexto').textContent = `${sintomasAvaliados} de ${totalSintomas} sintomas avaliados`;
+            
+            // Habilitar botão finalizar se todos avaliados
+            const btnFinalizar = document.getElementById('btnFinalizar');
+            if (sintomasAvaliados >= totalSintomas) {
+                btnFinalizar.classList.add('ativo');
+                btnFinalizar.removeAttribute('disabled');
+            } else {
+                btnFinalizar.classList.remove('ativo');
+                btnFinalizar.setAttribute('disabled', 'true');
+            }
+        }
+
+        function calcularResultados() {
+            if (totalSintomasAvaliados === 0) return;
+            
+            let pontuacaoTotal = 0;
+            let sintomasComImpacto = 0; // MS - Sintomas menstruais
+            let mesiCount = 0;
+            
+            // Calcular para sintomas 1-24
+            for (let i = 1; i <= 24; i++) {
+                const sintoma = respostasUsuario[`sintoma${i}`];
+                if (sintoma && sintoma.frequencia !== undefined) {
+                    const freq = sintoma.frequencia || 0;
+                    
+                    // Se freq = 0, pode atribuir pontuação final 0 diretamente
+                    if (freq === 0) {
+                        // Item sem impacto, não conta para MS nem pontuação total
+                        continue;
+                    }
+                    
+                    if (sintoma.mens !== undefined && sintoma.outros !== undefined) {
+                        // Calcular Δ Escore de angústia (B - D)
+                        const delta = Math.max(0, sintoma.mens - sintoma.outros);
+                        
+                        // Pontuação final do item = freq × delta (máximo 5 quando resultado = 6)
+                        let pontuacaoItem = freq * delta;
+                        if (pontuacaoItem === 6) pontuacaoItem = 5;
+                        
+                        pontuacaoTotal += pontuacaoItem;
+                        
+                        // MS = itens com pontuação final > 0
+                        if (pontuacaoItem > 0) {
+                            sintomasComImpacto++;
+                            
+                            // Para MESI: B > C E B > D (sintoma mais intenso na menstruação)
+                            const preValue = sintoma.pre || 0;
+                            if (sintoma.mens > preValue && sintoma.mens > sintoma.outros) {
+                                mesiCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Calcular para pergunta 25A (se aplicável)
+            if (respostasUsuario.q25 === 'sim' && respostasUsuario.sintoma25a) {
+                const sintoma = respostasUsuario.sintoma25a;
+                if (sintoma.frequencia !== undefined) {
+                    let freq = sintoma.frequencia || 0;
+                    
+                    // Para item 25, usar "pontuações entre parênteses" se necessário
+                    // As opções especiais já são tratadas no valor da frequência
+                    
+                    if (freq === 0) {
+                        // Item sem impacto
+                        // Nota: Mesmo "nunca penetração por outros motivos" = 0, não impacta
+                    } else if (sintoma.mens !== undefined && sintoma.outros !== undefined) {
+                        const delta = Math.max(0, sintoma.mens - sintoma.outros);
+                        let pontuacaoItem = freq * delta;
+                        if (pontuacaoItem === 6) pontuacaoItem = 5;
+                        
+                        pontuacaoTotal += pontuacaoItem;
+                        
+                        if (pontuacaoItem > 0) {
+                            sintomasComImpacto++;
+                            
+                            // Para MESI: B > C E B > D
+                            const preValue = sintoma.pre || 0;
+                            if (sintoma.mens > preValue && sintoma.mens > sintoma.outros) {
+                                mesiCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Calcular índices conforme documentação oficial
+            // MSD = Pontuação Total ÷ MS (não por todos os sintomas calculados)
+            const msd = sintomasComImpacto > 0 ? (pontuacaoTotal / sintomasComImpacto) : 0;
+            // MESI = (Número de itens B > C E B > D) ÷ MS
+            const mesi = sintomasComImpacto > 0 ? (mesiCount / sintomasComImpacto) : 0;
+            
+            // Determinar interpretação
+            const interpretacao = interpretarMSD(msd);
+            
+            // Atualizar interface
+            document.getElementById('pontuacaoTotal').textContent = pontuacaoTotal;
+            document.getElementById('sintomasEM').textContent = sintomasComImpacto;
+            document.getElementById('indiceMSD').textContent = msd.toFixed(2);
+            document.getElementById('indiceMESI').textContent = mesi.toFixed(2);
+            
+            // Atualizar interpretação
+            const interpretacaoDiv = document.getElementById('interpretacaoMSD');
+            const textoInterpretacao = document.getElementById('textoInterpretacao');
+            textoInterpretacao.innerHTML = `
+                <span class="nivel-badge ${interpretacao.classe}">${interpretacao.nivel}</span>
+                ${interpretacao.texto}
+            `;
+            
+            // Mostrar preview se houver resultados
+            if (sintomasCalculados > 0) {
+                document.getElementById('resultadoPreview').classList.add('show');
+            }
+            
+            // Salvar resultados temporários
+            window.resultadosTemporarios = {
+                pontuacaoTotal,
+                sintomasComImpacto,
+                msd,
+                mesi,
+                interpretacao
+            };
+        }
+
+        function interpretarMSD(msd) {
+            // Interpretação baseada no range oficial MSD (0-5)
+            if (msd === 0) {
+                return {
+                    nivel: 'Nenhum',
+                    classe: 'nivel-muito-baixo',
+                    texto: 'Nenhum desconforto menstrual significativo identificado.'
+                };
+            } else if (msd <= 1) {
+                return {
+                    nivel: 'Muito Baixo',
+                    classe: 'nivel-muito-baixo',
+                    texto: 'Desconforto muito baixo: sintomas mínimos e pouco impacto na qualidade de vida.'
+                };
+            } else if (msd <= 2) {
+                return {
+                    nivel: 'Baixo',
+                    classe: 'nivel-baixo',
+                    texto: 'Desconforto baixo: sintomas leves com impacto limitado no funcionamento diário.'
+                };
+            } else if (msd <= 3) {
+                return {
+                    nivel: 'Moderado',
+                    classe: 'nivel-moderado',
+                    texto: 'Desconforto moderado: sintomas presentes com impacto moderado nas atividades.'
+                };
+            } else if (msd <= 4) {
+                return {
+                    nivel: 'Alto',
+                    classe: 'nivel-significativo',
+                    texto: 'Desconforto alto: sintomas frequentes e com impacto considerável na qualidade de vida.'
+                };
+            } else {
+                return {
+                    nivel: 'Muito Alto',
+                    classe: 'nivel-muito-elevado',
+                    texto: 'Desconforto muito alto: sintomas intensos com grande impacto no funcionamento. Recomenda-se avaliação médica.'
+                };
+            }
+        }
+
+        function finalizarQuestionario() {
+            if (totalSintomasAvaliados < totalSintomas) {
+                alert('Por favor, avalie todos os sintomas antes de finalizar.');
+                return;
+            }
+            
+            if (!window.resultadosTemporarios) {
+                alert('Erro: Resultados não calculados. Tente novamente.');
+                return;
+            }
+            
+            const resultados = window.resultadosTemporarios;
+            
+            // Preparar dados para salvar
+            const resultadoFinal = {
+                questionario: 'medi_q_desconforto_menstrual',
+                userId: userId,
+                timestamp: new Date().toISOString(),
+                respostas: respostasUsuario,
+                pontuacaoTotal: resultados.pontuacaoTotal,
+                sintomasComImpacto: resultados.sintomasComImpacto,
+                indiceMSD: resultados.msd,
+                indiceMESI: resultados.mesi,
+                nivelDesconforto: resultados.interpretacao.nivel,
+                interpretacao: resultados.interpretacao.texto,
+                dataCompleta: new Date().toLocaleString('pt-BR')
+            };
+            
+            // Salvar resultado
+            localStorage.setItem(`resultado_q3_${userId}`, JSON.stringify(resultadoFinal));
+            
+            // Marcar questionário 3 como completo
+            let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');
+            progresso.questionario3 = true;
+            localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
+            
+            // Mostrar confirmação e redirecionar
+            alert(`✅ MEDI-Q concluído!\n\nPontuação Total: ${resultados.pontuacaoTotal}\nSintomas com Impacto: ${resultados.sintomasComImpacto}\nÍndice MSD: ${resultados.msd.toFixed(2)}\nNível: ${resultados.interpretacao.nivel}\n\nTodos os questionários foram completados! O diagnóstico já está disponível!`);
+            
+            // Redirecionar para página de questionários
+            window.location.href = 'questionarios.html';
+        }
+
+    </script>
+
+</body>
+</html>

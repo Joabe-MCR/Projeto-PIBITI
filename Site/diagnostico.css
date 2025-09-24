@@ -18,7 +18,7 @@
     text-align: center;
     margin-bottom: 40px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #ffffff;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
@@ -28,12 +28,16 @@
     font-size: 2.5em;
     margin-bottom: 15px;
     font-weight: 700;
+    color: #f8f9fa !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .diagnostico-header p {
     font-size: 1.1em;
     line-height: 1.6;
-    opacity: 0.95;
+    color: #f8f9fa !important;
+    opacity: 0.98;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Resumo do usuário */
@@ -273,6 +277,7 @@
     background: linear-gradient(135deg, #ddd6fe 0%, #e0e7ff 100%);
     border-radius: 15px;
     animation: fadeInUp 1s ease 0.5s both;
+    text-align: center;
 }
 
 .acoes-grid {
@@ -280,6 +285,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     margin-bottom: 25px;
+    justify-items: center;
 }
 
 .btn-acao {
@@ -325,23 +331,26 @@
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
+    text-align: center;
 }
 
 .disclaimer p {
     margin: 0;
-    color: #856404;
+    color: #614a05;
     line-height: 1.6;
     font-size: 0.95em;
+    text-align: center;
 }
 
 /* Rodapé da pesquisa */
 .rodape-pesquisa {
-    background: #2c3e50;
+    background: #1e2d3e;
     color: white;
     padding: 30px;
     border-radius: 15px;
     margin-top: 30px;
     text-align: center;
+    border: 1px solid #34495e;
 }
 
 .rodape-pesquisa h3 {
@@ -352,14 +361,17 @@
 .rodape-pesquisa p {
     line-height: 1.6;
     margin-bottom: 20px;
-    opacity: 0.9;
+    opacity: 0.95;
+    color: #bdc3c7;
 }
 
 .contato-pesquisadores {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(52, 73, 94, 0.4);
     padding: 15px;
     border-radius: 8px;
     font-size: 0.95em;
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.2);
 }
 
 /* Modal de compartilhamento */
@@ -468,6 +480,8 @@
     
     .diagnostico-header h1 {
         font-size: 2em;
+        color: #f8f9fa !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     .secao-header {
@@ -507,6 +521,8 @@
 @media (max-width: 480px) {
     .diagnostico-header h1 {
         font-size: 1.8em;
+        color: #f8f9fa !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     .resultado-secao {
@@ -527,5 +543,207 @@
     
     .barra-labels {
         font-size: 0.8em;
+    }
+}
+
+/* ==========================================
+   ESTILOS PARA DIAGNÓSTICO PERSONALIZADO
+   ========================================== */
+
+.diagnostico-personalizado {
+    margin: 30px 0;
+}
+
+.card-personalizado {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-personalizado:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.diagnostico-personalizado-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.diagnostico-personalizado-header h3 {
+    font-size: 1.8em;
+    margin: 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.prioridade-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.prioridade-baixa {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.prioridade-media {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: white;
+}
+
+.prioridade-alta {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+    color: white;
+}
+
+.diagnostico-descricao {
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+}
+
+.classificacao-detalhes {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.classificacao-detalhes h4 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.classificacao-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item-classificacao {
+    padding: 12px 15px;
+    margin: 8px 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+}
+
+.item-classificacao.ativo {
+    background: linear-gradient(135deg, #ff6b6b15, #ee5a5220);
+    border-left: 4px solid #ff6b6b;
+    color: #c0392b;
+}
+
+.item-classificacao.inativo {
+    background: linear-gradient(135deg, #28a74515, #20c99720);
+    border-left: 4px solid #28a745;
+    color: #27ae60;
+}
+
+.codigo-classificacao {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+.codigo-classificacao code {
+    background: #667eea;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.analise-personalizada {
+    background: linear-gradient(135deg, #667eea10, #764ba215);
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    border: 1px solid #667eea30;
+}
+
+.analise-personalizada h4 {
+    color: #667eea;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.analise-personalizada p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #2c3e50;
+}
+
+.analise-personalizada strong {
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* Responsividade para diagnóstico personalizado */
+@media (max-width: 768px) {
+    .diagnostico-personalizado-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .diagnostico-personalizado-header h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+    
+    .prioridade-badge {
+        align-self: center;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    
+    .card-personalizado {
+        padding: 20px;
+    }
+    
+    .classificacao-detalhes {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .diagnostico-personalizado-header h3 {
+        font-size: 1.3em;
+    }
+    
+    .diagnostico-descricao {
+        font-size: 1em;
+        padding: 15px;
+    }
+    
+    .item-classificacao {
+        padding: 10px 12px;
+        font-size: 0.9em;
     }
 }

@@ -222,6 +222,91 @@ p .descricao {
   min-height: 100vh;              /* ocupa no mínimo 100% da altura da tela */
   padding: 60px 30px;
 }
+
+.contato h2 {
+  font-size: 48px;
+  color: #814d4d;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.contato-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.contato-intro {
+  font-size: 1.2em;
+  color: #6e5353;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.contatos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.contato-item {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 15px;
+  border-left: 5px solid #814d4d;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contato-item h3 {
+  color: #814d4d;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.contato-item p {
+  margin: 8px 0;
+  line-height: 1.5;
+  color: #2c3e50;
+}
+
+.contato-item strong {
+  color: #814d4d;
+}
+
+.contato-item a {
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contato-item a:hover {
+  color: #5a6fd8;
+  text-decoration: underline;
+}
+
+.contato-observacao {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 1px solid #ffc107;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contato-observacao p {
+  margin: 0;
+  color: #856404;
+  font-weight: 500;
+  text-align: center !important;
+  width: 100%;
+}
   
 
 
@@ -248,6 +333,23 @@ p .descricao {
   text-align: center;
 }
 
+/* Força a centralização do subtítulo do TCLE */
+.tcle-container .tcle-subtitle {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.tcle-container .tcle-subtitle p {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+  width: 100% !important;
+}
+
 .tcle-header h1 {
   font-size: 2.8em;
   color:#5a2a2a;
@@ -259,16 +361,21 @@ p .descricao {
 }
 
 .tcle-subtitle {
-  text-align: center;
+  text-align: center !important;
   margin-bottom: 35px;
+  width: 100%;
+  display: block;
 }
 
 .tcle-subtitle p {
+  text-align: center !important;
   font-size: 1.2em;
   color: #6e5353;
   line-height: 1.6;
-  margin: 0;
+  margin: 0 auto;
   font-weight: 400;
+  max-width: 100%;
+  display: block;
 }
 
 
@@ -413,19 +520,24 @@ p .descricao {
 nav {
   display: flex;
   justify-content: center;
-  gap: 200px;
-  padding: 15px 0 5px;
+  align-items: center;
+  gap: 120px;
+  padding: 15px 20px 5px;
   font-style: italic;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   border-bottom:1.5px solid #814d4d;
-  background-color: #fff; /* Ajuste se o fundo for diferente */
+  background-color: #fff;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 nav a {
   text-decoration: none;
   color: #814d4d;
   transition: color 0.3s;
+  white-space: nowrap;
+  text-align: center;
 }
 
 nav a:hover {
@@ -582,10 +694,13 @@ button:hover {
 @media screen and (max-width: 768px) {
   /* Menu responsivo */
   nav {
-    flex-direction: column;
-    gap: 20px;
-    padding: 15px 0;
-    font-size: 18px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 60px;
+    padding: 15px 10px;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
   }
   
   /* Seções gerais */
@@ -699,6 +814,29 @@ button:hover {
     min-width: 160px;
   }
   
+  /* Seção de contato responsiva */
+  .contato h2 {
+    font-size: 2.5em;
+  }
+  
+  .contato-container {
+    padding: 25px;
+    max-width: 95%;
+  }
+  
+  .contatos-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .contato-item {
+    padding: 20px;
+  }
+  
+  .contato-item h3 {
+    font-size: 1.2em;
+  }
+
   /* Botões responsivos */
   button {
     padding: 12px 20px;
@@ -712,13 +850,18 @@ button:hover {
 @media screen and (max-width: 480px) {
   /* Menu ainda mais compacto */
   nav {
-    gap: 15px;
-    font-size: 16px;
-    padding: 12px 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 25px;
+    font-size: 14px;
+    padding: 12px 5px;
+    justify-content: center;
+    align-items: center;
   }
   
   nav a {
     padding: 5px;
+    font-size: 14px;
   }
   
   /* Seções mais compactas */
@@ -840,6 +983,32 @@ button:hover {
     text-align: center;
   }
   
+  /* Contato responsivo para smartphones */
+  .contato h2 {
+    font-size: 2em;
+  }
+  
+  .contato-container {
+    padding: 20px;
+    margin: 0 10px;
+  }
+  
+  .contato-intro {
+    font-size: 1em;
+  }
+  
+  .contato-item {
+    padding: 15px;
+  }
+  
+  .contato-item h3 {
+    font-size: 1.1em;
+  }
+  
+  .contato-item p {
+    font-size: 0.9em;
+  }
+
   /* Botão compacto */
   button {
     padding: 10px 18px;
@@ -895,11 +1064,12 @@ button:hover {
   
   /* Melhorar espaçamento para toque */
   nav a {
-    padding: 8px 12px;
+    padding: 8px 10px;
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
   }
 }
 

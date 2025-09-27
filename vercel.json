@@ -1,15 +1,13 @@
 {
-  "projectSettings": {
-    "framework": null
-  },
+  "version": 2,
   "builds": [
-    { "src": "Site/**/*", "use": "@vercel/static" }
+    { "src": "Site/(.*)", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/", "dest": "/Site/index.html" },
-    { "src": "/questionarios", "dest": "/Site/questionarios.html" },
-    { "src": "/diagnostico", "dest": "/Site/diagnostico.html" },
-    { "src": "/(.*)", "dest": "/Site/$1" }
+    { "src": "/", "dest": "Site/index.html" },
+    { "src": "/questionarios", "dest": "Site/questionarios.html" },
+    { "src": "/diagnostico", "dest": "Site/diagnostico.html" },
+    { "src": "/(.*)", "dest": "Site/$1" }
   ],
   "headers": [
     {

@@ -58,6 +58,18 @@
         <p class="tcle-placeholder">TCLE legível aqui</p>
         <div class="tcle-text">
           <p><strong>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</strong></p>
+          <p style="margin-top:8px;font-size:0.95rem;">
+            Versão em PDF oficial:&nbsp;
+            <a href="assets/TCLE Corrigido.pdf" target="_blank" rel="noopener" style="font-weight:bold; text-decoration:underline;">abrir em nova aba</a>
+            &nbsp;|&nbsp;
+            <button type="button" id="btnVerPdfTcle" style="padding:4px 10px; cursor:pointer; font-size:0.8rem;">Ver incorporado</button>
+          </p>
+          <div id="tclePdfEmbed" style="display:none; margin:12px 0 18px; border:1px solid #ccc; border-radius:6px; overflow:hidden; background:#fff;">
+            <iframe title="TCLE PDF" src="assets/TCLE Corrigido.pdf" style="width:100%; height:480px; border:0; background:#fff;" loading="lazy"></iframe>
+            <div style="text-align:right; padding:4px 8px; background:#f7f7f7; border-top:1px solid #e0e0e0;">
+              <button type="button" id="btnFecharPdfTcle" style="padding:2px 8px; font-size:0.7rem; cursor:pointer;">Fechar PDF</button>
+            </div>
+          </div>
           
           <p>Você está sendo convidada a participar de uma pesquisa sobre estresse e sintomas relacionados à menopausa. Esta pesquisa tem como objetivo compreender melhor os níveis de estresse e sua relação com os sintomas da menopausa em mulheres.</p>
           
@@ -156,6 +168,26 @@ function generateUserId() {
     const randomNum = Math.random().toString(36).substr(2, 5);
     return `user_${timestamp}_${randomNum}`;
 }
+
+// ---- TCLE PDF Embutido ----
+document.addEventListener('DOMContentLoaded', () => {
+  const btnVer = document.getElementById('btnVerPdfTcle');
+  const areaPdf = document.getElementById('tclePdfEmbed');
+  const btnFechar = document.getElementById('btnFecharPdfTcle');
+  if (btnVer && areaPdf) {
+    btnVer.addEventListener('click', () => {
+      areaPdf.style.display = 'block';
+      btnVer.style.display = 'none';
+    });
+  }
+  if (btnFechar && areaPdf) {
+    btnFechar.addEventListener('click', () => {
+      areaPdf.style.display = 'none';
+      const btnVerAgain = document.getElementById('btnVerPdfTcle');
+      if (btnVerAgain) btnVerAgain.style.display = 'inline-block';
+    });
+  }
+});
 </script>
 
 

@@ -270,23 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar estado do botão
     toggleProsseguirButton();
   }
-  // Lógica de exibição do PDF do TCLE
-  const btnVer = document.getElementById('btnVerPdfTcle');
-  const areaPdf = document.getElementById('tclePdfEmbed');
-  const btnFechar = document.getElementById('btnFecharPdfTcle');
-  if (btnVer && areaPdf) {
-    btnVer.addEventListener('click', () => {
-      areaPdf.style.display = 'block';
-      btnVer.style.display = 'none';
-    });
-  }
-  if (btnFechar && areaPdf) {
-    btnFechar.addEventListener('click', () => {
-      areaPdf.style.display = 'none';
-      const again = document.getElementById('btnVerPdfTcle');
-      if (again) again.style.display = 'inline-block';
-    });
-  }
+
 });
 
 // ==========================================

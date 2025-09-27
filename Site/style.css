@@ -416,12 +416,14 @@ p .descricao {
 
 .tcle-text {
   display: block; /* Mostrar o conteúdo do TCLE */
-  max-height: 280px;
+  max-height: 400px;
   overflow-y: auto;
-  padding: 15px;
+  padding: 20px;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
   margin-top: 20px;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .tcle-text p {

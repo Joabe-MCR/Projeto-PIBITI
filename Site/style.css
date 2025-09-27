@@ -175,6 +175,7 @@ p .descricao {
   border: 2px solid #7d4545;
   border-radius: 15px;
   overflow: hidden;
+  position: relative;
 }
 
 .faq-question {
@@ -187,11 +188,15 @@ p .descricao {
   border: none;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 15px 15px 0 0;
+  position: relative;
+  z-index: 1;
 }
 
 .faq-question:hover {
   background-color: #f9f1f1;
+  transform: scale(1.001);
 }
 
 .faq-answer {
@@ -410,7 +415,7 @@ p .descricao {
 }
 
 .tcle-text {
-  display: none; /* Escondido inicialmente, só mostra o placeholder */
+  display: block; /* Mostrar o conteúdo do TCLE */
   max-height: 280px;
   overflow-y: auto;
   padding: 15px;

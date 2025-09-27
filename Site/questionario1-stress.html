@@ -737,6 +737,7 @@
                 timestamp: new Date().toISOString(),
                 respostas: respostasUsuario,
                 pontuacaoTotal: pontuacaoTotal,
+                porcentagem: Number(((pontuacaoTotal/40)*100).toFixed(2)),
                 interpretacao: pontuacaoTotal <= 13 ? 'Abaixo da Média' : 'Acima da Média',
                 percentil: pontuacaoTotal <= 13 ? 'P50-' : 'P50+',
                 dataCompleta: new Date().toLocaleString('pt-BR')

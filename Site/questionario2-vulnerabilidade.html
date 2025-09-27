@@ -1160,6 +1160,7 @@
                 timestamp: new Date().toISOString(),
                 respostas: respostasUsuario,
                 pontuacaoTotal: pontuacaoTotal,
+                porcentagem: Number(((pontuacaoTotal/100)*100).toFixed(2)),
                 nivelVulnerabilidade: nivelVulnerabilidade,
                 interpretacao: interpretacao,
                 dataCompleta: new Date().toLocaleString('pt-BR')

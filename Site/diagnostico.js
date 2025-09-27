@@ -263,30 +263,37 @@ function carregarDadosQuestionarios() {
 }
 
 function processarDadosReais(dadosReais) {
-    const processados = {
+    // Garante derivação de porcentagens caso ainda não existam nas versões antigas salvas no localStorage
+    const pontuacaoStress = dadosReais.stress?.pontuacaoTotal ?? 0; // 0-40
+    const porcentagemStress = dadosReais.stress?.porcentagem ?? (pontuacaoStress > 0 ? (pontuacaoStress / 40) * 100 : 0);
+
+    const pontuacaoVulnerabilidade = dadosReais.vulnerabilidade?.pontuacaoTotal ?? 0; // 0-100
+    const porcentagemVulnerabilidade = dadosReais.vulnerabilidade?.porcentagem ?? (pontuacaoVulnerabilidade > 0 ? (pontuacaoVulnerabilidade / 100) * 100 : 0);
+
+    const msd = dadosReais.desconforto?.indiceMSD ?? dadosReais.desconforto?.msd ?? 0; // compat
+
+    return {
         stress: {
-            pontuacao: dadosReais.stress?.pontuacaoTotal || 0,
-            porcentagem: dadosReais.stress?.porcentagem || 0,
-            nivel: determinarNivel(dadosReais.stress?.porcentagem || 0)
+            pontuacao: pontuacaoStress,
+            porcentagem: Number(porcentagemStress.toFixed(2)),
+            nivel: determinarNivel(Number(porcentagemStress))
         },
         vulnerabilidade: {
-            pontuacao: dadosReais.vulnerabilidade?.pontuacaoTotal || 0,
-            porcentagem: dadosReais.vulnerabilidade?.porcentagem || 0,
-            nivel: determinarNivel(dadosReais.vulnerabilidade?.porcentagem || 0)
+            pontuacao: pontuacaoVulnerabilidade,
+            porcentagem: Number(porcentagemVulnerabilidade.toFixed(2)),
+            nivel: determinarNivel(Number(porcentagemVulnerabilidade))
         },
         desconforto: {
             pontuacao: dadosReais.desconforto?.pontuacaoTotal || 0,
-            msd: dadosReais.desconforto?.indiceMSD || 0,
-            mesi: dadosReais.desconforto?.indiceMESI || 0,
-            sintomasComImpacto: dadosReais.desconforto?.sintomasComImpacto || 0,
-            nivel: determinarNivelDesconforto(dadosReais.desconforto?.indiceMSD || 0),
-            porcentagem: calcularPorcentagemDesconforto(dadosReais.desconforto?.indiceMSD || 0)
+            msd: msd,
+            mesi: dadosReais.desconforto?.indiceMESI || dadosReais.desconforto?.mesi || 0,
+            sintomasComImpacto: dadosReais.desconforto?.sintomasComImpacto || dadosReais.desconforto?.sintomas_com_impacto || 0,
+            nivel: determinarNivelDesconforto(msd),
+            porcentagem: calcularPorcentagemDesconforto(msd)
         },
         origem: 'real',
         timestamp: new Date().toISOString()
     };
-    
-    return processados;
 }
 
 function calcularPorcentagemDesconforto(msd) {
@@ -609,7 +616,7 @@ function gerarDadosSimulados() {
 
 function aplicarDiagnosticoStress() {
     const dados = dadosDiagnostico.stress;
-    const valor = dados.porcentagem || dados || 0;
+    const valor = Number(dados?.porcentagem ?? 0); // garante número mesmo se 0
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
@@ -617,7 +624,7 @@ function aplicarDiagnosticoStress() {
     const texto = document.getElementById('nivelStressTexto');
     if (badge && texto) {
         badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
     }
     
     // Animar barra
@@ -638,7 +645,7 @@ function aplicarDiagnosticoStress() {
 
 function aplicarDiagnosticoVulnerabilidade() {
     const dados = dadosDiagnostico.vulnerabilidade;
-    const valor = dados.porcentagem || dados || 0;
+    const valor = Number(dados?.porcentagem ?? 0);
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
@@ -646,7 +653,7 @@ function aplicarDiagnosticoVulnerabilidade() {
     const texto = document.getElementById('nivelVulnerabilidadeTexto');
     if (badge && texto) {
         badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
     }
     
     // Animar barra
@@ -667,7 +674,7 @@ function aplicarDiagnosticoVulnerabilidade() {
 
 function aplicarDiagnosticoDesconforto() {
     const dados = dadosDiagnostico.desconforto;
-    const valor = dados.porcentagem || dados || 0;
+    const valor = Number(dados?.porcentagem ?? 0);
     const nivel = determinarNivel(valor);
     
     // Atualizar badge
@@ -675,7 +682,7 @@ function aplicarDiagnosticoDesconforto() {
     const texto = document.getElementById('nivelDesconfortoTexto');
     if (badge && texto) {
         badge.className = `nivel-badge ${CONFIGURACAO_DIAGNOSTICO.niveis[nivel].classe}`;
-        texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
+    texto.textContent = `${nivel.toUpperCase()} (${valor.toFixed(1)}%)`;
     }
     
     // Animar barra

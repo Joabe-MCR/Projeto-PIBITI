@@ -176,16 +176,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para ir para a página do TCLE
 function irParaTCLE() {
+  console.log('irParaTCLE chamada');
+  
+  // Verificar se elementos existem
+  const pginicial = document.getElementById('pginicial');
+  const tcle = document.getElementById('tcle');
+  
+  console.log('pginicial:', pginicial);
+  console.log('tcle:', tcle);
+  
+  if (!pginicial || !tcle) {
+    console.error('Elementos não encontrados!');
+    return;
+  }
+  
   // Esconder seção inicial
-  document.getElementById('pginicial').style.display = 'none';
+  pginicial.style.display = 'none';
+  console.log('pginicial escondida');
+  
   // Mostrar seção do TCLE
-  document.getElementById('tcle').style.display = 'flex';
+  tcle.style.display = 'flex';
+  console.log('tcle mostrada com display flex');
+  
   // Scroll para o topo
   window.scrollTo(0, 0);
+  
   // Gerar userId se não existir
   if (!localStorage.getItem('userSessionId')) {
     localStorage.setItem('userSessionId', generateUserId());
   }
+  
   // Garantir listener do checkbox para habilitar botão
   toggleProsseguirButton();
 }
@@ -233,8 +253,12 @@ function toggleProsseguirButton() {
   const checkbox = document.getElementById('consentimento');
   const button = document.querySelector('.btn-prosseguir');
   
+  console.log('toggleProsseguirButton - checkbox:', checkbox);
+  console.log('toggleProsseguirButton - button:', button);
+  
   if (checkbox && button) {
     button.disabled = !checkbox.checked;
+    console.log('Botão prosseguir disabled:', button.disabled);
   }
 }
 

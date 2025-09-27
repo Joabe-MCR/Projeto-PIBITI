@@ -21,65 +21,65 @@ const CONFIGURACAO_DIAGNOSTICO = {
     diagnosticosPersonalizados: {
         '000': { // Não estressada + Não vulnerável + Sem alteração
             codigo: 'perfil_saudavel',
-            titulo: '💚 Perfil Saudável',
-            subtitulo: 'Parabéns! Você apresenta um perfil equilibrado',
-            descricao: 'Você demonstra baixos níveis de estresse, boa resistência ao estresse e ciclo menstrual sem alterações significativas.',
+            titulo: '💚 Perfil Equilibrado',
+            subtitulo: 'Você apresenta um perfil de bem-estar e equilíbrio',
+            descricao: 'Você não apresenta níveis relevantes de estresse nem sinais de vulnerabilidade ou alterações menstruais. Isso significa que seu corpo está em equilíbrio, mas é importante manter hábitos saudáveis para prevenir mudanças futuras. O estresse pode afetar o ciclo menstrual, mesmo em quem hoje não apresenta sintomas, porque interfere nos hormônios que regulam a ovulação e a menstruação. Por isso, cuidar da rotina, buscando mantê-la organizada, praticar atividade física leve e buscar momentos de lazer ajudam a manter sua saúde estável.',
             cor: '#28a745',
             prioridade: 'baixa'
         },
         '001': { // Não estressada + Não vulnerável + Com alteração
             codigo: 'alteracao_isolada',
-            titulo: '🟡 Alteração Menstrual Isolada',
-            subtitulo: 'Alteração no ciclo sem fatores de estresse evidentes',
-            descricao: 'Apesar de não apresentar estresse elevado ou alta vulnerabilidade, você tem desconforto menstrual que merece atenção.',
+            titulo: '🟡 Alterações Menstruais sem Estresse',
+            subtitulo: 'Alterações no ciclo independentes de fatores estressores atuais',
+            descricao: 'Você não apresenta estresse elevado nem vulnerabilidade significativa, mas já tem alterações no ciclo menstrual. Isso pode acontecer porque mesmo níveis mais baixos de estresse ou outros fatores do dia a dia (sono irregular, alimentação, excesso de atividade) podem impactar os hormônios do ciclo ou ser dada por outras causas. O ideal é manter hábitos de vida saudáveis e observar se os sintomas persistem. Caso os ciclos continuem irregulares ou venham acompanhados de dor intensa, é importante procurar atendimento ginecológico.',
             cor: '#ffc107',
             prioridade: 'media'
         },
         '010': { // Não estressada + Vulnerável + Sem alteração
             codigo: 'vulnerabilidade_latente',
-            titulo: '🟠 Vulnerabilidade Latente',
-            subtitulo: 'Potencial para desenvolver sintomas sob estresse',
-            descricao: 'Você tem características de vulnerabilidade ao estresse, mas mantém níveis baixos de estresse atual e ciclo estável.',
+            titulo: '🟠 Vulnerabilidade sem Estresse Atual',
+            subtitulo: 'Maior sensibilidade que requer fortalecimento preventivo',
+            descricao: 'Você não está com estresse elevado no momento, mas apresenta uma maior vulnerabilidade a ele. Isso significa que fatores do seu estilo de vida ou de sua rotina podem deixá-la mais propensa a sentir impacto quando situações estressantes surgirem. A prática de meditação e técnicas de relaxamento funcionam como um "treino" para o cérebro, fortalecendo a sua resiliência emocional. Além disso, manter uma rede de apoio social ajuda a lidar melhor com possíveis pressões futuras.',
             cor: '#ff8c00',
             prioridade: 'media'
         },
         '011': { // Não estressada + Vulnerável + Com alteração
             codigo: 'vulneravel_com_alteracao',
-            titulo: '🟠 Vulnerável com Alteração Menstrual',
-            subtitulo: 'Combinação de vulnerabilidade e alterações no ciclo',
-            descricao: 'Mesmo sem estresse elevado atual, sua vulnerabilidade pode estar contribuindo para alterações menstruais.',
+            titulo: '🟠 Vulnerabilidade com Alterações Menstruais',
+            subtitulo: 'Sensibilidade elevada já impactando o ciclo menstrual',
+            descricao: 'Você não apresenta estresse elevado, mas tem vulnerabilidade aumentada e já manifesta alterações menstruais. Isso indica que, mesmo sem uma sobrecarga emocional evidente, seu corpo responde de forma mais sensível ao estresse, refletindo no ciclo menstrual. O fortalecimento da resiliência emocional, junto ao suporte social e hábitos saudáveis, pode reduzir esses impactos. Se os sintomas forem intensos ou recorrentes, procurar acompanhamento psicológico e ginecológico é uma medida preventiva importante.',
             cor: '#ff6b35',
             prioridade: 'media'
         },
         '100': { // Estressada + Não vulnerável + Sem alteração
             codigo: 'estresse_situacional',
-            titulo: '🔶 Estresse Situacional',
-            subtitulo: 'Estresse atual sem grandes repercussões',
-            descricao: 'Você apresenta níveis elevados de estresse, mas sua baixa vulnerabilidade e ciclo estável indicam boa capacidade de adaptação.',
+            titulo: '🔶 Estresse sem Alterações Menstruais',
+            subtitulo: 'Estresse presente mas com boa capacidade de adaptação',
+            descricao: 'Você apresenta sinais de estresse, mas não de vulnerabilidade significativa nem de impacto no ciclo menstrual. Isso indica que seu corpo está conseguindo lidar com as demandas atuais, mas já mostra sinais de sobrecarga. Técnicas de relaxamento, como meditação e exercícios de respiração, ajudam a reduzir o cortisol, hormônio do estresse, melhorando sono, humor e concentração. A prática regular de exercícios físicos também libera endorfinas, que aumentam a sensação de bem-estar.',
             cor: '#ff9500',
             prioridade: 'media'
         },
         '101': { // Estressada + Não vulnerável + Com alteração
             codigo: 'estresse_com_impacto',
-            titulo: '🔥 Estresse com Impacto Menstrual',
-            subtitulo: 'O estresse está afetando seu ciclo menstrual',
-            descricao: 'Seus níveis elevados de estresse estão se manifestando através de alterações no ciclo menstrual.',
+            titulo: '🔥 Estresse Impactando o Ciclo Menstrual',
+            subtitulo: 'Estresse elevado já refletindo em alterações menstruais',
+            descricao: 'Você apresenta sinais de estresse e alterações no ciclo menstrual, embora não tenha vulnerabilidade alta. Isso mostra que o estresse já está repercutindo em seu organismo, especialmente na regulação hormonal do ciclo. Técnicas de relaxamento e exercícios físicos ajudam a equilibrar o eixo hormonal e reduzem o impacto do estresse. Se as alterações persistirem por mais de 2 a 3 ciclos, a avaliação ginecológica é recomendada.',
             cor: '#ff6b00',
             prioridade: 'alta'
         },
         '110': { // Estressada + Vulnerável + Sem alteração
             codigo: 'alto_risco',
-            titulo: '⚠️ Perfil de Alto Risco',
-            subtitulo: 'Combinação preocupante que requer atenção',
-            descricao: 'Você apresenta estresse elevado e alta vulnerabilidade. É importante agir preventivamente antes que alterações menstruais apareçam.',
+            titulo: '⚠️ Estresse Elevado com Vulnerabilidade',
+            subtitulo: 'Combinação de risco que necessita intervenção preventiva',
+            descricao: 'Você apresenta estresse elevado e também alta vulnerabilidade, embora ainda sem alterações no ciclo menstrual. Isso significa que seu corpo já está sob impacto, mas ainda não mostrou repercussões hormonais. Nessa fase, é essencial adotar uma combinação de estratégias para evitar que o estresse afete sua saúde reprodutiva. Técnicas de relaxamento, exercícios físicos regulares e práticas como yoga ajudam a equilibrar hormônios e reduzir sintomas emocionais. O suporte social também é fundamental para aliviar a carga emocional.',
             cor: '#dc3545',
             prioridade: 'alta'
         },
         '111': { // Estressada + Vulnerável + Com alteração
             codigo: 'perfil_critico',
-            titulo: '🚨 Perfil Crítico',
-            subtitulo: 'Situação que requer atenção médica especializada',
-            descricao: 'Você apresenta a combinação de estresse elevado, alta vulnerabilidade e alterações menstruais significativas. Recomendamos fortemente buscar acompanhamento profissional.',
+            titulo: '🚨 Perfil de Impacto Significativo',
+            subtitulo: 'Estresse elevado já afetando múltiplas dimensões da saúde',
+            descricao: 'Você apresenta estresse elevado, alta vulnerabilidade e alterações menstruais. Esse é um quadro em que o estresse já está impactando de forma significativa sua saúde. É fundamental adotar uma rotina estruturada de técnicas de relaxamento, exercícios físicos regulares, além de atividades complementares como musicoterapia ou arteterapia. Também é essencial procurar acompanhamento psicológico e ginecológico, para que o manejo seja adequado e seguro.',
             cor: '#8b0000',
             prioridade: 'critica'
         }
@@ -757,75 +757,266 @@ function gerarAnaliseIntegrada() {
 // ==========================================
 
 function gerarRecomendacoes() {
-    const { stress, vulnerabilidade, desconforto } = dadosDiagnostico;
-    const stressValor = stress?.porcentagem ?? 0;
-    const vulnerabilidadeValor = vulnerabilidade?.porcentagem ?? 0;
-    const desconfortoValor = desconforto?.porcentagem ?? 0;
-    const recomendacoes = [];
+    const classificacao = dadosDiagnostico.classificacao;
+    if (!classificacao) return;
     
-    // Recomendações baseadas no stress
-    if (stressValor > 60) {
-        recomendacoes.push({
-            titulo: "🧘‍♀️ Técnicas de Relaxamento",
-            descricao: "Pratique técnicas de respiração profunda, meditação ou yoga. Reserve 10-15 minutos diários para relaxamento consciente."
-        });
-        
-        recomendacoes.push({
-            titulo: "⏰ Gestão do Tempo",
-            descricao: "Organize suas atividades com prioridades claras. Evite sobrecarga e aprenda a dizer 'não' quando necessário."
-        });
-    }
-    
-    // Recomendações baseadas na vulnerabilidade
-    if (vulnerabilidadeValor > 60) {
-        recomendacoes.push({
-            titulo: "💪 Fortalecimento da Resiliência",
-            descricao: "Desenvolva sua rede de apoio social. Mantenha conexões significativas com familiares e amigos."
-        });
-        
-        recomendacoes.push({
-            titulo: "🎯 Estratégias Preventivas",
-            descricao: "Identifique seus gatilhos de stress e desenvolva planos de ação antecipados para situações desafiadoras."
-        });
-    }
-    
-    // Recomendações baseadas no desconforto menstrual
-    if (desconfortoValor > 60) {
-        recomendacoes.push({
-            titulo: "🏃‍♀️ Atividade Física Regular",
-            descricao: "Exercícios moderados podem reduzir significativamente os sintomas menstruais. Considere caminhadas, natação ou yoga."
-        });
-        
-        recomendacoes.push({
-            titulo: "🥗 Cuidados Nutricionais",
-            descricao: "Mantenha uma alimentação equilibrada, rica em ferro e vitaminas. Reduza cafeína e açúcar durante o período menstrual."
-        });
-    }
-    
-    // Recomendações gerais sempre incluídas
-    recomendacoes.push({
-        titulo: "😴 Qualidade do Sono",
-        descricao: "Mantenha horários regulares de sono. Uma boa qualidade de sono é fundamental para o equilíbrio hormonal e bem-estar."
-    });
-    
-    recomendacoes.push({
-        titulo: "📱 Monitoramento Pessoal",
-        descricao: "Considere manter um diário de sintomas para identificar padrões e gatilhos. Isso pode ajudar no autoconhecimento."
-    });
-    
-    // Atualizar DOM
+    const codigoBinario = classificacao.codigoBinario;
     const container = document.getElementById('recomendacoesList');
     container.innerHTML = '';
     
-    recomendacoes.forEach(rec => {
-        const div = document.createElement('div');
-        div.className = 'recomendacao-item';
-        div.innerHTML = `
-            <h4>${rec.titulo}</h4>
-            <p>${rec.descricao}</p>
+    // Recomendações específicas baseadas no perfil
+    const recomendacoesPorPerfil = {
+        '000': { // Perfil Equilibrado
+            items: [
+                {
+                    titulo: "🧘‍♀️ Exercícios Leves (Caminhada, Yoga)",
+                    descricao: "Mantém o corpo ativo e reduzem pequenas tensões diárias. O yoga ajuda a reduzir o estresse e evitar o mesmo, além de trabalhar consciência corporal e respiração!",
+                    links: ["https://youtu.be/OuCvUDVoX3M?si=0GeBz9b-1zrVVwiv"]
+                },
+                {
+                    titulo: "🎨 Arteterapia",
+                    descricao: "Promove relaxamento e criatividade, prevenindo acúmulo de estresse, além de gerar quebra na rotina estressora. Existem muitas formas, variando desde pintura, fotografia e dança, até música.",
+                    links: ["https://youtu.be/pfm-fd7zVy8?si=J_TPSP8d1dBK14yo"]
+                },
+                {
+                    titulo: "😴 Hábitos Saudáveis",
+                    descricao: "Sono adequado, além da higiene do sono, e uma alimentação equilibrada ajudam a regular os hormônios e a reduzir o estresse.",
+                    links: [
+                        "https://www.msdmanuals.com/pt/profissional/multimedia/table/higiene-do-sono",
+                        "https://www.revistaabm.com.br/artigos/como-a-alimentacao-ajuda-a-combater-o-estresse-e-outros-transtornos"
+                    ]
+                }
+            ],
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual",
+                "https://drauziovarella.uol.com.br/mulher/estresse-prolongado-pode-afetar-o-ciclo-menstrual/"
+            ]
+        },
+        
+        '100': { // Estresse sem Alterações
+            items: [
+                {
+                    titulo: "🧘‍♀️ Meditação Regular",
+                    descricao: "Funciona como treino mental, aumentando resiliência. Ela atua reduzindo o cortisol, hormônio do estresse, melhorando sono e humor.",
+                    links: [
+                        "https://helloclue.com/pt/artigos/emocoes/meditacao-estresse-e-ciclo-menstrual",
+                        "https://youtu.be/vJfwuCB5C8o?si=OeVAnMEQ5ixAakaC",
+                        "https://youtu.be/pT8ON6KAJPA?si=dbVUJQ36KdlMyMZe"
+                    ]
+                },
+                {
+                    titulo: "�‍♀️ Exercícios Físicos",
+                    descricao: "Liberam endorfinas, que aumentam o bem-estar. O importante é fazer algum exercício que lhe agrade, mas mantendo sempre a constância!"
+                },
+                {
+                    titulo: "🎵 Musicoterapia",
+                    descricao: "É uma abordagem que busca regular emoções por meio de sons e músicas, ajudando a acalmar a mente.",
+                    links: ["https://youtu.be/X_-1HGSPRpE?si=jpNuOm4uf0daLYGk"]
+                }
+            ]
+        },
+        
+        '010': { // Vulnerabilidade sem Estresse
+            items: [
+                {
+                    titulo: "🧘‍♀️ Meditação Regular",
+                    descricao: "Funciona como treino mental, aumentando resiliência. Ela atua reduzindo o cortisol, hormônio do estresse.",
+                    links: [
+                        "https://helloclue.com/pt/artigos/emocoes/meditacao-estresse-e-ciclo-menstrual",
+                        "https://youtu.be/vJfwuCB5C8o?si=OeVAnMEQ5ixAakaC"
+                    ]
+                },
+                {
+                    titulo: "💪 Relaxamento Muscular Progressivo",
+                    descricao: "São técnicas que ajudam a reconhecer e reduzir tensões antes que se acumulem.",
+                    links: ["https://www.youtube.com/watch?v=RsCGOBLpLHc"]
+                },
+                {
+                    titulo: "👥 Suporte Social",
+                    descricao: "Converse e troque experiências com pessoas que você tem confiança, sobre sua rotina e o que pode lhe gerar estresse a longo prazo."
+                }
+            ]
+        },
+        
+        '110': { // Alto Risco
+            items: [
+                {
+                    titulo: "💪 Relaxamento Muscular Progressivo",
+                    descricao: "São técnicas que ajudam a reconhecer e reduzir tensões antes que se acumulem.",
+                    links: ["https://www.youtube.com/watch?v=RsCGOBLpLHc"]
+                },
+                {
+                    titulo: "🧘‍♀️ Yoga",
+                    descricao: "Mantém o corpo ativo e reduz tensões diárias. Ajuda a reduzir o estresse além de trabalhar consciência corporal.",
+                    links: ["https://youtu.be/OuCvUDVoX3M?si=0GeBz9b-1zrVVwiv"]
+                },
+                {
+                    titulo: "🎨 Arteterapia",
+                    descricao: "Promove relaxamento e criatividade, prevenindo acúmulo de estresse, além de gerar quebra na rotina estressora.",
+                    links: ["https://youtu.be/pfm-fd7zVy8?si=J_TPSP8d1dBK14yo"]
+                }
+            ]
+        },
+        
+        '001': { // Alterações sem Estresse
+            items: [
+                {
+                    titulo: "😴 Hábitos Saudáveis Prioritários",
+                    descricao: "Foque especialmente em sono adequado e alimentação equilibrada para regular os hormônios do ciclo menstrual."
+                }
+            ]
+        },
+        
+        '101': { // Estresse + Alterações
+            items: [
+                {
+                    titulo: "🧘‍♀️ Meditação Regular",
+                    descricao: "Funciona como treino mental, aumentando resiliência. Ela atua reduzindo o cortisol, hormônio do estresse.",
+                    links: [
+                        "https://helloclue.com/pt/artigos/emocoes/meditacao-estresse-e-ciclo-menstrual",
+                        "https://youtu.be/vJfwuCB5C8o?si=OeVAnMEQ5ixAakaC"
+                    ]
+                },
+                {
+                    titulo: "🏃‍♀️ Exercícios Físicos",
+                    descricao: "Liberam endorfinas, que aumentam o bem-estar. O importante é fazer algum exercício que lhe agrade, mantendo sempre a constância!"
+                },
+                {
+                    titulo: "🎨 Arteterapia",
+                    descricao: "Promove relaxamento e criatividade, prevenindo acúmulo de estresse, além de gerar quebra na rotina estressora.",
+                    links: ["https://youtu.be/pfm-fd7zVy8?si=J_TPSP8d1dBK14yo"]
+                }
+            ]
+        },
+        
+        '011': { // Vulnerável + Alterações
+            items: [
+                {
+                    titulo: "🧘‍♀️ Meditação Regular",
+                    descricao: "Funciona como treino mental, aumentando resiliência. Ela atua reduzindo o cortisol, hormônio do estresse.",
+                    links: [
+                        "https://helloclue.com/pt/artigos/emocoes/meditacao-estresse-e-ciclo-menstrual",
+                        "https://youtu.be/vJfwuCB5C8o?si=OeVAnMEQ5ixAakaC"
+                    ]
+                },
+                {
+                    titulo: "🧘‍♀️ Yoga",
+                    descricao: "Mantém o corpo ativo e reduz tensões diárias. Ajuda a reduzir o estresse além de trabalhar consciência corporal.",
+                    links: ["https://youtu.be/OuCvUDVoX3M?si=0GeBz9b-1zrVVwiv"]
+                },
+                {
+                    titulo: "👥 Suporte Social",
+                    descricao: "Converse e troque experiências com pessoas que você tem confiança, sobre sua rotina e o que pode lhe gerar estresse a longo prazo."
+                },
+                {
+                    titulo: "🧠 Psicoterapia",
+                    descricao: "A psicoterapia ajuda a compreender como o estresse impacta o corpo e as emoções, oferecendo ferramentas práticas para lidar melhor com situações do dia a dia."
+                }
+            ]
+        },
+        
+        '111': { // Perfil Crítico
+            items: [
+                {
+                    titulo: "🧘‍♀️ Meditação Regular",
+                    descricao: "Funciona como treino mental, aumentando resiliência. Ela atua reduzindo o cortisol, hormônio do estresse.",
+                    links: [
+                        "https://helloclue.com/pt/artigos/emocoes/meditacao-estresse-e-ciclo-menstrual",
+                        "https://youtu.be/vJfwuCB5C8o?si=OeVAnMEQ5ixAakaC"
+                    ]
+                },
+                {
+                    titulo: "🧘‍♀️ Yoga",
+                    descricao: "Mantém o corpo ativo e reduz tensões diárias. Ajuda a reduzir o estresse além de trabalhar consciência corporal.",
+                    links: ["https://youtu.be/OuCvUDVoX3M?si=0GeBz9b-1zrVVwiv"]
+                },
+                {
+                    titulo: "👥 Suporte Social",
+                    descricao: "Converse e troque experiências com pessoas que você tem confiança, sobre sua rotina e o que pode lhe gerar estresse a longo prazo."
+                },
+                {
+                    titulo: "🧠 Psicoterapia",
+                    descricao: "A psicoterapia ajuda a compreender como o estresse impacta o corpo e as emoções, oferecendo ferramentas práticas para lidar melhor com situações do dia a dia."
+                }
+            ]
+        }
+    };
+    
+    // Recomendações com alterações menstruais (adicionar consulta ginecológica)
+    const temAlteracaoMenstrual = codigoBinario.endsWith('1');
+    
+    // Buscar recomendações para o perfil específico ou usar padrão
+    const recomendacoes = recomendacoesPorPerfil[codigoBinario] || 
+                         recomendacoesPorPerfil['000']; // fallback para perfil equilibrado
+    
+    // Sempre incluir hábitos saudáveis
+    const habitos = {
+        titulo: "😴 Hábitos Saudáveis",
+        descricao: "Sono adequado, além da higiene do sono, e uma alimentação equilibrada ajudam a regular os hormônios e a reduzir o estresse.",
+        links: [
+            "https://www.msdmanuals.com/pt/profissional/multimedia/table/higiene-do-sono",
+            "https://www.revistaabm.com.br/artigos/como-a-alimentacao-ajuda-a-combater-o-estresse-e-outros-transtornos"
+        ]
+    };
+    
+    // Renderizar recomendações
+    if (recomendacoes.items) {
+        recomendacoes.items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'recomendacao-item';
+            
+            let linksHtml = '';
+            if (item.links && item.links.length > 0) {
+                linksHtml = `<div class="recomendacao-links">
+                    ${item.links.map(link => `<a href="${link}" target="_blank" rel="noopener">📎 Saiba mais</a>`).join(' ')}
+                </div>`;
+            }
+            
+            div.innerHTML = `
+                <h4>${item.titulo}</h4>
+                <p>${item.descricao}</p>
+                ${linksHtml}
+            `;
+            container.appendChild(div);
+        });
+    }
+    
+    // Adicionar hábitos saudáveis
+    const habitosDiv = document.createElement('div');
+    habitosDiv.className = 'recomendacao-item';
+    habitosDiv.innerHTML = `
+        <h4>${habitos.titulo}</h4>
+        <p>${habitos.descricao}</p>
+        <div class="recomendacao-links">
+            ${habitos.links.map(link => `<a href="${link}" target="_blank" rel="noopener">📎 Saiba mais</a>`).join(' ')}
+        </div>
+    `;
+    container.appendChild(habitosDiv);
+    
+    // Adicionar consulta ginecológica se houver alterações menstruais
+    if (temAlteracaoMenstrual) {
+        const ginecoDiv = document.createElement('div');
+        ginecoDiv.className = 'recomendacao-item recomendacao-alerta';
+        ginecoDiv.innerHTML = `
+            <h4>⚠️ Acompanhamento Ginecológico</h4>
+            <p>Caso os ciclos continuem irregulares por mais 2-3 ciclos ou venham acompanhados de dor intensa, é importante procurar atendimento ginecológico para uma melhor avaliação.</p>
         `;
-        container.appendChild(div);
-    });
+        container.appendChild(ginecoDiv);
+    }
+    
+    // Adicionar recursos educativos
+    if (recomendacoes.recursos) {
+        const recursosDiv = document.createElement('div');
+        recursosDiv.className = 'recursos-educativos';
+        recursosDiv.innerHTML = `
+            <h4>📚 Recursos Educativos</h4>
+            <p>Veja em mais detalhes como o estresse altera seu ciclo menstrual:</p>
+            <div class="recomendacao-links">
+                ${recomendacoes.recursos.map(link => `<a href="${link}" target="_blank" rel="noopener">📎 Leia mais</a>`).join(' ')}
+            </div>
+        `;
+        container.appendChild(recursosDiv);
+    }
 }
 
 // ==========================================

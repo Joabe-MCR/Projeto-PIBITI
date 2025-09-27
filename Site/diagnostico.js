@@ -706,50 +706,111 @@ function aplicarDiagnosticoDesconforto() {
 // ==========================================
 
 function gerarAnaliseIntegrada() {
-    const { stress, vulnerabilidade, desconforto } = dadosDiagnostico;
+    const classificacao = dadosDiagnostico.classificacao;
+    if (!classificacao) return;
     
-    // Extrair valores de porcentagem
-    const stressValor = stress.porcentagem || stress || 0;
-    const vulnerabilidadeValor = vulnerabilidade.porcentagem || vulnerabilidade || 0;
-    const desconfortoValor = desconforto.porcentagem || desconforto || 0;
-    
-    let analise = [];
-    
-    // Análise da correlação entre stress e desconforto
-    if (stressValor > 60 && desconfortoValor > 60) {
-        analise.push("Há uma possível correlação entre seus níveis elevados de stress e desconforto menstrual. Esta é uma observação comum em nossa pesquisa, sugerindo que o manejo do stress pode contribuir para o alívio dos sintomas menstruais.");
-    } else if (stressValor < 40 && desconfortoValor < 40) {
-        analise.push("Seus baixos níveis de stress parecem correlacionados com menores níveis de desconforto menstrual, o que está alinhado com os achados de nossa pesquisa sobre a relação entre bem-estar emocional e saúde menstrual.");
-    }
-    
-    // Análise da vulnerabilidade
-    if (vulnerabilidadeValor > 70) {
-        analise.push("Sua alta vulnerabilidade ao stress sugere que você pode se beneficiar especialmente de estratégias preventivas e técnicas de manejo do stress antes que situações desafiadoras se intensifiquem.");
-    } else if (vulnerabilidadeValor < 30) {
-        analise.push("Sua baixa vulnerabilidade ao stress indica boa capacidade de resiliência. Isso é um fator protetor importante para seu bem-estar geral.");
-    }
-    
-    // Análise do perfil geral
-    const media = (stressValor + vulnerabilidadeValor + desconfortoValor) / 3;
-    if (media < 35) {
-        analise.push("De forma geral, seu perfil indica bons níveis de bem-estar e capacidade de manejo das situações avaliadas. Continue mantendo seus hábitos saudáveis.");
-    } else if (media > 65) {
-        analise.push("Seu perfil geral sugere a importância de dedicar atenção especial ao seu bem-estar. Pequenas mudanças na rotina podem trazer benefícios significativos.");
-    }
-    
-    // Se não há análises específicas, usar uma geral
-    if (analise.length === 0) {
-        analise.push("Seus resultados mostram um perfil único que contribui para nossa compreensão da diversidade de experiências relacionadas ao stress e bem-estar menstrual. Cada participante traz insights valiosos para nossa pesquisa.");
-    }
-    
-    // Atualizar DOM
+    const codigoBinario = classificacao.codigoBinario;
     const container = document.getElementById('analiseIntegrada');
     container.innerHTML = '';
-    analise.forEach(texto => {
-        const p = document.createElement('p');
-        p.textContent = texto;
-        container.appendChild(p);
-    });
+    
+    // Textos completos para cada perfil
+    const textosCompletos = {
+        '000': {
+            texto: `Você não apresenta níveis relevantes de estresse nem sinais de vulnerabilidade ou alterações menstruais. Isso significa que seu corpo está em equilíbrio, mas é importante manter hábitos saudáveis para prevenir mudanças futuras. O estresse pode afetar o ciclo menstrual, mesmo em quem hoje não apresenta sintomas, porque interfere nos hormônios que regulam a ovulação e a menstruação. Por isso, cuidar da rotina, buscando mantê-la organizada, praticar atividade física leve e buscar momentos de lazer ajudam a manter sua saúde estável.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual",
+                "https://drauziovarella.uol.com.br/mulher/estresse-prolongado-pode-afetar-o-ciclo-menstrual/"
+            ]
+        },
+        
+        '100': {
+            texto: `Você apresenta sinais de estresse, mas não de vulnerabilidade significativa nem de impacto no ciclo menstrual. Isso indica que seu corpo está conseguindo lidar com as demandas atuais, mas já mostra sinais de sobrecarga. Técnicas de relaxamento, como meditação e exercícios de respiração, ajudam a reduzir o cortisol, hormônio do estresse, melhorando sono, humor e concentração. A prática regular de exercícios físicos também libera endorfinas, que aumentam a sensação de bem-estar.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual",
+                "https://drauziovarella.uol.com.br/mulher/estresse-prolongado-pode-afetar-o-ciclo-menstrual/"
+            ]
+        },
+        
+        '010': {
+            texto: `Você não está com estresse elevado no momento, mas apresenta uma maior vulnerabilidade a ele. Isso significa que fatores do seu estilo de vida ou de sua rotina podem deixá-la mais propensa a sentir impacto quando situações estressantes surgirem. A prática de meditação e técnicas de relaxamento funcionam como um "treino" para o cérebro, fortalecendo a sua resiliência emocional. Além disso, manter uma rede de apoio social ajuda a lidar melhor com possíveis pressões futuras.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual",
+                "https://drauziovarella.uol.com.br/mulher/estresse-prolongado-pode-afetar-o-ciclo-menstrual/"
+            ]
+        },
+        
+        '110': {
+            texto: `Você apresenta estresse elevado e também alta vulnerabilidade, embora ainda sem alterações no ciclo menstrual. Isso significa que seu corpo já está sob impacto, mas ainda não mostrou repercussões hormonais. Nessa fase, é essencial adotar uma combinação de estratégias para evitar que o estresse afete sua saúde reprodutiva. Técnicas de relaxamento, exercícios físicos regulares e práticas como yoga ajudam a equilibrar hormônios e reduzir sintomas emocionais. O suporte social também é fundamental para aliviar a carga emocional.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual",
+                "https://drauziovarella.uol.com.br/mulher/estresse-prolongado-pode-afetar-o-ciclo-menstrual/"
+            ]
+        },
+        
+        '001': {
+            texto: `Você não apresenta estresse elevado nem vulnerabilidade significativa, mas já tem alterações no ciclo menstrual. Isso pode acontecer porque mesmo níveis mais baixos de estresse ou outros fatores do dia a dia (sono irregular, alimentação, excesso de atividade) podem impactar os hormônios do ciclo ou ser dada por outras causas. O ideal é manter hábitos de vida saudáveis e observar se os sintomas persistem. Caso os ciclos continuem irregulares ou venham acompanhados de dor intensa, pode ser necessário procurar atendimento ginecológico.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual"
+            ]
+        },
+        
+        '101': {
+            texto: `Você apresenta sinais de estresse e alterações no ciclo menstrual, embora não tenha vulnerabilidade alta. Isso mostra que o estresse já está repercutindo em seu organismo, especialmente na regulação hormonal do ciclo. Técnicas de relaxamento e exercícios físicos ajudam a equilibrar o eixo hormonal e reduzem o impacto do estresse. Se as alterações persistirem por mais de 2 a 3 ciclos, a avaliação ginecológica é recomendada.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual"
+            ]
+        },
+        
+        '011': {
+            texto: `Você não apresenta estresse elevado, mas tem vulnerabilidade aumentada e já manifesta alterações menstruais. Isso indica que, mesmo sem uma sobrecarga emocional evidente, seu corpo responde de forma mais sensível ao estresse, refletindo no ciclo menstrual. O fortalecimento da resiliência emocional, junto ao suporte social e hábitos saudáveis, pode reduzir esses impactos. Se os sintomas forem intensos ou recorrentes, procurar acompanhamento psicológico e ginecológico é uma medida preventiva importante.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual"
+            ]
+        },
+        
+        '111': {
+            texto: `Você apresenta estresse elevado, alta vulnerabilidade e alterações menstruais. Esse é um quadro em que o estresse já está impactando de forma significativa sua saúde. É fundamental adotar uma rotina estruturada de técnicas de relaxamento, exercícios físicos regulares, além de atividades complementares como musicoterapia ou arteterapia. Também é essencial procurar acompanhamento psicológico e ginecológico, para que o manejo seja adequado e seguro.`,
+            recursos: [
+                "https://helloclue.com/pt/artigos/emocoes/estresse-e-o-ciclo-menstrual"
+            ]
+        }
+    };
+    
+    // Buscar texto para o perfil específico
+    const textoCompleto = textosCompletos[codigoBinario] || textosCompletos['000'];
+    
+    // Criar o container da análise
+    const analiseDiv = document.createElement('div');
+    analiseDiv.className = 'analise-detalhada';
+    
+    // Adicionar o texto principal
+    const textoP = document.createElement('p');
+    textoP.textContent = textoCompleto.texto;
+    textoP.className = 'analise-texto-principal';
+    analiseDiv.appendChild(textoP);
+    
+    // Adicionar recursos educativos
+    if (textoCompleto.recursos && textoCompleto.recursos.length > 0) {
+        const recursosDiv = document.createElement('div');
+        recursosDiv.className = 'recursos-educativos-analise';
+        recursosDiv.innerHTML = `
+            <h4>📚 Veja em mais detalhes:</h4>
+            <div class="recomendacao-links">
+                ${textoCompleto.recursos.map(link => {
+                    let texto = "📎 Saiba mais";
+                    if (link.includes('helloclue.com')) {
+                        texto = "📎 Como o estresse altera seu ciclo menstrual";
+                    } else if (link.includes('drauziovarella.uol.com.br')) {
+                        texto = "📎 Portal Drauzio Varella - Estresse e ciclo menstrual";
+                    }
+                    return `<a href="${link}" target="_blank" rel="noopener">${texto}</a>`;
+                }).join(' ')}
+            </div>
+        `;
+        analiseDiv.appendChild(recursosDiv);
+    }
+    
+    container.appendChild(analiseDiv);
 }
 
 // ==========================================

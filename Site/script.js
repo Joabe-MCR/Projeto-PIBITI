@@ -182,6 +182,12 @@ function irParaTCLE() {
   document.getElementById('tcle').style.display = 'flex';
   // Scroll para o topo
   window.scrollTo(0, 0);
+  // Gerar userId se não existir
+  if (!localStorage.getItem('userSessionId')) {
+    localStorage.setItem('userSessionId', generateUserId());
+  }
+  // Garantir listener do checkbox para habilitar botão
+  toggleProsseguirButton();
 }
 
 // Função para voltar à página inicial
@@ -215,6 +221,13 @@ function prosseguirQuestionarios() {
   }
 }
 
+// Gerar ID único
+function generateUserId() {
+  const timestamp = Date.now().toString(36);
+  const randomNum = Math.random().toString(36).substring(2, 7);
+  return `user_${timestamp}_${randomNum}`;
+}
+
 // Função para habilitar/desabilitar o botão Prosseguir
 function toggleProsseguirButton() {
   const checkbox = document.getElementById('consentimento');
@@ -232,6 +245,23 @@ document.addEventListener('DOMContentLoaded', function() {
     checkbox.addEventListener('change', toggleProsseguirButton);
     // Inicializar estado do botão
     toggleProsseguirButton();
+  }
+  // Lógica de exibição do PDF do TCLE
+  const btnVer = document.getElementById('btnVerPdfTcle');
+  const areaPdf = document.getElementById('tclePdfEmbed');
+  const btnFechar = document.getElementById('btnFecharPdfTcle');
+  if (btnVer && areaPdf) {
+    btnVer.addEventListener('click', () => {
+      areaPdf.style.display = 'block';
+      btnVer.style.display = 'none';
+    });
+  }
+  if (btnFechar && areaPdf) {
+    btnFechar.addEventListener('click', () => {
+      areaPdf.style.display = 'none';
+      const again = document.getElementById('btnVerPdfTcle');
+      if (again) again.style.display = 'inline-block';
+    });
   }
 });
 

@@ -329,9 +329,13 @@
     background: #fff3cd;
     border: 1px solid #ffeaa7;
     border-radius: 8px;
-    padding: 20px;
+    padding: 24px 32px;
     margin-top: 20px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 130px;
 }
 
 .disclaimer p {
@@ -340,6 +344,8 @@
     line-height: 1.6;
     font-size: 0.95em;
     text-align: center;
+    width: 100%;
+    flex: 1;
 }
 
 /* Rodapé da pesquisa */

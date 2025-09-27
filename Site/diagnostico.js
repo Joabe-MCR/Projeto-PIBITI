@@ -477,7 +477,7 @@ async function buscarResultadoAPI(userId) {
     }
 }
 
-function processarDadosReais(resultados) {
+function processarDadosAPI(resultados) {
     // Converter dados reais da API para o formato esperado
     const dados = {
         timestamp: new Date().toISOString(),
@@ -706,10 +706,13 @@ function gerarAnaliseIntegrada() {
 
 function gerarRecomendacoes() {
     const { stress, vulnerabilidade, desconforto } = dadosDiagnostico;
+    const stressValor = stress?.porcentagem ?? 0;
+    const vulnerabilidadeValor = vulnerabilidade?.porcentagem ?? 0;
+    const desconfortoValor = desconforto?.porcentagem ?? 0;
     const recomendacoes = [];
     
     // Recomendações baseadas no stress
-    if (stress > 60) {
+    if (stressValor > 60) {
         recomendacoes.push({
             titulo: "🧘‍♀️ Técnicas de Relaxamento",
             descricao: "Pratique técnicas de respiração profunda, meditação ou yoga. Reserve 10-15 minutos diários para relaxamento consciente."
@@ -722,7 +725,7 @@ function gerarRecomendacoes() {
     }
     
     // Recomendações baseadas na vulnerabilidade
-    if (vulnerabilidade > 60) {
+    if (vulnerabilidadeValor > 60) {
         recomendacoes.push({
             titulo: "💪 Fortalecimento da Resiliência",
             descricao: "Desenvolva sua rede de apoio social. Mantenha conexões significativas com familiares e amigos."
@@ -735,7 +738,7 @@ function gerarRecomendacoes() {
     }
     
     // Recomendações baseadas no desconforto menstrual
-    if (desconforto > 60) {
+    if (desconfortoValor > 60) {
         recomendacoes.push({
             titulo: "🏃‍♀️ Atividade Física Regular",
             descricao: "Exercícios moderados podem reduzir significativamente os sintomas menstruais. Considere caminhadas, natação ou yoga."
@@ -793,27 +796,30 @@ function gerarGradienteBarra(valor) {
     }
 }
 
-function salvarDiagnostico() {
-    const dadosCompletos = {
-        userId: userId,
-        diagnostico: dadosDiagnostico,
-        timestamp: new Date().toISOString(),
-        versao: '1.0'
-    };
-    
-    localStorage.setItem(`diagnostico_${userId}`, JSON.stringify(dadosCompletos));
-    
-    // Salvar também um histórico
-    const historico = JSON.parse(localStorage.getItem('historico_diagnosticos') || '[]');
-    historico.push(dadosCompletos);
-    localStorage.setItem('historico_diagnosticos', JSON.stringify(historico));
-}
-
 // ==========================================
 // AÇÕES DO USUÁRIO
 // ==========================================
 
 function salvarDiagnostico() {
+    const stressValor = dadosDiagnostico.stress?.porcentagem ?? 0;
+    const vulnerabilidadeValor = dadosDiagnostico.vulnerabilidade?.porcentagem ?? 0;
+    const desconfortoValor = dadosDiagnostico.desconforto?.porcentagem ?? 0;
+    const nivelStress = determinarNivel(stressValor);
+    const nivelVulnerabilidade = determinarNivel(vulnerabilidadeValor);
+    const nivelDesconforto = determinarNivel(desconfortoValor);
+
+    // Persistir no histórico local
+    const dadosCompletos = {
+        userId,
+        diagnostico: dadosDiagnostico,
+        geradoEm: new Date().toISOString(),
+        versao: '1.0'
+    };
+    localStorage.setItem(`diagnostico_${userId}`, JSON.stringify(dadosCompletos));
+    const historico = JSON.parse(localStorage.getItem('historico_diagnosticos') || '[]');
+    historico.push(dadosCompletos);
+    localStorage.setItem('historico_diagnosticos', JSON.stringify(historico));
+
     // Criar conteúdo para download
     const conteudo = `
 DIAGNÓSTICO PERSONALIZADO - PROJETO PIBITI
@@ -823,9 +829,10 @@ ID da Sessão: ${userId}
 Data: ${new Date().toLocaleDateString('pt-BR')}
 
 RESULTADOS:
-- Percepção de Stress: ${dadosDiagnostico.stress}% (${determinarNivel(dadosDiagnostico.stress)})
-- Vulnerabilidade ao Stress: ${dadosDiagnostico.vulnerabilidade}% (${determinarNivel(dadosDiagnostico.vulnerabilidade)})
-- Desconforto Menstrual: ${dadosDiagnostico.desconforto}% (${determinarNivel(dadosDiagnostico.desconforto)})
+- Percepção de Stress: ${stressValor.toFixed(1)}% (${nivelStress.toUpperCase()})
+- Vulnerabilidade ao Stress: ${vulnerabilidadeValor.toFixed(1)}% (${nivelVulnerabilidade.toUpperCase()})
+- Desconforto Menstrual: ${desconfortoValor.toFixed(1)}% (${nivelDesconforto.toUpperCase()})
+- Índice MSD: ${(dadosDiagnostico.desconforto?.msd ?? 0).toFixed(2)}
 
 ANÁLISE INTEGRADA:
 ${document.getElementById('analiseIntegrada').innerText}
@@ -833,7 +840,7 @@ ${document.getElementById('analiseIntegrada').innerText}
 RECOMENDAÇÕES:
 ${Array.from(document.querySelectorAll('.recomendacao-item')).map(item => 
     item.querySelector('h4').textContent + ': ' + item.querySelector('p').textContent
-).join('\\n')}
+).join('\n')}
 
 Este diagnóstico foi gerado automaticamente com base em suas respostas e não substitui consulta médica profissional.
     `;
@@ -860,15 +867,21 @@ function fecharModalCompartilhar() {
 }
 
 function compartilharWhatsApp() {
-    const texto = `Acabei de completar uma avaliação sobre stress e bem-estar menstrual no Projeto PIBITI. Meus resultados: Stress ${dadosDiagnostico.stress}%, Vulnerabilidade ${dadosDiagnostico.vulnerabilidade}%, Desconforto ${dadosDiagnostico.desconforto}%. Participe também!`;
+    const stressValor = dadosDiagnostico.stress?.porcentagem ?? 0;
+    const vulnerabilidadeValor = dadosDiagnostico.vulnerabilidade?.porcentagem ?? 0;
+    const desconfortoValor = dadosDiagnostico.desconforto?.porcentagem ?? 0;
+    const texto = `Acabei de completar uma avaliação sobre stress e bem-estar menstrual no Projeto PIBITI. Meus resultados: Stress ${stressValor.toFixed(1)}%, Vulnerabilidade ${vulnerabilidadeValor.toFixed(1)}%, Desconforto ${desconfortoValor.toFixed(1)}%. Participe também!`;
     const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
     window.open(url, '_blank');
     fecharModalCompartilhar();
 }
 
 function compartilharEmail() {
+    const stressValor = dadosDiagnostico.stress?.porcentagem ?? 0;
+    const vulnerabilidadeValor = dadosDiagnostico.vulnerabilidade?.porcentagem ?? 0;
+    const desconfortoValor = dadosDiagnostico.desconforto?.porcentagem ?? 0;
     const assunto = 'Diagnóstico - Projeto PIBITI';
-    const corpo = `Olá!\n\nCompartilho meu diagnóstico do Projeto PIBITI sobre stress e bem-estar menstrual:\n\n- Percepção de Stress: ${dadosDiagnostico.stress}%\n- Vulnerabilidade: ${dadosDiagnostico.vulnerabilidade}%\n- Desconforto Menstrual: ${dadosDiagnostico.desconforto}%\n\nEste projeto contribui para pesquisas importantes sobre saúde feminina!`;
+    const corpo = `Olá!\n\nCompartilho meu diagnóstico do Projeto PIBITI sobre stress e bem-estar menstrual:\n\n- Percepção de Stress: ${stressValor.toFixed(1)}%\n- Vulnerabilidade: ${vulnerabilidadeValor.toFixed(1)}%\n- Desconforto Menstrual: ${desconfortoValor.toFixed(1)}%\n\nEste projeto contribui para pesquisas importantes sobre saúde feminina!`;
     
     const url = `mailto:?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
     window.location.href = url;

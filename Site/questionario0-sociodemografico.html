@@ -715,16 +715,18 @@
                     timestamp: new Date().toISOString(),
                     data_completa: new Date().toLocaleString('pt-BR'),
                     questionario_pulado: pulado,
-                    idade: dados.idade || 'não_informado',
+                    // Mantém compatibilidade caso use 'faixa_etaria' no Sheets
+                    faixa_etaria: dados.faixa_etaria || dados.idade || 'não_informado',
+                    idade: dados.idade || dados.faixa_etaria || 'não_informado',
                     cor_raca: dados.cor_raca || 'não_informado',
                     escolaridade: dados.escolaridade || 'não_informado',
                     renda: dados.renda || 'não_informado'
                 };
 
                 // Integração com Google Sheets via Apps Script
-                const GOOGLE_SHEETS_URL = 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI'; // Substituir pela URL real
+                const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwhkTGkrSad5rjnqGed3Mb4bH408Fd35aLup8h4bympjNHKDur1W8bONFZF64xjdyqOAQ/exec';
                 
-                if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI') {
+                if (GOOGLE_SHEETS_URL) {
                     const response = await fetch(GOOGLE_SHEETS_URL, {
                         method: 'POST',
                         mode: 'no-cors', // Necessário para Google Apps Script
@@ -732,7 +734,8 @@
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            planilha: 'dados_sociodemograficos',
+                            // Usar chave 'aba' conforme script universal atualizado
+                            aba: 'dados_sociodemograficos',
                             dados: dadosParaSalvar
                         })
                     });
@@ -758,6 +761,11 @@
             const confirmacao = confirm('Tem certeza de que deseja pular o questionário sociodemográfico?\n\nVocê pode voltar depois se mudar de ideia.');
             
             if (confirmacao) {
+                // Garantir consentimento antes de qualquer outra checagem
+                if (!localStorage.getItem('tcleConsentimento')) {
+                    localStorage.setItem('tcleConsentimento', 'true');
+                    localStorage.setItem('tcleDataConsentimento', new Date().toISOString());
+                }
                 // Salvar que foi pulado
                 await salvarDadosGoogleSheets({}, true);
                 
@@ -767,6 +775,7 @@
                 localStorage.setItem(`progress_${userId}`, JSON.stringify(progresso));
                 
                 alert('Questionário sociodemográfico pulado. Redirecionando para os questionários principais.');
+                // Redirecionar sempre usando mesmo diretório
                 window.location.href = 'questionarios.html';
             }
         }

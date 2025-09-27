@@ -6,7 +6,7 @@
 const QUESTIONARIOS_URLS = {
     1: 'questionario1-stress.html', // Escala de Percepção ao Stress
     2: 'questionario2-vulnerabilidade.html', // Escala de Vulnerabilidade ao Stress  
-    3: 'questionario3-menstrual.html'  // Questionário de Desconforto Menstrual
+    3: 'questionario3-medi.html'  // Questionário de Desconforto Menstrual
 };
 
 // Variáveis globais
@@ -37,17 +37,25 @@ document.addEventListener('DOMContentLoaded', function() {
 function verificarConsentimentoTCLE() {
     const consentimento = localStorage.getItem('tcleConsentimento');
     const dataConsentimento = localStorage.getItem('tcleDataConsentimento');
-    
-    // Verificar se há consentimento e se foi dado recentemente (últimas 24h para segurança)
+
     if (consentimento === 'true' && dataConsentimento) {
         const agora = new Date();
         const dataConsent = new Date(dataConsentimento);
         const diferencaHoras = (agora - dataConsent) / (1000 * 60 * 60);
-        
-        // Permitir acesso se consentiu nas últimas 24 horas
-        return diferencaHoras <= 24;
+        if (diferencaHoras <= 24) return true;
     }
-    
+
+    // Consentimento implícito: se o usuário já possui ID e algum sinal de progresso / dados locais
+    const userExisting = localStorage.getItem('userSessionId');
+    if (userExisting) {
+        const progressoKey = localStorage.getItem(`progress_${userExisting}`);
+        const dadosSocio = localStorage.getItem(`dados_sociodemograficos_${userExisting}`);
+        if (progressoKey || dadosSocio) {
+            localStorage.setItem('tcleConsentimento', 'true');
+            localStorage.setItem('tcleDataConsentimento', new Date().toISOString());
+            return true;
+        }
+    }
     return false;
 }
 

@@ -640,37 +640,7 @@
 
             </form>
 
-            <!-- Preview do Resultado -->
-            <div id="resultadoPreview" class="resultado-preview">
-                <h3>📊 Resultados Preliminares MEDI-Q</h3>
-                <div class="resultado-indices">
-                    <div class="indice-card">
-                        <div class="indice-valor" id="pontuacaoTotal">0</div>
-                        <div class="indice-label">Pontuação Total</div>
-                    </div>
-                    <div class="indice-card">
-                        <div class="indice-valor" id="sintomasEM">0</div>
-                        <div class="indice-label">Sintomas Menstruais (MS)</div>
-                    </div>
-                    <div class="indice-card">
-                        <div class="indice-valor" id="indiceMSD">0.0</div>
-                        <div class="indice-label">MSD</div>
-                    </div>
-                    <div class="indice-card">
-                        <div class="indice-valor" id="indiceMESI">0.0</div>
-                        <div class="indice-label">MESI</div>
-                    </div>
-                </div>
-                
-                <div class="interpretacao-msd" id="interpretacaoMSD">
-                    <h4>Interpretação do Nível de Desconforto:</h4>
-                    <p id="textoInterpretacao">Complete o questionário para ver a interpretação.</p>
-                </div>
-                
-                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
-                    <strong>Legenda:</strong> MS = Sintomas com impacto, MSD = Índice de Sofrimento, MESI = Índice de Especificidade
-                </p>
-            </div>
+            <!-- (Mini diagnóstico removido conforme solicitação) -->
 
             <!-- Botões de Ação -->
             <div class="botoes-container">
@@ -1030,108 +1000,43 @@
 
         function calcularResultados() {
             if (totalSintomasAvaliados === 0) return;
-            
+
             let pontuacaoTotal = 0;
-            let sintomasComImpacto = 0; // MS - Sintomas menstruais
+            let sintomasComImpacto = 0; // MS
             let mesiCount = 0;
-            
-            // Calcular para sintomas 1-24
-            for (let i = 1; i <= 24; i++) {
-                const sintoma = respostasUsuario[`sintoma${i}`];
-                if (sintoma && sintoma.frequencia !== undefined) {
-                    const freq = sintoma.frequencia || 0;
-                    
-                    // Se freq = 0, pode atribuir pontuação final 0 diretamente
-                    if (freq === 0) {
-                        // Item sem impacto, não conta para MS nem pontuação total
-                        continue;
-                    }
-                    
-                    if (sintoma.mens !== undefined && sintoma.outros !== undefined) {
-                        // Calcular Δ Escore de angústia (B - D)
-                        const delta = Math.max(0, sintoma.mens - sintoma.outros);
-                        
-                        // Pontuação final do item = freq × delta (máximo 5 quando resultado = 6)
-                        let pontuacaoItem = freq * delta;
-                        if (pontuacaoItem === 6) pontuacaoItem = 5;
-                        
-                        pontuacaoTotal += pontuacaoItem;
-                        
-                        // MS = itens com pontuação final > 0
-                        if (pontuacaoItem > 0) {
-                            sintomasComImpacto++;
-                            
-                            // Para MESI: B > C E B > D (sintoma mais intenso na menstruação)
-                            const preValue = sintoma.pre || 0;
-                            if (sintoma.mens > preValue && sintoma.mens > sintoma.outros) {
-                                mesiCount++;
-                            }
-                        }
-                    }
+
+            // Função helper para processar um sintoma
+            function processarSintoma(sintoma) {
+                if (!sintoma || sintoma.frequencia === undefined) return; 
+                const freq = Number(sintoma.frequencia) || 0;
+                if (freq === 0) return; // sem impacto
+                if (sintoma.mens === undefined || sintoma.outros === undefined) return; // incompleto
+                const mens = Number(sintoma.mens) || 0;
+                const outros = Number(sintoma.outros) || 0;
+                const preValue = Number(sintoma.pre) || 0;
+                const delta = Math.max(0, mens - outros);
+                let pontuacaoItem = freq * delta;
+                if (pontuacaoItem > 5) pontuacaoItem = 5; // cap conforme regra
+                if (pontuacaoItem > 0) {
+                    sintomasComImpacto++;
+                    if (mens > preValue && mens > outros) mesiCount++; // critério MESI
                 }
+                pontuacaoTotal += pontuacaoItem;
             }
-            
-            // Calcular para pergunta 25A (se aplicável)
-            if (respostasUsuario.q25 === 'sim' && respostasUsuario.sintoma25a) {
-                const sintoma = respostasUsuario.sintoma25a;
-                if (sintoma.frequencia !== undefined) {
-                    let freq = sintoma.frequencia || 0;
-                    
-                    // Para item 25, usar "pontuações entre parênteses" se necessário
-                    // As opções especiais já são tratadas no valor da frequência
-                    
-                    if (freq === 0) {
-                        // Item sem impacto
-                        // Nota: Mesmo "nunca penetração por outros motivos" = 0, não impacta
-                    } else if (sintoma.mens !== undefined && sintoma.outros !== undefined) {
-                        const delta = Math.max(0, sintoma.mens - sintoma.outros);
-                        let pontuacaoItem = freq * delta;
-                        if (pontuacaoItem === 6) pontuacaoItem = 5;
-                        
-                        pontuacaoTotal += pontuacaoItem;
-                        
-                        if (pontuacaoItem > 0) {
-                            sintomasComImpacto++;
-                            
-                            // Para MESI: B > C E B > D
-                            const preValue = sintoma.pre || 0;
-                            if (sintoma.mens > preValue && sintoma.mens > sintoma.outros) {
-                                mesiCount++;
-                            }
-                        }
-                    }
-                }
+
+            // Sintomas 1..24
+            for (let i=1;i<=24;i++) {
+                processarSintoma(respostasUsuario[`sintoma${i}`]);
             }
-            
-            // Calcular índices conforme documentação oficial
-            // MSD = Pontuação Total ÷ MS (não por todos os sintomas calculados)
+            // Sintoma 25A se aplicável
+            if (respostasUsuario.q25 === 'sim') {
+                processarSintoma(respostasUsuario.sintoma25a);
+            }
+
             const msd = sintomasComImpacto > 0 ? (pontuacaoTotal / sintomasComImpacto) : 0;
-            // MESI = (Número de itens B > C E B > D) ÷ MS
             const mesi = sintomasComImpacto > 0 ? (mesiCount / sintomasComImpacto) : 0;
-            
-            // Determinar interpretação
             const interpretacao = interpretarMSD(msd);
-            
-            // Atualizar interface
-            document.getElementById('pontuacaoTotal').textContent = pontuacaoTotal;
-            document.getElementById('sintomasEM').textContent = sintomasComImpacto;
-            document.getElementById('indiceMSD').textContent = msd.toFixed(2);
-            document.getElementById('indiceMESI').textContent = mesi.toFixed(2);
-            
-            // Atualizar interpretação
-            const interpretacaoDiv = document.getElementById('interpretacaoMSD');
-            const textoInterpretacao = document.getElementById('textoInterpretacao');
-            textoInterpretacao.innerHTML = `
-                <span class="nivel-badge ${interpretacao.classe}">${interpretacao.nivel}</span>
-                ${interpretacao.texto}
-            `;
-            
-            // Mostrar preview se houver resultados
-            if (sintomasCalculados > 0) {
-                document.getElementById('resultadoPreview').classList.add('show');
-            }
-            
-            // Salvar resultados temporários
+
             window.resultadosTemporarios = {
                 pontuacaoTotal,
                 sintomasComImpacto,
@@ -1201,10 +1106,15 @@
                 userId: userId,
                 timestamp: new Date().toISOString(),
                 respostas: respostasUsuario,
-                pontuacaoTotal: resultados.pontuacaoTotal,
+                pontuacao_total: resultados.pontuacaoTotal, // snake_case p/ export
+                pontuacaoTotal: resultados.pontuacaoTotal,  // mantém compatibilidade
+                sintomas_com_impacto: resultados.sintomasComImpacto,
                 sintomasComImpacto: resultados.sintomasComImpacto,
+                indice_msd: resultados.msd,
                 indiceMSD: resultados.msd,
+                indice_mesi: resultados.mesi,
                 indiceMESI: resultados.mesi,
+                nivel_desconforto: resultados.interpretacao.nivel,
                 nivelDesconforto: resultados.interpretacao.nivel,
                 interpretacao: resultados.interpretacao.texto,
                 dataCompleta: new Date().toLocaleString('pt-BR')
@@ -1212,6 +1122,51 @@
             
             // Salvar resultado
             localStorage.setItem(`resultado_q3_${userId}`, JSON.stringify(resultadoFinal));
+
+            // Enviar para Google Sheets (não bloqueante)
+            (async () => {
+                try {
+                    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwhkTGkrSad5rjnqGed3Mb4bH408Fd35aLup8h4bympjNHKDur1W8bONFZF64xjdyqOAQ/exec';
+                    // Montar array de respostas em formato [ [freq,dur,imp], ... ]
+                    const respostasArr = [];
+                    for (let i=1;i<=24;i++) {
+                        const s = respostasUsuario[`sintoma${i}`] || {};
+                        respostasArr.push([
+                            Number(s.frequencia)||0,
+                            Number(s.mens)||0,
+                            Number(s.outros)||0
+                        ]);
+                    }
+                    // Sintoma 25
+                    if (respostasUsuario.sintoma25a) {
+                        const s25 = respostasUsuario.sintoma25a;
+                        respostasArr.push([
+                            Number(s25.frequencia)||0,
+                            Number(s25.mens)||0,
+                            Number(s25.outros)||0
+                        ]);
+                    } else {
+                        respostasArr.push([0,0,0]);
+                    }
+                    await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            aba: 'questionario_mediq',
+                            dados: {
+                                userId: resultadoFinal.userId,
+                                timestamp: resultadoFinal.timestamp,
+                                respostas: respostasArr,
+                                pontuacao_total: resultadoFinal.pontuacao_total,
+                                indice_msd: resultadoFinal.indice_msd,
+                                indice_mesi: resultadoFinal.indice_mesi,
+                                sintomas_com_impacto: resultadoFinal.sintomas_com_impacto
+                            }
+                        })
+                    });
+                } catch(e) { console.warn('Falha envio Sheets MEDI-Q', e); }
+            })();
             
             // Marcar questionário 3 como completo
             let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');

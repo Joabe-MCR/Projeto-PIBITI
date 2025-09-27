@@ -847,6 +847,29 @@
             
             // Salvar resultado no localStorage
             localStorage.setItem(`resultado_q1_${userId}`, JSON.stringify(resultadoFinal));
+
+            // Enviar para Google Sheets (não bloqueante)
+            (async () => {
+                try {
+                    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwhkTGkrSad5rjnqGed3Mb4bH408Fd35aLup8h4bympjNHKDur1W8bONFZF64xjdyqOAQ/exec';
+                    await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            aba: 'questionario_stress',
+                            dados: {
+                                userId: resultadoFinal.userId,
+                                timestamp: resultadoFinal.timestamp,
+                                respostas: Object.values(respostasUsuario),
+                                pontuacao_total: resultadoFinal.pontuacaoTotal,
+                                porcentagem: ((resultadoFinal.pontuacaoTotal/40)*100).toFixed(2),
+                                categoria: resultadoFinal.interpretacao
+                            }
+                        })
+                    });
+                } catch(e) { console.warn('Falha envio Sheets Stress', e); }
+            })();
             
             // Marcar questionário 1 como completo
             let progresso = JSON.parse(localStorage.getItem(`progress_${userId}`) || '{}');

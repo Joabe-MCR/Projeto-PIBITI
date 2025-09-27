@@ -3,11 +3,11 @@
   "builds": [
     { "src": "Site/(.*)", "use": "@vercel/static" }
   ],
-  "routes": [
-    { "src": "/", "dest": "Site/index.html" },
-    { "src": "/questionarios", "dest": "Site/questionarios.html" },
-    { "src": "/diagnostico", "dest": "Site/diagnostico.html" },
-    { "src": "/(.*)", "dest": "Site/$1" }
+  "rewrites": [
+    { "source": "/", "destination": "/Site/index.html" },
+    { "source": "/questionarios", "destination": "/Site/questionarios.html" },
+    { "source": "/diagnostico", "destination": "/Site/diagnostico.html" },
+    { "source": "/(.*)", "destination": "/Site/$1" }
   ],
   "headers": [
     {

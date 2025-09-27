@@ -131,10 +131,8 @@ function inicializarDiagnostico() {
     document.getElementById('userIdDisplay').textContent = userId;
     document.getElementById('dataCompleta').textContent = new Date().toLocaleDateString('pt-BR');
     
-    // Simular carregamento e gerar diagnóstico
-    setTimeout(() => {
-        gerarDiagnostico();
-    }, 2000);
+    // Gerar diagnóstico imediatamente
+    gerarDiagnostico();
 }
 
 function obterUserIdDaUrl() {
@@ -152,20 +150,28 @@ function redirecionarParaQuestionarios() {
 // ==========================================
 
 async function gerarDiagnostico() {
+    console.log('🔄 Iniciando geração de diagnóstico para userId:', userId);
+    
     try {
         // Carregar dados dos questionários do localStorage
+        console.log('📊 Carregando dados dos questionários...');
         const dadosReais = carregarDadosQuestionarios();
         
+        console.log('📋 Dados carregados:', dadosReais);
+        
         if (dadosReais.completo) {
-            // Usar dados reais dos questionários
+            console.log('✅ Usando dados reais dos questionários');
             dadosDiagnostico = processarDadosReais(dadosReais);
         } else {
-            // Fallback para dados simulados
+            console.log('⚠️ Dados incompletos, usando dados simulados');
             dadosDiagnostico = gerarDadosSimulados();
         }
         
+        console.log('🎯 Dados processados:', dadosDiagnostico);
+        
     } catch (error) {
-        console.log('Erro ao carregar dados, usando simulados:', error);
+        console.error('❌ Erro ao carregar dados:', error);
+        console.log('🔄 Usando dados simulados como fallback');
         dadosDiagnostico = gerarDadosSimulados();
     }
     
@@ -174,23 +180,30 @@ async function gerarDiagnostico() {
     dadosDiagnostico.classificacao = classificacaoBinaria;
     
     // Ocultar loading e mostrar conteúdo
+    console.log('🎨 Ocultando loading e mostrando conteúdo...');
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('diagnosticoContent').style.display = 'block';
     document.getElementById('acoesFinais').style.display = 'block';
     
     // Aplicar diagnósticos
+    console.log('📈 Aplicando diagnósticos nas barras...');
     aplicarDiagnosticoStress();
     aplicarDiagnosticoVulnerabilidade();
     aplicarDiagnosticoDesconforto();
     
     // Gerar análise integrada
+    console.log('🧠 Gerando análise integrada...');
     gerarAnaliseIntegrada();
     
     // Gerar recomendações
+    console.log('💡 Gerando recomendações...');
     gerarRecomendacoes();
     
     // Salvar no localStorage
+    console.log('💾 Salvando diagnóstico no localStorage...');
     localStorage.setItem(`diagnostico_${userId}`, JSON.stringify(dadosDiagnostico));
+    
+    console.log('🎉 Diagnóstico concluído com sucesso!');
 }
 
 // ==========================================
@@ -198,12 +211,44 @@ async function gerarDiagnostico() {
 // ==========================================
 
 function carregarDadosQuestionarios() {
+    console.log('🔍 Procurando dados para userId:', userId);
+    
+    // Listar todas as chaves do localStorage para debug
+    console.log('🗂️ Todas as chaves do localStorage:');
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        console.log(`  - ${key}`);
+    }
+    
     try {
-        const resultadoQ1 = JSON.parse(localStorage.getItem(`resultado_q1_${userId}`) || 'null');
-        const resultadoQ2 = JSON.parse(localStorage.getItem(`resultado_q2_${userId}`) || 'null');
-        const resultadoQ3 = JSON.parse(localStorage.getItem(`resultado_q3_${userId}`) || 'null');
+        const keyQ1 = `resultado_q1_${userId}`;
+        const keyQ2 = `resultado_q2_${userId}`;
+        const keyQ3 = `resultado_q3_${userId}`;
+        
+        console.log('🔑 Chaves de busca:', { keyQ1, keyQ2, keyQ3 });
+        
+        const dataQ1 = localStorage.getItem(keyQ1);
+        const dataQ2 = localStorage.getItem(keyQ2);
+        const dataQ3 = localStorage.getItem(keyQ3);
+        
+        console.log('💾 Dados brutos encontrados:', {
+            Q1: dataQ1 ? 'ENCONTRADO' : 'NÃO ENCONTRADO',
+            Q2: dataQ2 ? 'ENCONTRADO' : 'NÃO ENCONTRADO', 
+            Q3: dataQ3 ? 'ENCONTRADO' : 'NÃO ENCONTRADO'
+        });
+        
+        const resultadoQ1 = dataQ1 ? JSON.parse(dataQ1) : null;
+        const resultadoQ2 = dataQ2 ? JSON.parse(dataQ2) : null;
+        const resultadoQ3 = dataQ3 ? JSON.parse(dataQ3) : null;
+        
+        console.log('📊 Dados parseados:', {
+            Q1: resultadoQ1 ? 'OK' : 'NULL',
+            Q2: resultadoQ2 ? 'OK' : 'NULL',
+            Q3: resultadoQ3 ? 'OK' : 'NULL'
+        });
         
         const completo = resultadoQ1 && resultadoQ2 && resultadoQ3;
+        console.log('✅ Dados completos?', completo);
         
         return {
             completo: completo,
@@ -212,7 +257,7 @@ function carregarDadosQuestionarios() {
             desconforto: resultadoQ3
         };
     } catch (error) {
-        console.error('Erro ao carregar dados dos questionários:', error);
+        console.error('❌ Erro ao carregar dados dos questionários:', error);
         return { completo: false };
     }
 }

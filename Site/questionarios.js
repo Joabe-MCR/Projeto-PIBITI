@@ -187,6 +187,11 @@ function atualizarEstadoQuestionarios() {
         progressoUsuario.questionario1 && progressoUsuario.questionario2, 
         progressoUsuario.questionario3
     );
+    
+    // Verificar se todos estão completos para mostrar botão diagnóstico
+    if (todosQuestionariosCompletos()) {
+        mostrarBotaoDiagnostico();
+    }
 }
 
 function atualizarQuestionario(numero, habilitado, completo) {

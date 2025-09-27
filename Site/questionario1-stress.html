@@ -238,57 +238,7 @@
             box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
-        .resultado-preview {
-            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
-            border: 2px solid #28a745;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            display: none;
-        }
 
-        .resultado-preview.show {
-            display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .resultado-score {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #28a745;
-            margin: 10px 0;
-        }
-
-        .resultado-interpretacao {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-
-        .resultado-barra {
-            background: #e0e0e0;
-            border-radius: 20px;
-            height: 20px;
-            margin: 15px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .resultado-barra-fill {
-            height: 100%;
-            border-radius: 20px;
-            transition: all 0.8s ease;
-        }
-
-        .resultado-barra-texto {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
 
         @media (max-width: 768px) {
             .questionario-container {
@@ -676,20 +626,6 @@
 
             </form>
 
-            <!-- Preview do Resultado -->
-            <div id="resultadoPreview" class="resultado-preview">
-                <h3>📊 Seu Resultado Preliminar</h3>
-                <div class="resultado-score" id="scoreDisplay">0</div>
-                <div class="resultado-interpretacao" id="interpretacaoDisplay">Complete todas as questões</div>
-                <div class="resultado-barra">
-                    <div class="resultado-barra-fill" id="resultadoBarraFill"></div>
-                    <div class="resultado-barra-texto" id="resultadoBarraTexto">0/40</div>
-                </div>
-                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
-                    <strong>Referência:</strong> P50 = 14 pontos (média da população)
-                </p>
-            </div>
-
             <!-- Botões de Ação -->
             <div class="botoes-container">
                 <a href="questionarios.html" class="btn btn-voltar">
@@ -756,8 +692,7 @@
                     // Atualizar progresso
                     atualizarProgresso();
                     
-                    // Calcular e mostrar resultado em tempo real
-                    calcularResultado();
+
                 });
             });
         }
@@ -781,45 +716,7 @@
             }
         }
 
-        function calcularResultado() {
-            if (totalRespondidas === 0) return;
-            
-            // Calcular pontuação total
-            let pontuacaoTotal = 0;
-            for (let pergunta in respostasUsuario) {
-                pontuacaoTotal += respostasUsuario[pergunta];
-            }
-            
-            // Determinar interpretação baseada no P50 = 14
-            let interpretacao, cor, porcentagemBarra;
-            
-            if (pontuacaoTotal <= 13) {
-                interpretacao = "Abaixo da Média (P50)";
-                cor = "#28a745"; // Verde
-                porcentagemBarra = (pontuacaoTotal / 40) * 100;
-            } else {
-                interpretacao = "Acima da Média (P50)";
-                // Gradiente do amarelo para vermelho
-                const intensidade = Math.min((pontuacaoTotal - 14) / 26, 1); // 0 a 1
-                const red = Math.round(255);
-                const green = Math.round(255 - (intensidade * 200));
-                cor = `rgb(${red}, ${green}, 0)`;
-                porcentagemBarra = (pontuacaoTotal / 40) * 100;
-            }
-            
-            // Atualizar display do resultado
-            document.getElementById('scoreDisplay').textContent = pontuacaoTotal;
-            document.getElementById('interpretacaoDisplay').textContent = interpretacao;
-            document.getElementById('resultadoBarraFill').style.width = porcentagemBarra + '%';
-            document.getElementById('resultadoBarraFill').style.background = cor;
-            document.getElementById('resultadoBarraTexto').textContent = `${pontuacaoTotal}/40`;
-            
-            // Mostrar preview do resultado
-            const preview = document.getElementById('resultadoPreview');
-            if (totalRespondidas >= 5) { // Mostrar quando pelo menos metade respondida
-                preview.classList.add('show');
-            }
-        }
+
 
         function finalizarQuestionario() {
             if (totalRespondidas !== 10) {

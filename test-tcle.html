@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste TCLE</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .debug { border: 2px solid red; background: yellow; padding: 10px; margin: 10px; }
+        .termo-consentimento {
+            background: lightblue;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid red;
+        }
+        .tcle-container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            border: 3px solid blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug">
+        <h1>Teste de Visibilidade do TCLE</h1>
+        <button onclick="mostrarTCLE()">Mostrar TCLE</button>
+        <button onclick="esconderTCLE()">Esconder TCLE</button>
+    </div>
+
+    <section class="termo-consentimento" id="tcle" style="display: none;">
+        <div class="tcle-container">
+            <div class="tcle-header">
+                <h1>TERMO DE CONSENTIMENTO - TESTE</h1>
+            </div>
+            <p>Se você está vendo isso, o TCLE está funcionando!</p>
+            <button onclick="esconderTCLE()">Fechar</button>
+        </div>
+    </section>
+
+    <script>
+        function mostrarTCLE() {
+            console.log('Mostrando TCLE...');
+            const tcle = document.getElementById('tcle');
+            console.log('Elemento TCLE:', tcle);
+            if (tcle) {
+                tcle.style.display = 'flex';
+                console.log('Display definido como flex');
+                console.log('Computed style:', window.getComputedStyle(tcle).display);
+            }
+        }
+        
+        function esconderTCLE() {
+            const tcle = document.getElementById('tcle');
+            if (tcle) {
+                tcle.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

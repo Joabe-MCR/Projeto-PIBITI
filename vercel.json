@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "Site/(.*)", "use": "@vercel/static" }
-  ],
   "rewrites": [
     { "source": "/", "destination": "/Site/index.html" },
     { "source": "/questionarios", "destination": "/Site/questionarios.html" },

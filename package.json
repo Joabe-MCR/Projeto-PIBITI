@@ -5,7 +5,7 @@
   "main": "Site/index.html",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'Build complete'",
+    "build": "echo 'Build iniciado' && echo 'Build complete'",
     "deploy": "vercel"
   },
   "dependencies": {},

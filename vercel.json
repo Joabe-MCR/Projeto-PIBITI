@@ -1,11 +1,11 @@
 {
   "version": 2,
+  "outputDirectory": "Site",
   "rewrites": [
-    { "source": "/", "destination": "/Site/index.html" },
-    { "source": "/questionarios", "destination": "/Site/questionarios.html" },
-    { "source": "/diagnostico", "destination": "/Site/diagnostico.html" },
-    { "source": "/duvidas-admin", "destination": "/Site/duvidas-admin.html" },
-    { "source": "/(.*)", "destination": "/Site/$1" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/questionarios", "destination": "/questionarios.html" },
+    { "source": "/diagnostico", "destination": "/diagnostico.html" },
+    { "source": "/duvidas-admin", "destination": "/duvidas-admin.html" }
   ],
   "headers": [
     {

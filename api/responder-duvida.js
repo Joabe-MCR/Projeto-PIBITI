@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
-import crypto from 'crypto';
+const { readFileSync, writeFileSync, existsSync } = require('fs');
+const { join } = require('path');
+const crypto = require('crypto');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,7 +8,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type'
 };
 
-export default function handler(req, res) {
+module.exports = function handler(req, res) {
   // Tratar preflight request
   if (req.method === 'OPTIONS') {
     Object.entries(corsHeaders).forEach(([key, value]) => {

@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+const { readFileSync, existsSync } = require('fs');
+const { join } = require('path');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type'
 };
 
-export default function handler(req, res) {
+module.exports = function handler(req, res) {
   // Tratar preflight request
   if (req.method === 'OPTIONS') {
     Object.entries(corsHeaders).forEach(([key, value]) => {

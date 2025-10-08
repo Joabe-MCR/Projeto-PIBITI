@@ -1004,6 +1004,9 @@
             let pontuacaoTotal = 0;
             let sintomasComImpacto = 0; // MS
             let mesiCount = 0;
+            
+            console.log('🔬 INICIANDO CÁLCULO MEDI-Q');
+            console.log('Total de sintomas avaliados:', totalSintomasAvaliados);
 
             // Função helper para processar um sintoma
             function processarSintoma(sintoma) {
@@ -1011,12 +1014,25 @@
                 const freq = Number(sintoma.frequencia) || 0;
                 if (freq === 0) return; // sem impacto
                 if (sintoma.mens === undefined || sintoma.outros === undefined) return; // incompleto
-                const mens = Number(sintoma.mens) || 0;
-                const outros = Number(sintoma.outros) || 0;
-                const preValue = Number(sintoma.pre) || 0;
-                const delta = Math.max(0, mens - outros);
-                let pontuacaoItem = freq * delta;
-                if (pontuacaoItem > 5) pontuacaoItem = 5; // cap conforme regra
+                
+                const mens = Number(sintoma.mens) || 0;      // B = desconforto menstrual
+                const outros = Number(sintoma.outros) || 0;  // D = desconforto intermenstrual  
+                const preValue = Number(sintoma.pre) || 0;   // C = desconforto pré-menstrual
+                
+                // Δ Escore de angústia = B - D (conforme documentação MEDI-Q)
+                const deltaAngustia = Math.max(0, mens - outros);
+                
+                // Pontuação final do item = A (frequência) × Δ Escore de angústia
+                // Com base na tabela: A × Δ = pontuação final
+                let pontuacaoItem = freq * deltaAngustia;
+                
+                // Aplicar regra: se multiplicação >= 6, usar pontuação 5
+                if (pontuacaoItem >= 6) {
+                    pontuacaoItem = 5;
+                }
+                
+                console.log(`Sintoma: freq=${freq}, mens=${mens}, outros=${outros}, delta=${deltaAngustia}, pontuacao=${pontuacaoItem}`);
+                
                 if (pontuacaoItem > 0) {
                     sintomasComImpacto++;
                     if (mens > preValue && mens > outros) mesiCount++; // critério MESI
@@ -1036,6 +1052,14 @@
             const msd = sintomasComImpacto > 0 ? (pontuacaoTotal / sintomasComImpacto) : 0;
             const mesi = sintomasComImpacto > 0 ? (mesiCount / sintomasComImpacto) : 0;
             const interpretacao = interpretarMSD(msd);
+            
+            console.log('📊 RESULTADOS FINAIS MEDI-Q:');
+            console.log('  Pontuação Total:', pontuacaoTotal);
+            console.log('  Sintomas com Impacto (MS):', sintomasComImpacto);
+            console.log('  MSD (Menstrual Symptoms Distress):', msd.toFixed(2));
+            console.log('  MESI (Menstrual Especificity Index):', mesi.toFixed(2));
+            console.log('  Interpretação:', interpretacao.nivel);
+            console.log('  Texto:', interpretacao.texto);
 
             window.resultadosTemporarios = {
                 pontuacaoTotal,
@@ -1048,7 +1072,9 @@
 
         function interpretarMSD(msd) {
             // Interpretação baseada no range oficial MSD (0-5)
-            if (msd === 0) {
+            console.log('🎯 Interpretando MSD:', msd);
+            
+            if (msd === 0 || isNaN(msd)) {
                 return {
                     nivel: 'Nenhum',
                     classe: 'nivel-muito-baixo',

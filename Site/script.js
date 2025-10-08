@@ -171,28 +171,94 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==========================================
-// FUNÇÕES PARA NAVEGAÇÃO DO TCLE
+// FUNÇÕES PARA QUESTIONÁRIO DE TRIAGEM
 // ==========================================
 
-// Função para ir para a página do TCLE
-function irParaTCLE() {
-  console.log('irParaTCLE chamada');
+// Função para ir para o questionário de triagem
+function irParaTriagem() {
+  console.log('irParaTriagem chamada');
   
-  // Verificar se elementos existem
   const pginicial = document.getElementById('pginicial');
-  const tcle = document.getElementById('tcle');
+  const triagem = document.getElementById('triagem');
   
-  console.log('pginicial:', pginicial);
-  console.log('tcle:', tcle);
-  
-  if (!pginicial || !tcle) {
-    console.error('Elementos não encontrados!');
+  if (!pginicial || !triagem) {
+    console.error('Elementos de triagem não encontrados!');
     return;
   }
   
   // Esconder seção inicial
   pginicial.style.display = 'none';
-  console.log('pginicial escondida');
+  // Mostrar questionário de triagem
+  triagem.style.display = 'flex';
+  
+  // Scroll para o topo
+  window.scrollTo(0, 0);
+}
+
+// Função para processar respostas da triagem
+function processarTriagem() {
+  const anticoncepcional = document.querySelector('input[name="anticoncepcional"]:checked');
+  const gestante = document.querySelector('input[name="gestante"]:checked');
+  const medicamentos = document.querySelector('input[name="medicamentos"]:checked');
+  
+  if (!anticoncepcional || !gestante || !medicamentos) {
+    alert('Por favor, responda todas as perguntas antes de continuar.');
+    return;
+  }
+  
+  // Salvar respostas da triagem
+  const respostasTriagem = {
+    anticoncepcional: anticoncepcional.value,
+    gestante: gestante.value,
+    medicamentos: medicamentos.value,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('respostasTriagem', JSON.stringify(respostasTriagem));
+  
+  // Verificar critérios de exclusão
+  // Se respondeu SIM para qualquer uma das perguntas, exclui
+  if (anticoncepcional.value === 'sim' || gestante.value === 'sim' || medicamentos.value === 'sim') {
+    // Mostrar tela de exclusão
+    mostrarTelaExclusao();
+  } else {
+    // Continuar para o TCLE
+    irParaTCLE();
+  }
+}
+
+// Função para mostrar tela de exclusão
+function mostrarTelaExclusao() {
+  const triagem = document.getElementById('triagem');
+  const exclusao = document.getElementById('exclusao');
+  
+  triagem.style.display = 'none';
+  exclusao.style.display = 'flex';
+  
+  // Scroll para o topo
+  window.scrollTo(0, 0);
+}
+
+// ==========================================
+// FUNÇÕES PARA NAVEGAÇÃO DO TCLE
+// ==========================================
+
+// Função para ir para a página do TCLE (após aprovação na triagem)
+function irParaTCLE() {
+  console.log('irParaTCLE chamada');
+  
+  const triagem = document.getElementById('triagem');
+  const tcle = document.getElementById('tcle');
+  
+  if (!tcle) {
+    console.error('Elemento TCLE não encontrado!');
+    return;
+  }
+  
+  // Esconder triagem se estiver visível
+  if (triagem) {
+    triagem.style.display = 'none';
+  }
   
   // Mostrar seção do TCLE
   tcle.style.display = 'flex';
@@ -212,16 +278,33 @@ function irParaTCLE() {
 
 // Função para voltar à página inicial
 function voltarInicio() {
-  // Esconder seção do TCLE
+  // Esconder todas as seções
   document.getElementById('tcle').style.display = 'none';
+  document.getElementById('triagem').style.display = 'none';
+  document.getElementById('exclusao').style.display = 'none';
+  
   // Mostrar seção inicial
   document.getElementById('pginicial').style.display = 'block';
-  // Limpar checkbox
+  
+  // Limpar checkbox do TCLE
   const checkbox = document.getElementById('consentimento');
   if (checkbox) {
     checkbox.checked = false;
     toggleProsseguirButton();
   }
+  
+  // Limpar respostas da triagem
+  const inputs = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="medicamentos"]');
+  inputs.forEach(input => {
+    input.checked = false;
+  });
+  
+  // Desabilitar botão continuar da triagem
+  const btnTriagem = document.getElementById('btnContinuarTriagem');
+  if (btnTriagem) {
+    btnTriagem.disabled = true;
+  }
+  
   // Scroll para o topo
   window.scrollTo(0, 0);
 }
@@ -234,8 +317,8 @@ function prosseguirQuestionarios() {
     localStorage.setItem('tcleConsentimento', 'true');
     localStorage.setItem('tcleDataConsentimento', new Date().toISOString());
     
-    // Redirecionar para a página dos questionários
-    window.location.href = 'questionarios.html';
+    // Redirecionar para o questionário sociodemográfico (Q0) primeiro
+    window.location.href = 'questionario0-sociodemografico.html';
   } else {
     alert('Por favor, aceite o termo de consentimento para prosseguir.');
   }
@@ -262,16 +345,42 @@ function toggleProsseguirButton() {
   }
 }
 
-// Adicionar event listener para o checkbox quando a página carregar
+// Adicionar event listeners quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+  // Event listener para checkbox do TCLE
   const checkbox = document.getElementById('consentimento');
   if (checkbox) {
     checkbox.addEventListener('change', toggleProsseguirButton);
     // Inicializar estado do botão
     toggleProsseguirButton();
   }
-
+  
+  // Event listeners para questionário de triagem
+  const inputsTriagem = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="medicamentos"]');
+  inputsTriagem.forEach(input => {
+    input.addEventListener('change', verificarTriagemCompleta);
+  });
+  
+  // Inicializar estado do botão de triagem
+  verificarTriagemCompleta();
 });
+
+// Função para verificar se todas as perguntas da triagem foram respondidas
+function verificarTriagemCompleta() {
+  const anticoncepcional = document.querySelector('input[name="anticoncepcional"]:checked');
+  const gestante = document.querySelector('input[name="gestante"]:checked');
+  const medicamentos = document.querySelector('input[name="medicamentos"]:checked');
+  
+  const btnContinuar = document.getElementById('btnContinuarTriagem');
+  
+  if (btnContinuar) {
+    if (anticoncepcional && gestante && medicamentos) {
+      btnContinuar.disabled = false;
+    } else {
+      btnContinuar.disabled = true;
+    }
+  }
+}
 
 // ==========================================
 // FUNÇÕES PARA SISTEMA DE DÚVIDAS
@@ -316,91 +425,10 @@ function togglePerguntasRespondidas() {
   }
 }
 
-// Função para enviar dúvida
-async function enviarDuvida(event) {
-  event.preventDefault();
-  
-  const categoria = document.getElementById('categoria-duvida').value;
-  const duvida = document.getElementById('texto-duvida').value;
-  const btnEnviar = document.querySelector('.btn-enviar');
-  
-  // Validar campos
-  if (!categoria || !duvida.trim()) {
-    alert('Por favor, preencha todos os campos.');
-    return;
-  }
-  
-  // Desabilitar botão durante envio
-  btnEnviar.disabled = true;
-  btnEnviar.textContent = 'Enviando...';
-  
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/duvidas/enviar`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        categoria: categoria,
-        duvida: duvida.trim(),
-        timestamp: new Date().toISOString()
-      })
-    });
-    
-    if (response.ok) {
-      // Mostrar mensagem de sucesso
-      document.getElementById('mensagem-sucesso').style.display = 'flex';
-      limparFormularioDuvida();
-    } else {
-      throw new Error('Erro ao enviar dúvida');
-    }
-  } catch (error) {
-    console.error('Erro ao enviar dúvida:', error);
-    alert('Erro ao enviar dúvida. Tente novamente mais tarde.');
-  } finally {
-    // Reabilitar botão
-    btnEnviar.disabled = false;
-    btnEnviar.textContent = 'Enviar Dúvida';
-  }
-}
+// Sistema de dúvidas será carregado via duvidas-sistema.js
+// Esta função é mantida para compatibilidade, mas será sobrescrita pelo novo sistema
 
-// Função para carregar perguntas respondidas
-async function carregarPerguntasRespondidas() {
-  const container = document.getElementById('perguntas-container');
-  const loading = document.getElementById('loading-respondidas');
-  const semPerguntas = document.getElementById('sem-perguntas');
-  
-  // Mostrar loading
-  loading.style.display = 'flex';
-  semPerguntas.style.display = 'none';
-  
-  // Limpar container
-  const perguntasExistentes = container.querySelectorAll('.pergunta-respondida-item');
-  perguntasExistentes.forEach(p => p.remove());
-  
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/duvidas/respondidas`);
-    
-    if (response.ok) {
-      const perguntas = await response.json();
-      
-      loading.style.display = 'none';
-      
-      if (perguntas.length === 0) {
-        semPerguntas.style.display = 'block';
-      } else {
-        exibirPerguntasRespondidas(perguntas);
-      }
-    } else {
-      throw new Error('Erro ao carregar perguntas');
-    }
-  } catch (error) {
-    console.error('Erro ao carregar perguntas:', error);
-    loading.style.display = 'none';
-    semPerguntas.innerHTML = '<p>Erro ao carregar perguntas. Tente novamente.</p>';
-    semPerguntas.style.display = 'block';
-  }
-}
+// Função de carregamento será gerenciada pelo novo sistema de dúvidas
 
 // Função para exibir perguntas respondidas
 function exibirPerguntasRespondidas(perguntas) {

@@ -42,9 +42,107 @@
   <p class="descricao" id="descricao">
     Clique no botão abaixo, responda aos questionários, veja seus níveis de estresse e como você pode lidar com eles
   </p>
-  <button onclick="irParaTCLE()">
+  <button onclick="irParaTriagem()">
     Começar
   </button>
+</section>
+
+<!-- Seção: Questionário de Triagem -->
+<section class="questionario-triagem" id="triagem" style="display: none;">
+  <div class="triagem-container">
+    <div class="triagem-header">
+      <h1>QUESTIONÁRIO DE TRIAGEM</h1>
+      <p class="triagem-subtitulo">Antes de começar, temos algumas perguntas para saber se você se encaixa para realizar nossos questionários:</p>
+    </div>
+    
+    <div class="triagem-content">
+      <div class="pergunta-triagem">
+        <h3>Faço uso de anticoncepcionais (oral, pílula, DIU, injetável, subcutâneo)</h3>
+        <div class="opcoes-triagem">
+          <label class="opcao-triagem">
+            <input type="radio" name="anticoncepcional" value="sim">
+            <span class="radio-custom"></span>
+            <span>Sim</span>
+          </label>
+          <label class="opcao-triagem">
+            <input type="radio" name="anticoncepcional" value="nao">
+            <span class="radio-custom"></span>
+            <span>Não</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="pergunta-triagem">
+        <h3>Sou gestante</h3>
+        <div class="opcoes-triagem">
+          <label class="opcao-triagem">
+            <input type="radio" name="gestante" value="sim">
+            <span class="radio-custom"></span>
+            <span>Sim</span>
+          </label>
+          <label class="opcao-triagem">
+            <input type="radio" name="gestante" value="nao">
+            <span class="radio-custom"></span>
+            <span>Não</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="pergunta-triagem">
+        <h3>Faço uso de medicamentos para depressão ou ansiedade</h3>
+        <div class="opcoes-triagem">
+          <label class="opcao-triagem">
+            <input type="radio" name="medicamentos" value="sim">
+            <span class="radio-custom"></span>
+            <span>Sim</span>
+          </label>
+          <label class="opcao-triagem">
+            <input type="radio" name="medicamentos" value="nao">
+            <span class="radio-custom"></span>
+            <span>Não</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="triagem-actions">
+        <button class="btn-voltar-inicio" onclick="voltarInicio()">
+          Voltar
+        </button>
+        <button class="btn-continuar-triagem" id="btnContinuarTriagem" onclick="processarTriagem()" disabled>
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: Resultado da Triagem (Exclusão) -->
+<section class="resultado-exclusao" id="exclusao" style="display: none;">
+  <div class="exclusao-container">
+    <div class="exclusao-header">
+      <h1>😊</h1>
+      <h2>Olá! Seja bem vinda!</h2>
+    </div>
+    
+    <div class="exclusao-content">
+      <p class="exclusao-texto">
+        Agradecemos muito por ter dedicado seu tempo para responder ao questionário inicial. 
+        Após a análise das respostas, verificamos que, neste momento, você não se enquadra nos 
+        critérios de participação estabelecidos para esta pesquisa.
+      </p>
+      
+      <p class="exclusao-texto">
+        Mesmo assim, agradecemos sinceramente o seu interesse e colaboração. Sua disposição 
+        em contribuir é muito importante para nós!
+      </p>
+      
+      <div class="exclusao-actions">
+        <button class="btn-voltar-inicial" onclick="voltarInicio()">
+          Voltar à Página Inicial
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Seção: Termo de Consentimento -->

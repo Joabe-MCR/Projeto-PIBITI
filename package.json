@@ -1,0 +1,20 @@
+{
+  "name": "projeto-pibiti-duvidas",
+  "version": "1.0.0",
+  "description": "Sistema de gerenciamento de dúvidas para o Projeto PIBITI",
+  "main": "Site/index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build complete'",
+    "deploy": "vercel"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vercel": "^33.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Projeto PIBITI",
+  "license": "MIT"
+}

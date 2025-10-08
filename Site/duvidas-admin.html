@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração de Dúvidas - Projeto PIBITI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .duvida-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .duvida-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .categoria-badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .categoria-badge.estresse { background-color: #ffeaa7; color: #2d3436; }
+        .categoria-badge.menacme { background-color: #fab1a0; color: #2d3436; }
+        .categoria-badge.questionarios { background-color: #a8e6cf; color: #2d3436; }
+        .categoria-badge.pesquisa { background-color: #dda0dd; color: #2d3436; }
+        .categoria-badge.outros { background-color: #e0e0e0; color: #2d3436; }
+
+        .data-info {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .pergunta-texto {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .duvida-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Administração de Dúvidas</h1>
+            <p>Responder dúvidas dos usuários do Projeto PIBITI</p>
+        </div>
+
+        <a href="/" class="back-link">← Voltar ao site principal</a>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Carregando dúvida...</p>
+        </div>
+
+        <div id="error-container" style="display: none;"></div>
+        <div id="success-container" style="display: none;"></div>
+
+        <div id="duvida-container" style="display: none;">
+            <div class="duvida-card">
+                <div class="duvida-meta">
+                    <span id="categoria-badge" class="categoria-badge"></span>
+                    <span id="data-envio" class="data-info"></span>
+                </div>
+
+                <div class="pergunta-texto" id="pergunta-texto"></div>
+
+                <form id="form-responder">
+                    <div class="form-group">
+                        <label for="titulo">Título da Pergunta (será exibido publicamente):</label>
+                        <input type="text" id="titulo" name="titulo" required 
+                               placeholder="Ex: Como lidar com estresse no trabalho?">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resposta">Resposta Completa:</label>
+                        <textarea id="resposta" name="resposta" required 
+                                  placeholder="Digite sua resposta detalhada aqui..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="respondida_por">Respondida por:</label>
+                        <input type="text" id="respondida_por" name="respondida_por" required 
+                               placeholder="Ex: Dr. João Silva" value="Equipe de Pesquisa">
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" id="btn-cancelar" class="btn btn-secondary">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="btn-salvar" class="btn btn-primary">
+                            Salvar Resposta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AdminDuvidas {
+            constructor() {
+                this.API_BASE = window.location.origin;
+                this.init();
+            }
+
+            init() {
+                this.loadDuvidaFromURL();
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                const form = document.getElementById('form-responder');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.salvarResposta(e));
+                }
+
+                const btnCancelar = document.getElementById('btn-cancelar');
+                if (btnCancelar) {
+                    btnCancelar.addEventListener('click', () => {
+                        window.close();
+                    });
+                }
+            }
+
+            async loadDuvidaFromURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                const token = urlParams.get('token');
+
+                if (!id || !token) {
+                    this.showError('ID ou token inválido na URL');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${this.API_BASE}/api/responder-duvida?id=${id}&token=${token}`);
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        this.displayDuvida(result.duvida, id, token);
+                    } else {
+                        throw new Error(result.error || 'Erro ao carregar dúvida');
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar dúvida:', error);
+                    this.showError('Erro ao carregar dúvida: ' + error.message);
+                }
+            }
+
+            displayDuvida(duvida, id, token) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('duvida-container').style.display = 'block';
+
+                // Preencher informações da dúvida
+                const categoriaBadge = document.getElementById('categoria-badge');
+                categoriaBadge.textContent = this.getCategoriaLabel(duvida.categoria);
+                categoriaBadge.className = `categoria-badge ${duvida.categoria}`;
+
+                document.getElementById('data-envio').textContent = 
+                    'Enviada em ' + new Date(duvida.data_envio).toLocaleString('pt-BR');
+
+                document.getElementById('pergunta-texto').textContent = duvida.duvida;
+
+                // Se já foi respondida, preencher campos
+                if (duvida.status === 'respondida') {
+                    document.getElementById('titulo').value = duvida.titulo || '';
+                    document.getElementById('resposta').value = duvida.resposta || '';
+                    document.getElementById('respondida_por').value = duvida.respondida_por || 'Equipe de Pesquisa';
+                }
+
+                // Armazenar IDs para uso posterior
+                this.currentId = id;
+                this.currentToken = token;
+            }
+
+            async salvarResposta(event) {
+                event.preventDefault();
+
+                const titulo = document.getElementById('titulo').value.trim();
+                const resposta = document.getElementById('resposta').value.trim();
+                const respondidaPor = document.getElementById('respondida_por').value.trim();
+
+                if (!titulo || !resposta || !respondidaPor) {
+                    this.showError('Todos os campos são obrigatórios');
+                    return;
+                }
+
+                const btnSalvar = document.getElementById('btn-salvar');
+                const originalText = btnSalvar.textContent;
+                
+                btnSalvar.disabled = true;
+                btnSalvar.textContent = 'Salvando...';
+
+                try {
+                    const response = await fetch(
+                        `${this.API_BASE}/api/responder-duvida?id=${this.currentId}&token=${this.currentToken}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                titulo,
+                                resposta,
+                                respondida_por: respondidaPor
+                            })
+                        }
+                    );
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        this.showSuccess('Resposta salva com sucesso! A pergunta agora aparecerá na seção de perguntas respondidas do site.');
+                        
+                        // Desabilitar formulário após salvar
+                        const form = document.getElementById('form-responder');
+                        const inputs = form.querySelectorAll('input, textarea, button');
+                        inputs.forEach(input => {
+                            if (input.id !== 'btn-cancelar') {
+                                input.disabled = true;
+                            }
+                        });
+                    } else {
+                        throw new Error(result.error || 'Erro ao salvar resposta');
+                    }
+                } catch (error) {
+                    console.error('Erro ao salvar resposta:', error);
+                    this.showError('Erro ao salvar resposta: ' + error.message);
+                } finally {
+                    btnSalvar.disabled = false;
+                    btnSalvar.textContent = originalText;
+                }
+            }
+
+            getCategoriaLabel(categoria) {
+                const labels = {
+                    'estresse': 'Estresse',
+                    'menacme': 'Ciclo Menstrual',
+                    'questionarios': 'Questionários',
+                    'pesquisa': 'Pesquisa',
+                    'outros': 'Outros'
+                };
+                return labels[categoria] || categoria;
+            }
+
+            showError(message) {
+                const container = document.getElementById('error-container');
+                container.innerHTML = `<div class="alert alert-error">${message}</div>`;
+                container.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                
+                // Scroll para o topo
+                window.scrollTo(0, 0);
+            }
+
+            showSuccess(message) {
+                const container = document.getElementById('success-container');
+                container.innerHTML = `<div class="alert alert-success">${message}</div>`;
+                container.style.display = 'block';
+                
+                // Scroll para o topo
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            new AdminDuvidas();
+        });
+    </script>
+</body>
+</html>

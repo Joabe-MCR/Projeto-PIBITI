@@ -707,40 +707,126 @@
             }
         }
 
+        // Função para converter respostas em códigos numéricos
+        function mapearRespostasParaNumeros(dados) {
+            const mapeamentos = {
+                // Faixa etária (1=18-22, 2=23-27, 3=28-32, 4=33-37, 5=38-40)
+                idade: {
+                    '18-22': 1,
+                    '23-27': 2,
+                    '28-32': 3,
+                    '33-37': 4,
+                    '38-40': 5,
+                    'nao_informar': 0
+                },
+                faixa_etaria: {
+                    '18-22': 1,
+                    '23-27': 2,
+                    '28-32': 3,
+                    '33-37': 4,
+                    '38-40': 5,
+                    'nao_informar': 0
+                },
+                // Cor/raça (1=Branca, 2=Preta, 3=Parda, 4=Amarela, 5=Indígena)
+                cor_raca: {
+                    'branca': 1,
+                    'preta': 2,
+                    'parda': 3,
+                    'amarela': 4,
+                    'indigena': 5,
+                    'nao_informar': 0
+                },
+                // Renda familiar (1=Menos de 1 SM, 2=1 SM, 3=1-2 SM, 4=2-3 SM, 5=3-4 SM, 6=4-5 SM, 7=Mais de 5 SM)
+                renda: {
+                    'menos_1_sm': 1,
+                    '1_sm': 2,
+                    '1_a_2_sm': 3,
+                    '2_a_3_sm': 4,
+                    '3_a_4_sm': 5,
+                    '4_a_5_sm': 6,
+                    'mais_5_sm': 7,
+                    'nao_informar': 0
+                },
+                // Escolaridade (1=Fundamental incompleto até 4 anos, 2=5-9 anos, 3=10-12 anos, 4=Graduação ou pós-graduação)
+                escolaridade: {
+                    'fundamental_incompleto': 1,
+                    'fundamental_completo': 2,
+                    'medio_incompleto': 3,
+                    'superior_pos': 4,
+                    'nao_informar': 0
+                }
+            };
+
+            const dadosMapeados = {};
+            
+            // Mapear cada campo
+            for (const [campo, valor] of Object.entries(dados)) {
+                if (mapeamentos[campo] && mapeamentos[campo][valor]) {
+                    dadosMapeados[campo] = mapeamentos[campo][valor];
+                } else {
+                    // Se não encontrar mapeamento, marcar como não informado
+                    dadosMapeados[campo] = 0; // 0 para não informado
+                }
+            }
+            
+            // Garantir que faixa_etaria tenha o mesmo valor que idade
+            if (dados.idade && mapeamentos.idade[dados.idade]) {
+                dadosMapeados.faixa_etaria = mapeamentos.idade[dados.idade];
+            }
+            
+            return dadosMapeados;
+        }
+
         async function salvarDadosGoogleSheets(dados, pulado = false) {
             try {
+                console.log('Dados recebidos para salvar:', dados);
+                console.log('Questionário pulado:', pulado);
+                
+                // Mapear respostas para códigos numéricos
+                const dadosNumericos = mapearRespostasParaNumeros(dados);
+                console.log('Dados convertidos para números:', dadosNumericos);
+                
                 // Dados para enviar ao Google Sheets
                 const dadosParaSalvar = {
                     userId: userId,
                     timestamp: new Date().toISOString(),
                     data_completa: new Date().toLocaleString('pt-BR'),
                     questionario_pulado: pulado,
-                    // Mantém compatibilidade caso use 'faixa_etaria' no Sheets
-                    faixa_etaria: dados.faixa_etaria || dados.idade || 'não_informado',
-                    idade: dados.idade || dados.faixa_etaria || 'não_informado',
-                    cor_raca: dados.cor_raca || 'não_informado',
-                    escolaridade: dados.escolaridade || 'não_informado',
-                    renda: dados.renda || 'não_informado'
+                    // Códigos numéricos para análise estatística
+                    faixa_etaria: dadosNumericos.faixa_etaria || dadosNumericos.idade || 0,
+                    cor_raca: dadosNumericos.cor_raca || 0,
+                    escolaridade: dadosNumericos.escolaridade || 0,
+                    renda: dadosNumericos.renda || 0
                 };
+                
+                console.log('📊 Dados formatados com códigos numéricos:');
+                console.log('   Faixa etária:', dadosParaSalvar.faixa_etaria, '(1=18-22, 2=23-27, 3=28-32, 4=33-37, 5=38-40)');
+                console.log('   Cor/raça:', dadosParaSalvar.cor_raca, '(1=Branca, 2=Preta, 3=Parda, 4=Amarela, 5=Indígena)');
+                console.log('   Escolaridade:', dadosParaSalvar.escolaridade, '(1=Fund.Inc, 2=Fund.Comp, 3=Médio, 4=Superior)');
+                console.log('   Renda:', dadosParaSalvar.renda, '(1=<1SM, 2=1SM, 3=1-2SM, 4=2-3SM, 5=3-4SM, 6=4-5SM, 7=>5SM)');
+                console.log('   Dados completos:', dadosParaSalvar);
 
                 // Integração com Google Sheets via Apps Script
                 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwhkTGkrSad5rjnqGed3Mb4bH408Fd35aLup8h4bympjNHKDur1W8bONFZF64xjdyqOAQ/exec';
                 
                 if (GOOGLE_SHEETS_URL) {
+                    const payloadParaEnvio = {
+                        aba: 'dados_sociodemograficos', 
+                        dados: dadosParaSalvar
+                    };
+                    
+                    console.log('Payload completo sendo enviado:', JSON.stringify(payloadParaEnvio, null, 2));
+                    
                     const response = await fetch(GOOGLE_SHEETS_URL, {
                         method: 'POST',
                         mode: 'no-cors', // Necessário para Google Apps Script
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            // Usar chave 'aba' conforme script universal atualizado
-                            aba: 'dados_sociodemograficos',
-                            dados: dadosParaSalvar
-                        })
+                        body: JSON.stringify(payloadParaEnvio)
                     });
                     
-                    console.log('Dados enviados para Google Sheets');
+                    console.log('Dados enviados para Google Sheets - Status:', response.status);
                 } else {
                     console.log('URL do Google Sheets não configurada, salvando apenas localmente');
                 }

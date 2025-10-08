@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "rewrites": [
     { "source": "/", "destination": "/Site/index.html" },
     { "source": "/questionarios", "destination": "/Site/questionarios.html" },
     { "source": "/diagnostico", "destination": "/Site/diagnostico.html" },
-    { "source": "/duvidas-admin.html", "destination": "/Site/duvidas-admin.html" },
+    { "source": "/duvidas-admin", "destination": "/Site/duvidas-admin.html" },
     { "source": "/(.*)", "destination": "/Site/$1" }
   ],
   "headers": [

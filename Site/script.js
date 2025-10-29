@@ -199,9 +199,10 @@ function irParaTriagem() {
 function processarTriagem() {
   const anticoncepcional = document.querySelector('input[name="anticoncepcional"]:checked');
   const gestante = document.querySelector('input[name="gestante"]:checked');
+  const idadeFaixa = document.querySelector('input[name="idade_faixa"]:checked');
   const medicamentos = document.querySelector('input[name="medicamentos"]:checked');
   
-  if (!anticoncepcional || !gestante || !medicamentos) {
+  if (!anticoncepcional || !gestante || !idadeFaixa || !medicamentos) {
     alert('Por favor, responda todas as perguntas antes de continuar.');
     return;
   }
@@ -210,6 +211,7 @@ function processarTriagem() {
   const respostasTriagem = {
     anticoncepcional: anticoncepcional.value,
     gestante: gestante.value,
+    idade_faixa: idadeFaixa.value,
     medicamentos: medicamentos.value,
     timestamp: new Date().toISOString()
   };
@@ -217,8 +219,8 @@ function processarTriagem() {
   localStorage.setItem('respostasTriagem', JSON.stringify(respostasTriagem));
   
   // Verificar critérios de exclusão
-  // Se respondeu SIM para qualquer uma das perguntas, exclui
-  if (anticoncepcional.value === 'sim' || gestante.value === 'sim' || medicamentos.value === 'sim') {
+  // Se respondeu SIM para anticoncepcional, gestante ou medicamentos, OU NÃO para idade, exclui
+  if (anticoncepcional.value === 'sim' || gestante.value === 'sim' || medicamentos.value === 'sim' || idadeFaixa.value === 'nao') {
     // Mostrar tela de exclusão
     mostrarTelaExclusao();
   } else {
@@ -294,7 +296,7 @@ function voltarInicio() {
   }
   
   // Limpar respostas da triagem
-  const inputs = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="medicamentos"]');
+  const inputs = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="idade_faixa"], input[name="medicamentos"]');
   inputs.forEach(input => {
     input.checked = false;
   });
@@ -356,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Event listeners para questionário de triagem
-  const inputsTriagem = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="medicamentos"]');
+  const inputsTriagem = document.querySelectorAll('input[name="anticoncepcional"], input[name="gestante"], input[name="idade_faixa"], input[name="medicamentos"]');
   inputsTriagem.forEach(input => {
     input.addEventListener('change', verificarTriagemCompleta);
   });
@@ -369,12 +371,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function verificarTriagemCompleta() {
   const anticoncepcional = document.querySelector('input[name="anticoncepcional"]:checked');
   const gestante = document.querySelector('input[name="gestante"]:checked');
+  const idadeFaixa = document.querySelector('input[name="idade_faixa"]:checked');
   const medicamentos = document.querySelector('input[name="medicamentos"]:checked');
   
   const btnContinuar = document.getElementById('btnContinuarTriagem');
   
   if (btnContinuar) {
-    if (anticoncepcional && gestante && medicamentos) {
+    if (anticoncepcional && gestante && idadeFaixa && medicamentos) {
       btnContinuar.disabled = false;
     } else {
       btnContinuar.disabled = true;

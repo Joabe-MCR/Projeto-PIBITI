@@ -482,7 +482,6 @@
                 <div class="destaque">
                     <p><strong>Dados coletados:</strong></p>
                     <ul>
-                        <li>Número de telefone (para contato sobre pesquisa)</li>
                         <li>Idade (faixas etárias de 5 anos)</li>
                         <li>Cor/raça (conforme IBGE)</li>
                         <li>Nível de escolaridade</li>
@@ -502,37 +501,17 @@
                     <div class="progresso-fill" id="progressoFill"></div>
                 </div>
                 <div class="progresso-texto">
-                    <span id="progressoTexto">0 de 5 perguntas respondidas</span>
+                    <span id="progressoTexto">0 de 4 perguntas respondidas</span>
                 </div>
             </div>
 
             <!-- Formulário -->
             <form id="questionarioSocioForm">
                 
-                <!-- Pergunta 1: Número de Telefone -->
+                <!-- Pergunta 1: Idade -->
                 <div class="pergunta-item" data-pergunta="1">
                     <div class="pergunta-header">
                         <div class="pergunta-numero">1</div>
-                        <div class="pergunta-texto">Número de telefone (para contato sobre a pesquisa)</div>
-                    </div>
-                    <div class="opcoes-container">
-                        <div class="input-texto-container">
-                            <input type="tel" name="telefone" id="telefone" placeholder="(00) 00000-0000" maxlength="15">
-                            <small>Coloque seu número aqui! Entraremos em contato novamente para sua participação para avaliarmos a eficácia do nosso site 😊</small>
-                        </div>
-                        <div class="opcoes-vertical">
-                            <div class="opcao">
-                                <input type="radio" name="telefone_opcao" value="nao_informar" id="telefone_nao_informar">
-                                <label for="telefone_nao_informar">Prefiro não informar</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pergunta 2: Idade -->
-                <div class="pergunta-item" data-pergunta="2">
-                    <div class="pergunta-header">
-                        <div class="pergunta-numero">2</div>
                         <div class="pergunta-texto">Qual a sua faixa etária?</div>
                     </div>
                     <div class="opcoes-container">
@@ -565,10 +544,10 @@
                     </div>
                 </div>
 
-                <!-- Pergunta 3: Cor/Raça -->
-                <div class="pergunta-item" data-pergunta="3">
+                <!-- Pergunta 2: Cor/Raça -->
+                <div class="pergunta-item" data-pergunta="2">
                     <div class="pergunta-header">
-                        <div class="pergunta-numero">3</div>
+                        <div class="pergunta-numero">2</div>
                         <div class="pergunta-texto">Como você se identifica quanto à cor/raça? (Classificação IBGE)</div>
                     </div>
                     <div class="opcoes-container">
@@ -601,10 +580,10 @@
                     </div>
                 </div>
 
-                <!-- Pergunta 4: Escolaridade -->
-                <div class="pergunta-item" data-pergunta="4">
+                <!-- Pergunta 3: Escolaridade -->
+                <div class="pergunta-item" data-pergunta="3">
                     <div class="pergunta-header">
-                        <div class="pergunta-numero">4</div>
+                        <div class="pergunta-numero">3</div>
                         <div class="pergunta-texto">Qual o seu nível de escolaridade?</div>
                     </div>
                     <div class="opcoes-container">
@@ -633,10 +612,10 @@
                     </div>
                 </div>
 
-                <!-- Pergunta 5: Renda -->
-                <div class="pergunta-item" data-pergunta="5">
+                <!-- Pergunta 4: Renda -->
+                <div class="pergunta-item" data-pergunta="4">
                     <div class="pergunta-header">
-                        <div class="pergunta-numero">5</div>
+                        <div class="pergunta-numero">4</div>
                         <div class="pergunta-texto">Qual a renda familiar mensal? (em salários mínimos)</div>
                     </div>
                     <div class="opcoes-container">
@@ -703,7 +682,7 @@
         let userId = null;
         let respostasUsuario = {};
         let totalPerguntasRespondidas = 0;
-        const totalPerguntas = 5;
+        const totalPerguntas = 4;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -725,7 +704,7 @@
 
         function configurarFormulario() {
             // Configurar eventos para todas as perguntas
-            const perguntas = ['idade', 'cor_raca', 'escolaridade', 'renda', 'telefone_opcao'];
+            const perguntas = ['idade', 'cor_raca', 'escolaridade', 'renda'];
             
             perguntas.forEach(pergunta => {
                 document.querySelectorAll(`input[name="${pergunta}"]`).forEach(input => {
@@ -735,63 +714,6 @@
                     });
                 });
             });
-
-            // Configurar evento específico para o campo de telefone
-            const campoTelefone = document.getElementById('telefone');
-            if (campoTelefone) {
-                campoTelefone.addEventListener('input', function() {
-                    // Formatar telefone automaticamente
-                    this.value = formatarTelefone(this.value);
-                    
-                    const valor = this.value.trim();
-                    if (valor) {
-                        respostasUsuario['telefone'] = valor;
-                        // Desmarcar a opção "Prefiro não informar" se houver texto
-                        const radioNaoInformar = document.getElementById('telefone_nao_informar');
-                        if (radioNaoInformar) {
-                            radioNaoInformar.checked = false;
-                            delete respostasUsuario['telefone_opcao'];
-                        }
-                    } else {
-                        delete respostasUsuario['telefone'];
-                    }
-                    atualizarProgresso();
-                });
-            }
-
-            // Adicionar evento para limpar campo de texto quando selecionar "não informar"
-            const radioNaoInformar = document.getElementById('telefone_nao_informar');
-            if (radioNaoInformar) {
-                radioNaoInformar.addEventListener('change', function() {
-                    if (this.checked) {
-                        const campoTelefone = document.getElementById('telefone');
-                        if (campoTelefone) {
-                            campoTelefone.value = '';
-                            delete respostasUsuario['telefone'];
-                        }
-                    }
-                });
-            }
-        }
-
-        // Função para formatar o telefone automaticamente
-        function formatarTelefone(valor) {
-            // Remove tudo que não é número
-            let numeros = valor.replace(/\D/g, '');
-            
-            // Limita a 11 dígitos
-            numeros = numeros.substring(0, 11);
-            
-            // Aplica a formatação
-            if (numeros.length <= 2) {
-                return numeros;
-            } else if (numeros.length <= 7) {
-                return `(${numeros.substring(0, 2)}) ${numeros.substring(2)}`;
-            } else if (numeros.length <= 11) {
-                return `(${numeros.substring(0, 2)}) ${numeros.substring(2, 7)}-${numeros.substring(7)}`;
-            }
-            
-            return valor;
         }
 
         function atualizarProgresso() {
@@ -905,9 +827,7 @@
                     faixa_etaria: dadosNumericos.faixa_etaria || dadosNumericos.idade || 0,
                     cor_raca: dadosNumericos.cor_raca || 0,
                     escolaridade: dadosNumericos.escolaridade || 0,
-                    renda: dadosNumericos.renda || 0,
-                    // Dados textuais
-                    telefone: dados.telefone || (dados.telefone_opcao === 'nao_informar' ? 'não informado' : '')
+                    renda: dadosNumericos.renda || 0
                 };
                 
                 console.log('📊 Dados formatados com códigos numéricos:');
@@ -915,7 +835,6 @@
                 console.log('   Cor/raça:', dadosParaSalvar.cor_raca, '(1=Branca, 2=Preta, 3=Parda, 4=Amarela, 5=Indígena)');
                 console.log('   Escolaridade:', dadosParaSalvar.escolaridade, '(1=Fund.Inc, 2=Fund.Comp, 3=Médio, 4=Superior)');
                 console.log('   Renda:', dadosParaSalvar.renda, '(1=<1SM, 2=1SM, 3=1-2SM, 4=2-3SM, 5=3-4SM, 6=4-5SM, 7=>5SM)');
-                console.log('   Telefone:', dadosParaSalvar.telefone || 'não informado');
                 console.log('   Dados completos:', dadosParaSalvar);
 
                 // Integração com Google Sheets via Apps Script
